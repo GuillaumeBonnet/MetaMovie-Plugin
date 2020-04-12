@@ -1,0 +1,34 @@
+{
+  "name": "meta-movie-vue-plugin",
+  "description": "chrome plugin for movie infos",
+  "version": "1",
+  "manifest_version": 2,
+  "permissions": [
+    "activeTab",
+    "webNavigation",
+    "tabs",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "chrome-scripts/background.js"
+    ]
+  },
+  "browser_action": {
+    "default_title": "meta-movie-vue-plugin",
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "custom-elements.min.js"
+        , "vue.js"
+        , "hello-world.js"
+        , "chrome-scripts/content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}
