@@ -1,13 +1,10 @@
 
 declare const chrome: any;
 
-console.log("gboDebug: content.ts");
-
-const pocComp = document.createElement('hello-world');
-pocComp.setAttribute("msg", "gbop toto");
 let body = document.querySelector('body');
+let appDiv = document.createElement('div') as HTMLElement;
+appDiv.id = 'app';
+appDiv.setAttribute('style', 'position:fixed; top:0;');
 if(body) {
-    body.appendChild(pocComp);
+    body.appendChild(appDiv);
 }
-console.log("gboDebug:[end of content file]");
-

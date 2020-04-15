@@ -1,10 +1,10 @@
 {
-  "name": "MetaMovie-Plugin",
+  "name": "meta-movie-plugin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build && vue-cli-service build --no-clean --target wc --name hello-world src/components/HelloWorld.vue && del dist\\demo.html && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
+    "build": "vue-cli-service build && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
