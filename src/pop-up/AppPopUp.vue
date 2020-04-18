@@ -38,21 +38,23 @@
     </v-app-bar>
 
     <v-content>
-      <RootOverlay/>
+      <v-btn text small color="primary">Primary</v-btn>
+      <v-btn-toggle depressed color="primary">Primary</v-btn-toggle>
+      <HelloWorld/>
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import RootOverlay from './components/RootOverlay.vue';
+import HelloWorld from '../components/HelloWorld.vue';
 
 @Component({
   components: {
-    RootOverlay,
+    HelloWorld,
   },
 })
-export default class App extends Vue {}
+export default class AppPopUp extends Vue {}
 </script>
 
 <style lang="scss">

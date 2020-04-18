@@ -16,8 +16,11 @@
   },
   "browser_action": {
     "default_title": "meta-movie-vue-plugin",
-    "default_popup": "index.html"
+    "default_popup": "pop-up.html"
   },
+  "web_accessible_resources": [
+    "fonts/*"
+  ],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -25,11 +28,12 @@
         "vue.js"
         , "chrome-scripts/content.js"
         , "js/chunk-vendors.js"
-        , "js/app.js"
+        , "js/overlay.js"
       ],
       "css": [
-        "css/app.css"
+        "css/overlay.css"
         , "css/chunk-vendors.css"
+        , "css/materialdesignicons.min.css"
       ],
       "run_at": "document_idle",
       "all_frames": true

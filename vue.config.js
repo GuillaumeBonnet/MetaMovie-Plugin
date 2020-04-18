@@ -5,13 +5,34 @@ module.exports = {
 	filenameHashing: false,
 	configureWebpack: {
 		plugins: [
-		new CopyWebpackPlugin([
-			{ from: './src/manifest.json', to: 'manifest.json', flatten: true },
-			{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true },
-		]),
+			new CopyWebpackPlugin([
+				{ from: './src/manifest.json', to: 'manifest.json', flatten: true },
+				{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true },
+				{ from: './src/assets/materialdesignicons.min.css', to: 'css/materialdesignicons.min.css', flatten: true },
+			]),
 		]
 	},
 	transpileDependencies: [
 		"vuetify"
-	]
+	],
+	pages: {
+		['pop-up']: {
+			// entry for the page
+			entry: 'src/pop-up/pop-up.ts',
+			// the source template
+			template: 'src/pop-up/pop-up.html',
+			// output as dist/index.html
+			filename: 'pop-up.html',
+			// when using title option,
+			// template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
+			title: 'Pop-Up Page',
+			// chunks to include on this page, by default includes
+			// extracted common chunks and vendor chunks.
+			chunks: ['pop-up', 'chunk-vendors', 'chunk-common', 'index']
+		},
+		['overlay']: {
+			// entry for the page
+			entry: 'src/content-overlay/overlay.ts',
+		},
+	}
 }
