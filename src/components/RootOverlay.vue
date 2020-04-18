@@ -1,7 +1,7 @@
 <template>
   <div class="overlay-container">
     RootOverlay RootOverlay RootOverlay RootOverlay RootOverlay RootOverlay RootOverlay RootOverlay RootOverlay 
-    <HelloWorld msg="Welcome to [RootOverlay] Your Vue.js + TypeScript App"/>
+    <HelloWorld/>
   </div>
 </template>
 
@@ -21,12 +21,12 @@ export default class RootOverlay extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
   .overlay-container {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 9000;
+    // position: fixed;
+    // top: 0;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
+    // z-index: 9000;
 
     border: 5px red solid;
     display: flex;

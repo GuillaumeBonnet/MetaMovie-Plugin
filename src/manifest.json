@@ -27,6 +27,10 @@
         , "js/chunk-vendors.js"
         , "js/app.js"
       ],
+      "css": [
+        "css/app.css"
+        , "css/chunk-vendors.css"
+      ],
       "run_at": "document_idle",
       "all_frames": true
     }
