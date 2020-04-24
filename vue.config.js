@@ -1,5 +1,6 @@
 // vue.config.js
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
 module.exports = {
 	filenameHashing: false,
@@ -34,5 +35,8 @@ module.exports = {
 			// entry for the page
 			entry: 'src/content-overlay/overlay.ts',
 		},
+	},
+	devServer: {
+		contentBase: path.join(__dirname, 'dev-page')
 	}
 }
