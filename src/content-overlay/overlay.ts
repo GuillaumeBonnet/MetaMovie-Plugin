@@ -9,4 +9,4 @@ Vue.config.productionTip = false
 new Vue({
   vuetify,
   render: h => h(AppOverlay)
-}).$mount('#app')
+}).$mount('#plugin-meta-movie')

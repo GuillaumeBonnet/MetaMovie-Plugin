@@ -1,8 +1,8 @@
 
 declare const chrome: any;
-const body = document.querySelector('body');
+const fullScreenDiv = document.querySelector('div.sizing-wrapper');
 const appDiv = document.createElement('div') as HTMLElement;
-    appDiv.id = 'app';
-    if(body) {
-        body.appendChild(appDiv);
+    appDiv.id = 'plugin-meta-movie';
+    if(fullScreenDiv) {
+        fullScreenDiv.appendChild(appDiv);
     }
