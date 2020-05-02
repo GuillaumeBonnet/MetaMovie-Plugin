@@ -1,81 +1,188 @@
 <template>
-<div class="full-screen-overlay">
-	<v-app>
-		<v-btn class="mx-2"
-			@click="dialog = true"
-			fab dark small
-			color="primary"
-		>
-			<v-icon dark>mdi-close</v-icon>
-		</v-btn>
-	</v-app>
-
-	<v-dialog
-		v-model="dialog"
-		width="500"
-    >
-		<template v-slot:activator="{ on }">
-			<v-btn
-				color="red lighten-2"
-				dark
-				v-on="on"
-			>
-				Click Me
-			</v-btn>
+	<v-app class="full-screen-overlay">
+		<template v-if="videoDimensions">
+			<Bubble
+			v-for="(bubble, index) in bubbleDisplayed_list"
+			:key="index"
+			:text="bubble.text"
+			:x="bubble.x"
+			:y="bubble.y"
+			:videoDimensions="videoDimensions"
+			@click="togglePausePlay"
+			></Bubble>
 		</template>
-
-		<v-card>
-			<v-card-title
-				class="headline grey lighten-2"
-				primary-title
-			>
-				Privacy Policy
-			</v-card-title>
-
-			<v-card-text>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</v-card-text>
-
-			<v-divider></v-divider>
-
-			<v-card-actions>
-				<v-spacer></v-spacer>
-				<v-btn
-					color="primary"
-					text
-					@click="dialog = false"
-				>
-					I accept
-				</v-btn>
-			</v-card-actions>
-		</v-card>
-    </v-dialog>
-</div>
+	</v-app>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
+import Bubble from '../components/Bubble.vue';
+
+const UtilsConst = {
+	toSeconds: (time: string) => {
+		const timeValues = time.split(':').map(Number.parseInt);
+		if(timeValues.length == 1)
+			return timeValues[0];
+		else if(timeValues.length == 2)
+			return 60*timeValues[1] + timeValues[0];
+		else if(timeValues.length == 3)
+			return 60*60*timeValues[2] + 60*timeValues[1] + timeValues[0];
+		else{
+			return NaN;
+		}
+	}
+};
+
+class BubbleData {
+	public from: number;	
+	public to: number;
+	public text: string;
+	private x: number;
+	private y: number;
+
+	constructor(input: {fromStamp: string; toStamp: string; x: number; y: number}) {
+		this.from = UtilsConst.toSeconds(input.fromStamp);
+		this.to = UtilsConst.toSeconds(input.toStamp);
+		this.text = `text from ${input.fromStamp} sec
+					to ${input.toStamp}, x:${input.x}, y:${input.y}`;
+		this.x = input.x;
+		this.y = input.y;
+	}
+}
 
 @Component({
 	components: {
+		Bubble
 	},
 })
 export default class AppOverlay extends Vue {
 	created() {
-		console.log("gboDebug:[in created");
-		const video: HTMLVideoElement | null = document.querySelector('video');
-		console.log("gboDebug:[video]", video);
-		if(video) {
-			video.addEventListener("progress", (event) => {
-				console.log("gboDebug:[event.timeStamp]", event.timeStamp);        
-			});
-		}
+		const videoEvent = () => {
+			this.video = document.querySelector('video');
+			if(this.video) {
+				this.video.addEventListener("timeupdate", (event) => {
+					const currentTime = this.video && this.video.currentTime;
+					if(!currentTime) return;
+					this.handleVideoProgression(currentTime);
+				});
+				
+				const videoContainer = document.querySelector('div.VideoContainer');
+				const bottomController = document.querySelector('div.PlayerControlsNeo__bottom-controls');
+				if(!videoContainer || !bottomController) {
+					return;
+				}
+				this.videoDimensions = {
+					x: videoContainer.clientWidth,
+					y: videoContainer.clientHeight - bottomController.clientHeight
+				};
+			} else {
+				console.error('no video found.');
+				setTimeout(videoEvent, 200);
+			}
+		};
+		videoEvent();
 	}
 
-	
+	// TODO
+	//  To learn when other code has toggled full-screen mode on and off,
+	//  you should establish listeners for the fullscreenchange event on the Document.
+	//  It's also important to listen for fullscreenchange to be aware when, for example,
+	//  the user manually toggles full-screen mode, or when the user switches applications, 
+	//  causing your application to temporarily exit full-screen mode.
 
-	@Prop()
-	private dialog = false;
+	private video!: HTMLVideoElement | null;
+	private videoDimensions!: {x: number; y: number}; //in px
+
+
+	private Utils = UtilsConst;
+
+	private bubbleTable = [
+		new BubbleData({
+			fromStamp:'0'
+			, toStamp:'3'
+			, x:0
+			, y:0
+		}),
+		new BubbleData({
+			fromStamp:'0'
+			, toStamp:'3'
+			, x:0
+			, y:100
+		}),
+		new BubbleData({
+			fromStamp:'0'
+			, toStamp:'3'
+			, x:100
+			, y:0
+		}),
+		new BubbleData({
+			fromStamp:'0'
+			, toStamp:'3'
+			, x:100
+			, y:100
+		}),
+		new BubbleData({
+			fromStamp:'5'
+			, toStamp:'7'
+			, x:50
+			, y:50
+		}),
+		new BubbleData({
+			fromStamp:'10'
+			, toStamp:'15'
+			, x:0
+			, y:0
+		}),
+		new BubbleData({
+			fromStamp:'16'
+			, toStamp:'20'
+			, x:50
+			, y:25
+		}),
+		new BubbleData({
+			fromStamp:'25'
+			, toStamp:'30'
+			, x:100
+			, y:10
+		}),
+	] as BubbleData[];
+	private bubbleDisplayed_list: BubbleData[] = [];
+	private nextInfoTime = this.bubbleTable[0].from;
+
+
+	/* -------------------------------------------------------------------------- */
+	/*                                   methods                                  */
+	/* -------------------------------------------------------------------------- */
+	handleVideoProgression(currentTime: number) {		
+		if(this.bubbleDisplayed_list[0] && currentTime >= this.bubbleDisplayed_list[0].to) {
+			this.bubbleDisplayed_list.shift();
+		}
+
+		if(this.bubbleTable[0] && currentTime >= this.bubbleTable[0].from) {
+			const bubbleToDisplay = this.bubbleTable.shift();
+			if(bubbleToDisplay) {
+				let indexToInsert = 0;
+				for(const bubbleDisplayed of this.bubbleDisplayed_list) {
+					if(bubbleToDisplay.to < bubbleDisplayed.to) {
+						break;
+					}
+					indexToInsert++;
+				}
+				this.bubbleDisplayed_list.splice(indexToInsert, 0, bubbleToDisplay);
+			}
+		}		
+	}
+	
+	/* -------------------------------------------------------------------------- */
+	/*                                  handlers                                  */
+	/* -------------------------------------------------------------------------- */
+
+	togglePausePlay() {		
+		if(!this.video) {
+			return;
+		}
+		this.video.click();
+	}
 }
 </script>
 
@@ -84,16 +191,11 @@ export default class AppOverlay extends Vue {
 	font-family: materialdesignicons-webfont;
 	src: url('chrome-extension://__MSG_@@extension_id__/fonts/materialdesignicons-webfont.ttf');
 }
-.full-screen-overlay {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: 2;
-}
 
 div.v-application.v-application {
-	background-color: transparent;
+	position: relative;
+	z-index: 2;
+	height: 0;
+	width: 0;
 }
 </style>
