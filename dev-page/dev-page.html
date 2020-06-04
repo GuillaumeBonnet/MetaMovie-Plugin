@@ -11,8 +11,7 @@
   <script>
     let isPlaying = false;
     function play() {
-      let video = document.querySelector('video');
-      if(isPlaying) {
+      if (isPlaying) {
         video.pause();
         isPlaying = false;
       }
@@ -20,6 +19,14 @@
         video.play();
         isPlaying = true;
       }
+    }
+
+    function moveToTimeClicked(event) {
+      const progressControl = document.querySelector('div.progress-control');
+      const ratio = (event.clientX - event.srcElement.getBoundingClientRect().left)
+      / (event.srcElement.getBoundingClientRect().right - event.srcElement.getBoundingClientRect().left);
+      // video.currentTime = video.duration*ratio;
+      video.currentTime = fakeVideoDuration*ratio;
     }
   </script>
 </head>
@@ -242,8 +249,7 @@
                     <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
                       <div id="70044686" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
                         <div class="vsc-controller" data-vscid="ysvbiqspo"></div>
-                          <video controls src="videoplayback.mp4" style="height: 129.808%;"
-                          ></video>
+                        <video controls src="videoplayback.mp4" style="height: 129.808%;"></video>
                         <div class="player-timedtext"
                           style="position: absolute; left: 0px; top: 132px; right: 0px; bottom: 132px; display: block; direction: ltr;">
                           <div class="player-timedtext-text-container"
@@ -256,14 +262,12 @@
                     </div>
                   </div>
                   <div class="player-view-childrens player-view-childrens-static"></div>
-                  <div
-                    class="PlayerControlsNeo__layout PlayerControlsNeo__layout PlayerControlsNeo__layout">
+                  <div class="PlayerControlsNeo__layout PlayerControlsNeo__layout PlayerControlsNeo__layout">
                     <div class="PlayerControlsNeo__all-controls">
                       <div class="PlayerControlsNeo__gradient-top"></div>
                       <div class="PlayerControlsNeo__gradient-bottom"></div>
                       <div>
-                        <div
-                          style="display:none;"
+                        <div style="display:none;"
                           class="evidence-overlay nfa-z-idx-1 nfa-pos-abs nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb nfa-jc-center">
                           <h4 class="nfa-fs-1-6-em nfa-fw-normal nfa-c-gray-80 nfa-m-0 nfa-pb-02-em">You're watching
                           </h4>
@@ -278,15 +282,14 @@
                         </div>
                       </div>
                       <div class="controls-full-hit-zone">
-                        <div class="center-controls"
-                          onclick="play()"
-                        ></div>
+                        <div class="center-controls" onclick="play()"></div>
                       </div>
                       <div class="PlayerControlsNeo__core-controls">
                         <div class="nfp-control-row top-left-controls"><button
                             class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerBack tooltip-button tooltip-button-pos-center tooltip-button-align-right"
                             data-tooltip="Back to Browse" data-uia="nfplayer-exit" tabindex="0" role="button"
-                            aria-label="Back to Browse"><svg class="svg-icon svg-icon-nfplayerBack" focusable="false">
+                            aria-label="Back to Browse"><svg
+                              class="svg-icon svg-icon-nfplayerBack" focusable="false">
                               <use filter="" xlink:href="#nfplayerBack"></use>
                             </svg></button></div>
                         <div data-uia="nfplayer-bottom-controls"
@@ -295,23 +298,22 @@
                             class="PlayerControlsNeo__progress-control-row PlayerControlsNeo__progress-control-row--row-standard">
                             <div class="PlayerControlsNeo__progress-container">
                               <div
+                                onclick="moveToTimeClicked(event)"
                                 class="PlayerControls--control-element progress-control PlayerControls--control-element-hidden">
                                 <div class="scrubber-container">
                                   <div class="scrubber-bar">
                                     <div class="track">
-                                      <div class="buffered" style="width: 34.48%;"></div>
-                                      <div class="current-progress" style="width: 31.98%;"></div>
+                                      <div class="buffered" style="width: 0%;"></div>
+                                      <div class="current-progress" style="width: 0;"></div>
                                       <div class="play-head"></div>
                                     </div>
                                     <div class="trickplay trickplay-text-and-image" style="left: 1.26042px;">
-                                      <div class="tp-image"><img
-                                          src=""
-                                          alt=""></div>
+                                      <div class="tp-image"><img src="" alt=""></div>
                                       <div class="tp-text">0:00</div>
                                     </div>
                                     <div aria-label="Seek time scrubber" aria-valuemax="9465" aria-valuemin="0"
                                       aria-valuenow="3027" aria-valuetext="50:27 of 2:37:45" class="scrubber-head"
-                                      tabindex="0" style="left: 31.98%;"></div>
+                                      tabindex="0" style="left: 0%;"></div>
                                   </div>
                                 </div>
                               </div>
@@ -321,21 +323,15 @@
                             </div>
                           </div>
                           <div class="PlayerControlsNeo__button-control-row">
-                              <button
-                              onclick="play()"
+                            <button onclick="play()"
                               class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerPlay"
-                              tabindex="0"
-                              role="button"
-                              aria-label="Play"
-                              >
-                                <svg
-                                class="svg-icon svg-icon-nfplayerPlay"
-                                focusable="false">
-                                  <use filter="" xlink:href="#nfplayerPlay">
-                                  </use>
-                                </svg>
-                              </button>
-                              <button
+                              tabindex="0" role="button" aria-label="Play">
+                              <svg class="svg-icon svg-icon-nfplayerPlay" focusable="false">
+                                <use filter="" xlink:href="#nfplayerPlay">
+                                </use>
+                              </svg>
+                            </button>
+                            <button
                               class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerBackTen"
                               tabindex="0" role="button" aria-label="Seek Back"><svg
                                 class="svg-icon svg-icon-nfplayerBackTen" focusable="false">
@@ -1020,17 +1016,39 @@
     const fullScreenButton = document.querySelector('button.button-nfplayerFullscreen');
     fullScreenButton.addEventListener(
       "click"
-      , function() {
-        if(!isFullScreen) {
+      , function () {
+        if (!isFullScreen) {
           fullScreenDiv.requestFullscreen({ navigationUI: "hide" });
           isFullScreen = true;
         } else {
           fullScreenDiv.exitFullscreen ? fullScreenDiv.exitFullscreen :
-          document.exitFullscreen ? document.exitFullscreen() : function() {throw Error("can't exit full screen.");}();
-          isFullScreen = false;          
+            document.exitFullscreen ? document.exitFullscreen() : function () { throw Error("can't exit full screen."); }();
+          isFullScreen = false;
         }
       }
     );
+
+  /* =======================================================================
+                                  avancement                                
+     ======================================================================= */
+    const video = document.querySelector('video');
+    const fakeVideoDuration = 120;
+    const currentProgress = document.querySelector('div.current-progress');
+    const scrubberHead = document.querySelector('div.scrubber-head');
+    video.addEventListener("timeupdate", (event) => {
+        const currentTime = video.currentTime;
+        // const percentage = 100*currentTime/video.duration;
+        const percentage = 100*currentTime/fakeVideoDuration;
+        currentProgress.setAttribute('style', `width: ${percentage}%; position:relative; top:15px;`);
+        scrubberHead.setAttribute('style', `left: ${percentage}%`);
+    });
+
+    // reset button
+    const resetButton = document.querySelector('button.button-nfplayerBackTen');
+    resetButton.addEventListener('click', () => {
+      video.currentTime = 0;
+    });    
+
   </script>
 </body>
 

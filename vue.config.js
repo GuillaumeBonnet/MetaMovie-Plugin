@@ -3,6 +3,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
+	css: {
+		extract: process.env.npm_lifecycle_event == 'build'
+	},
 	filenameHashing: false,
 	configureWebpack: {
 		plugins: [

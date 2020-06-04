@@ -146,31 +146,62 @@ export default class AppOverlay extends Vue {
 			, y:10
 		}),
 	] as BubbleData[];
+	private bubbles: {list: BubbleData[]; progressIndex: number; nextBubble: Function} = {
+		list : this.bubbleTable
+		, progressIndex: 0
+		, nextBubble: function (): boolean | BubbleData {
+			return this.list && this.list[this.progressIndex];
+		}
+	};
 	private bubbleDisplayed_list: BubbleData[] = [];
 	private nextInfoTime = this.bubbleTable[0].from;
-
+	private previousTime = 0;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   methods                                  */
 	/* -------------------------------------------------------------------------- */
-	handleVideoProgression(currentTime: number) {		
-		if(this.bubbleDisplayed_list[0] && currentTime >= this.bubbleDisplayed_list[0].to) {
-			this.bubbleDisplayed_list.shift();
+	handleVideoProgression(currentTime: number) {
+			
+		if(Math.abs(currentTime-this.previousTime) > 1 ) {
+			//build a queue with the bubbles after current time
+			this.bubbleDisplayed_list = [];
+			this.bubbles.progressIndex = 0;
+			const indexNextBubble = this.bubbles.list.findIndex(
+				(bubble) => bubble.from >= currentTime
+			);
+						
+			if(indexNextBubble == -1) {
+				this.bubbles.progressIndex = this.bubbles.list.length;
+			}
+			else if(indexNextBubble == 0) {
+				this.bubbles.progressIndex = 0;
+			}
+			else {
+				this.bubbles.progressIndex = indexNextBubble - 1;
+			}
 		}
 
-		if(this.bubbleTable[0] && currentTime >= this.bubbleTable[0].from) {
-			const bubbleToDisplay = this.bubbleTable.shift();
-			if(bubbleToDisplay) {
-				let indexToInsert = 0;
-				for(const bubbleDisplayed of this.bubbleDisplayed_list) {
-					if(bubbleToDisplay.to < bubbleDisplayed.to) {
-						break;
-					}
-					indexToInsert++;
-				}
-				this.bubbleDisplayed_list.splice(indexToInsert, 0, bubbleToDisplay);
+		const removeExpiredBubble = () => {
+			if(this.bubbleDisplayed_list[0] && this.bubbleDisplayed_list[0].to <= currentTime ) {
+				this.bubbleDisplayed_list.shift();
 			}
-		}		
+		};
+		removeExpiredBubble();
+
+		const nextBubble = this.bubbles.nextBubble();		
+		if(nextBubble && currentTime >= nextBubble.from) {
+			this.bubbles.progressIndex++; // = nextBubble index
+			let indexToInsert = 0;
+			for(const bubbleAlreadyDisplayed of this.bubbleDisplayed_list) {
+				if(nextBubble.to < bubbleAlreadyDisplayed.to) {
+					break;
+				}
+				indexToInsert++;
+			}
+			this.bubbleDisplayed_list.splice(indexToInsert, 0, nextBubble);
+		}
+		removeExpiredBubble();
+		this.previousTime = currentTime;	
 	}
 	
 	/* -------------------------------------------------------------------------- */
