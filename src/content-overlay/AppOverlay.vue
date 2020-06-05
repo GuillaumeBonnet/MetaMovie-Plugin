@@ -1,6 +1,6 @@
 <template>
 	<v-app class="full-screen-overlay">
-		<template v-if="videoDimensions">
+		<template v-if="videoDimensions.x">
 			<Bubble
 			v-for="(bubble, index) in bubbleDisplayed_list"
 			:key="index"
@@ -91,7 +91,7 @@ export default class AppOverlay extends Vue {
 	//  causing your application to temporarily exit full-screen mode.
 
 	private video!: HTMLVideoElement | null;
-	private videoDimensions!: {x: number; y: number}; //in px
+	private videoDimensions: {x: number; y: number} =  {x:0, y:0}; //in px
 
 
 	private Utils = UtilsConst;
