@@ -72,6 +72,13 @@ export default class Bubble extends Vue {
         left: calc(50vw - 60px);
         &:not(:hover) {
             background-color: transparent;
+            & .text--primary {
+                text-shadow: 2px 2px 2px black;
+            }
+            & button {
+                opacity: 0;
+            }
+            box-shadow: none;
         }
     }
 </style>
