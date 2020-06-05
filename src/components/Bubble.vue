@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 
 @Component({
     components: {
@@ -41,10 +41,12 @@ export default class Bubble extends Vue {
     private xyPosition = { top: '50vh', left: '50vw'}
 
     mounted() {
-        const topValue = this.y * (this.videoDimensions.y - this.$el.clientHeight) / 100;
-        const leftValue = this.x * (this.videoDimensions.x - this.$el.clientWidth) / 100;
-        this.xyPosition.top = topValue + 'px';
-        this.xyPosition.left = leftValue + 'px';
+        this.setPosition();
+    }
+
+    @Watch('videoDimensions')
+    onVideoDimensionsChange() {
+        this.setPosition();
     }
     handleCloseButton() {
         this.isShown = false;
@@ -52,6 +54,15 @@ export default class Bubble extends Vue {
 
     showBubble() {
         this.isShown = true;
+    }
+
+    setPosition() {
+        if(this.videoDimensions && this.$el) {
+            const topValue = this.y * (this.videoDimensions.y - this.$el.clientHeight) / 100;
+            const leftValue = this.x * (this.videoDimensions.x - this.$el.clientWidth) / 100;
+            this.xyPosition.top = topValue + 'px';
+            this.xyPosition.left = leftValue + 'px';
+        }
     }
 }
 </script>

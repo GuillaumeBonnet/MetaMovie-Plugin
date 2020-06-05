@@ -57,16 +57,8 @@ class BubbleData {
 })
 export default class AppOverlay extends Vue {
 	created() {
-		const videoEvent = () => {
-			this.video = document.querySelector('video');
-			if(this.video) {
-				this.video.addEventListener("timeupdate", (event) => {
-					const currentTime = this.video && this.video.currentTime;
-					if(!currentTime) return;
-					this.handleVideoProgression(currentTime);
-				});
-				
-				const videoContainer = document.querySelector('div.VideoContainer');
+		const setVideoDimensions = () => {
+			const videoContainer = document.querySelector('div.VideoContainer');
 				const bottomController = document.querySelector('div.PlayerControlsNeo__bottom-controls');
 				if(!videoContainer || !bottomController) {
 					return;
@@ -75,21 +67,29 @@ export default class AppOverlay extends Vue {
 					x: videoContainer.clientWidth,
 					y: videoContainer.clientHeight - bottomController.clientHeight
 				};
+		};
+		const videoEvent = () => {
+			this.video = document.querySelector('video');
+			if(this.video) {
+				this.video.addEventListener("timeupdate", (event) => {
+					const currentTime = this.video && this.video.currentTime;
+					if(!currentTime) return;
+					this.handleVideoProgression(currentTime);
+				});
+				setVideoDimensions();				
 			} else {
 				console.error('no video found.');
 				setTimeout(videoEvent, 200);
 			}
 		};
 		videoEvent();
+		document.onfullscreenchange = ( event ) => {
+			setTimeout(() => {
+				setVideoDimensions();
+			}, 100);
+			//TODO understand why there is a racecondition between re-rendering and async queue
+		};
 	}
-
-	// TODO
-	//  To learn when other code has toggled full-screen mode on and off,
-	//  you should establish listeners for the fullscreenchange event on the Document.
-	//  It's also important to listen for fullscreenchange to be aware when, for example,
-	//  the user manually toggles full-screen mode, or when the user switches applications, 
-	//  causing your application to temporarily exit full-screen mode.
-
 	private video!: HTMLVideoElement | null;
 	private videoDimensions: {x: number; y: number} =  {x:0, y:0}; //in px
 
@@ -98,26 +98,26 @@ export default class AppOverlay extends Vue {
 
 	private bubbleTable = [
 		new BubbleData({
-			fromStamp:'0'
-			, toStamp:'3'
+			fromStamp:'1'
+			, toStamp:'4'
 			, x:0
 			, y:0
 		}),
 		new BubbleData({
-			fromStamp:'0'
-			, toStamp:'3'
+			fromStamp:'1'
+			, toStamp:'4'
 			, x:0
 			, y:100
 		}),
 		new BubbleData({
-			fromStamp:'0'
-			, toStamp:'3'
+			fromStamp:'1'
+			, toStamp:'4'
 			, x:100
 			, y:0
 		}),
 		new BubbleData({
-			fromStamp:'0'
-			, toStamp:'3'
+			fromStamp:'1'
+			, toStamp:'4'
 			, x:100
 			, y:100
 		}),
