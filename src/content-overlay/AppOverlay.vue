@@ -1,6 +1,8 @@
 <template>
 	<v-app class="full-screen-overlay">
-		<template v-if="videoDimensions.x">
+		<Menu></Menu>
+
+		<!-- <template v-if="videoDimensions.x">
 			<Bubble
 			v-for="(bubble, index) in bubbleDisplayed_list"
 			:key="index"
@@ -10,13 +12,14 @@
 			:videoDimensions="videoDimensions"
 			@click="togglePausePlay"
 			></Bubble>
-		</template>
+		</template> -->
 	</v-app>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
 import Bubble from '../components/Bubble.vue';
+import Menu from '../components/Menu.vue';
 
 const UtilsConst = {
 	toSeconds: (time: string) => {
@@ -52,7 +55,8 @@ class BubbleData {
 
 @Component({
 	components: {
-		Bubble
+		Bubble,
+		Menu
 	},
 })
 export default class AppOverlay extends Vue {
