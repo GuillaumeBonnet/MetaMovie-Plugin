@@ -1,5 +1,8 @@
 <template>
-    <v-menu
+    <div>
+        Menu
+    </div>
+    <!-- <v-menu
     class="menu-icon-container PlayerControls--control-element touchable nfp-popup-control"
     v-model="menu"
     offset-y
@@ -23,7 +26,7 @@
                 <v-list-item-title>titi</v-list-item-title>
             </v-list-item>
         </v-list>
-    </v-menu>
+    </v-menu> -->
 </template>
 
 <script lang="ts">

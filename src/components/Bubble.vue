@@ -1,7 +1,8 @@
 
 
 <template>
-    <v-card v-show="isShown"
+    <div>Bubble</div>
+    <!-- <v-card v-show="isShown"
     class="card mx-auto"
     :style="xyPosition"
     dark>
@@ -16,7 +17,7 @@
                 {{text}}
             </div>
         </v-card-text>
-    </v-card>
+    </v-card> -->
 </template>
 
 <script lang="ts">

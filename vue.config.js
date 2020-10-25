@@ -11,8 +11,7 @@ module.exports = {
 		plugins: [
 			new CopyWebpackPlugin([
 				{ from: './src/manifest.json', to: 'manifest.json', flatten: true },
-				{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true },
-				{ from: './src/assets/materialdesignicons.min.css', to: 'css/materialdesignicons.min.css', flatten: true },
+				{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true }
 			]),
 		]
 	},

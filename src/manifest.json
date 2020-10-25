@@ -33,7 +33,6 @@
       "css": [
         "css/overlay.css"
         , "css/chunk-vendors.css"
-        , "css/materialdesignicons.min.css"
       ],
       "run_at": "document_idle",
       "all_frames": true

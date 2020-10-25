@@ -1,5 +1,5 @@
 <template>
-	<v-app class="full-screen-overlay">
+	<div class="full-screen-overlay">
 		<Menu></Menu>
 
 		<!-- <template v-if="videoDimensions.x">
@@ -13,7 +13,7 @@
 			@click="togglePausePlay"
 			></Bubble>
 		</template> -->
-	</v-app>
+	</div>
 </template>
 
 <script lang="ts">
@@ -222,10 +222,6 @@ export default class AppOverlay extends Vue {
 </script>
 
 <style lang="scss">
-@font-face {
-	font-family: materialdesignicons-webfont;
-	src: url('chrome-extension://__MSG_@@extension_id__/fonts/materialdesignicons-webfont.ttf');
-}
 
 div.v-application.v-application {
 	position: relative;
