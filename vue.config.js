@@ -4,20 +4,18 @@ const path = require('path');
 
 module.exports = {
 	css: {
-		extract: process.env.npm_lifecycle_event == 'build'
+		extract: process.env.npm_lifecycle_event == 'build',
 	},
 	filenameHashing: false,
 	configureWebpack: {
 		plugins: [
 			new CopyWebpackPlugin([
 				{ from: './src/manifest.json', to: 'manifest.json', flatten: true },
-				{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true }
+				{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true },
 			]),
-		]
+		],
 	},
-	transpileDependencies: [
-		"vuetify"
-	],
+	transpileDependencies: ['vuetify'],
 	pages: {
 		['pop-up']: {
 			// entry for the page
@@ -31,7 +29,7 @@ module.exports = {
 			title: 'Pop-Up Page',
 			// chunks to include on this page, by default includes
 			// extracted common chunks and vendor chunks.
-			chunks: ['pop-up', 'chunk-vendors', 'chunk-common', 'index']
+			chunks: ['pop-up', 'chunk-vendors', 'chunk-common', 'index'],
 		},
 		['overlay']: {
 			// entry for the page
@@ -39,6 +37,6 @@ module.exports = {
 		},
 	},
 	devServer: {
-		contentBase: path.join(__dirname, 'dev-page')
-	}
-}
+		contentBase: path.join(__dirname, 'dev-page'),
+	},
+};

@@ -1,41 +1,29 @@
 {
-  "name": "meta-movie-vue-plugin",
-  "description": "chrome plugin for movie infos",
-  "version": "1",
-  "manifest_version": 2,
-  "permissions": [
-    "activeTab",
-    "webNavigation",
-    "tabs",
-    "<all_urls>"
-  ],
-  "background": {
-    "scripts": [
-      "chrome-scripts/background.js"
-    ]
-  },
-  "browser_action": {
-    "default_title": "meta-movie-vue-plugin",
-    "default_popup": "pop-up.html"
-  },
-  "web_accessible_resources": [
-    "fonts/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": [
-        "vue.js"
-        , "chrome-scripts/content.js"
-        , "js/chunk-vendors.js"
-        , "js/overlay.js"
-      ],
-      "css": [
-        "css/overlay.css"
-        , "css/chunk-vendors.css"
-      ],
-      "run_at": "document_idle",
-      "all_frames": true
-    }
-  ]
+	"name": "meta-movie-vue-plugin",
+	"description": "chrome plugin for movie infos",
+	"version": "1",
+	"manifest_version": 2,
+	"permissions": ["activeTab", "webNavigation", "tabs", "<all_urls>"],
+	"background": {
+		"scripts": ["chrome-scripts/background.js"]
+	},
+	"browser_action": {
+		"default_title": "meta-movie-vue-plugin",
+		"default_popup": "pop-up.html"
+	},
+	"web_accessible_resources": ["fonts/*"],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": [
+				"vue.js",
+				"chrome-scripts/content.js",
+				"js/chunk-vendors.js",
+				"js/overlay.js"
+			],
+			"css": ["css/overlay.css", "css/chunk-vendors.css"],
+			"run_at": "document_idle",
+			"all_frames": true
+		}
+	]
 }

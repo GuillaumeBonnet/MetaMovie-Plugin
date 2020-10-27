@@ -1,8 +1,8 @@
 <template>
-    <div>
-        Menu
-    </div>
-    <!-- <v-menu
+	<div>
+		Menu
+	</div>
+	<!-- <v-menu
     class="menu-icon-container PlayerControls--control-element touchable nfp-popup-control"
     v-model="menu"
     offset-y
@@ -33,39 +33,38 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-    components: {
-        // sub-components
-    },
+	components: {
+		// sub-components
+	},
 })
 export default class Menu extends Vue {
-    handleMenuButton() {
-        console.log("gboDebug:[button clicked]");        
-    }
+	handleMenuButton() {
+		console.log('gboDebug:[button clicked]');
+	}
 
-    private fav = true;
-    private menu = false;
-    private message = false;
-    private hints = true;
+	private fav = true;
+	private menu = false;
+	private message = false;
+	private hints = true;
 }
 </script>
 
 <style scoped lang="scss">
-    .menu-icon.menu-icon {
-        height: 100%;
-        width: 100%;
-        padding: 0px;
-    }
-    .menu-icon-container.menu-icon-container {
-        padding: 0 0 0.6em 0;
-        position: initial;
-        width: 3.4em;
-        height: 3.6em;
-        background: unset;
-        &::v-deep div {
-            min-width: unset;
-            min-height: unset;
-            background: unset;
-        }
-    }
-
+.menu-icon.menu-icon {
+	height: 100%;
+	width: 100%;
+	padding: 0px;
+}
+.menu-icon-container.menu-icon-container {
+	padding: 0 0 0.6em 0;
+	position: initial;
+	width: 3.4em;
+	height: 3.6em;
+	background: unset;
+	&::v-deep div {
+		min-width: unset;
+		min-height: unset;
+		background: unset;
+	}
+}
 </style>
