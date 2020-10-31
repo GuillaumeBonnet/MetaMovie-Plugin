@@ -1,6 +1,6 @@
 <template>
-	<div class="full-screen-overlay">
-		<Menu></Menu>
+	<div class="full-screen-overlay" @click="dbgClick()">
+		video Overlay {{ $store.state.count }}
 
 		<!-- <template v-if="videoDimensions.x">
 			<Bubble
@@ -64,7 +64,7 @@ class BubbleData {
 		Menu,
 	},
 })
-export default class AppOverlay extends Vue {
+export default class VideoOverlay extends Vue {
 	created() {
 		const setVideoDimensions = () => {
 			const videoContainer = document.querySelector('div.VideoContainer');
@@ -174,6 +174,10 @@ export default class AppOverlay extends Vue {
 	/* -------------------------------------------------------------------------- */
 	/*                                   methods                                  */
 	/* -------------------------------------------------------------------------- */
+	get sharedStateA() {
+		// return this.$shared;
+		return '';
+	}
 	handleVideoProgression(currentTime: number) {
 		if (Math.abs(currentTime - this.previousTime) > 1) {
 			//build a queue with the bubbles after current time
@@ -232,6 +236,10 @@ export default class AppOverlay extends Vue {
 </script>
 
 <style lang="scss">
+div.full-screen-overlay {
+	position: absolute;
+	z-index: 1000000;
+}
 div.v-application.v-application {
 	position: relative;
 	z-index: 2;

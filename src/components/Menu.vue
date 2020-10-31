@@ -1,7 +1,13 @@
 <template>
-	<div>
-		Menu
-	</div>
+	<button
+		@click="handleMenuButton()"
+		class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
+	>
+		<md-button class="md-icon-button md-raised md-accent">
+			<md-icon>question_answer</md-icon>
+		</md-button>
+	</button>
+
 	<!-- <v-menu
     class="menu-icon-container PlayerControls--control-element touchable nfp-popup-control"
     v-model="menu"
@@ -39,7 +45,7 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 export default class Menu extends Vue {
 	handleMenuButton() {
-		console.log('gboDebug:[button clicked]');
+		this.$store.commit('increment');
 	}
 
 	private fav = true;
@@ -50,10 +56,7 @@ export default class Menu extends Vue {
 </script>
 
 <style scoped lang="scss">
-.menu-icon.menu-icon {
-	height: 100%;
-	width: 100%;
-	padding: 0px;
+md-button {
 }
 .menu-icon-container.menu-icon-container {
 	padding: 0 0 0.6em 0;
