@@ -31,9 +31,9 @@ module.exports = {
 			// extracted common chunks and vendor chunks.
 			chunks: ['pop-up', 'chunk-vendors', 'chunk-common', 'index'],
 		},
-		['overlay']: {
+		['content-overlay']: {
 			// entry for the page
-			entry: 'src/content-overlay/overlay.ts',
+			entry: 'src/content-overlay/content-overlay.ts',
 		},
 	},
 	devServer: {

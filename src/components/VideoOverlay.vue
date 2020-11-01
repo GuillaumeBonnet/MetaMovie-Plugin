@@ -1,6 +1,6 @@
 <template>
 	<div class="full-screen-overlay" @click="dbgClick()">
-		video Overlay {{ $store.state.count }}
+		video Overlay {{ bubbleModule.countGetter }}
 
 		<!-- <template v-if="videoDimensions.x">
 			<Bubble
@@ -20,6 +20,8 @@
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
 import Bubble from '../components/Bubble.vue';
 import Menu from '../components/Menu.vue';
+import { getModule } from 'vuex-module-decorators';
+import BubbleModule from '../store/BubbleModule';
 
 const UtilsConst = {
 	toSeconds: (time: string) => {
@@ -105,6 +107,8 @@ export default class VideoOverlay extends Vue {
 	private videoDimensions: { x: number; y: number } = { x: 0, y: 0 }; //in px
 
 	private Utils = UtilsConst;
+
+	private bubbleModule = getModule(BubbleModule, this.$store);
 
 	private bubbleTable = [
 		new BubbleData({

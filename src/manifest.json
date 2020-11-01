@@ -19,9 +19,9 @@
 				"vue.js",
 				"chrome-scripts/content.js",
 				"js/chunk-vendors.js",
-				"js/overlay.js"
+				"js/content-overlay.js"
 			],
-			"css": ["css/overlay.css", "css/chunk-vendors.css"],
+			"css": ["css/content-overlay.css", "css/chunk-vendors.css"],
 			"run_at": "document_idle",
 			"all_frames": true
 		}

@@ -37,17 +37,31 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-
+import { getModule } from 'vuex-module-decorators';
+import BubbleModule from '../store/BubbleModule';
 @Component({
 	components: {
 		// sub-components
 	},
 })
 export default class Menu extends Vue {
+	public created() {
+		console.log('gboDebug:[this.bubbleModule]', this.bubbleModule);
+		console.log(
+			'gboDebug:[this.bubbleModule.countGetter]',
+			this.bubbleModule.countGetter
+		);
+		console.log('gboDebug:[this.$store]', this.$store);
+	}
 	handleMenuButton() {
-		this.$store.commit('increment');
+		this.bubbleModule.increment(1);
+		console.log(
+			'gboDebug:[this.bubbleModule.countGetter]',
+			this.bubbleModule.countGetter
+		);
 	}
 
+	private bubbleModule = getModule(BubbleModule, this.$store);
 	private fav = true;
 	private menu = false;
 	private message = false;
