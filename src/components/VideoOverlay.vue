@@ -1,6 +1,6 @@
 <template>
 	<div class="full-screen-overlay" @click="dbgClick()">
-		video Overlay {{ bubbleModule.countGetter }}
+		video Overlay {{ bubbleModule.areBubbleDisplayed }}
 
 		<!-- <template v-if="videoDimensions.x">
 			<Bubble

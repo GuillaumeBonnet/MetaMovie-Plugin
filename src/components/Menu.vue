@@ -1,12 +1,22 @@
 <template>
-	<button
-		@click="handleMenuButton()"
-		class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
-	>
-		<md-button class="md-icon-button md-raised md-accent">
-			<md-icon>question_answer</md-icon>
-		</md-button>
-	</button>
+	<md-menu md-direction="top-start" md-align-trigger>
+		<button
+			class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
+		>
+			<md-button md-menu-trigger class="md-icon-button md-raised md-accent">
+				<md-icon>question_answer</md-icon>
+			</md-button>
+		</button>
+
+		<md-menu-content class="menu-box">
+			<md-switch @change="handleSwitchToggling()" v-model="areBubblesHidden"
+				>Hide bubbles</md-switch
+			>
+			<md-menu-item>My Item 1</md-menu-item>
+			<md-menu-item>My Item 2</md-menu-item>
+			<md-menu-item>My Item 3</md-menu-item>
+		</md-menu-content>
+	</md-menu>
 
 	<!-- <v-menu
     class="menu-icon-container PlayerControls--control-element touchable nfp-popup-control"
@@ -45,23 +55,12 @@ import BubbleModule from '../store/BubbleModule';
 	},
 })
 export default class Menu extends Vue {
-	public created() {
-		console.log('gboDebug:[this.bubbleModule]', this.bubbleModule);
-		console.log(
-			'gboDebug:[this.bubbleModule.countGetter]',
-			this.bubbleModule.countGetter
-		);
-		console.log('gboDebug:[this.$store]', this.$store);
-	}
-	handleMenuButton() {
-		this.bubbleModule.increment(1);
-		console.log(
-			'gboDebug:[this.bubbleModule.countGetter]',
-			this.bubbleModule.countGetter
-		);
+	handleSwitchToggling() {
+		this.bubbleModule.toggleAreBubleHidden();
 	}
 
 	private bubbleModule = getModule(BubbleModule, this.$store);
+	private areBubblesHidden = !this.bubbleModule.areBubbleDisplayed;
 	private fav = true;
 	private menu = false;
 	private message = false;
@@ -70,7 +69,8 @@ export default class Menu extends Vue {
 </script>
 
 <style scoped lang="scss">
-md-button {
+.menu-box::v-deep .md-list {
+	padding: 0.8em;
 }
 .menu-icon-container.menu-icon-container {
 	padding: 0 0 0.6em 0;

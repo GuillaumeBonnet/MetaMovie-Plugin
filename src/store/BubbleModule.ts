@@ -5,29 +5,14 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
 	namespaced: true,
 })
 export default class BubbleModule extends VuexModule {
-	private count = 0;
+	private _areBubbleDisplayed = true;
 
-	get countGetter() {
-		return this.count;
+	get areBubbleDisplayed(): boolean {
+		return this._areBubbleDisplayed;
 	}
 
 	@Mutation
-	increment(delta: number) {
-		this.count += delta;
-	}
-	@Mutation
-	decrement(delta: number) {
-		this.count -= delta;
-	}
-
-	// action 'incr' commits mutation 'increment' when done with return value as payload
-	@Action({ commit: 'increment' })
-	incr() {
-		return 5;
-	}
-	// action 'decr' commits mutation 'decrement' when done with return value as payload
-	@Action({ commit: 'decrement' })
-	decr() {
-		return 5;
+	toggleAreBubleHidden() {
+		this._areBubbleDisplayed = !this._areBubbleDisplayed;
 	}
 }
