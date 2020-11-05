@@ -20,7 +20,7 @@ function removeExpiredBubble(bubbles: BubbleData[], currentTime: number): void {
 }
 
 function updateABubble(bubbles: BubbleData[], bubble: Partial<BubbleData>) {
-	if (bubble?.index) {
+	if (bubble?.index != null) {
 		const index = bubbles.findIndex(
 			bubbleElem => bubbleElem.index == bubble.index
 		);
