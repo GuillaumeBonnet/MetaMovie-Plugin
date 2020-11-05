@@ -1,43 +1,37 @@
 <template>
-	<div>Bubble</div>
-	<!-- <v-card v-show="isShown"
-    class="card mx-auto"
-    :style="xyPosition"
-    dark>
-        <v-btn class="button-close"
-        @click="handleCloseButton()"
-        text dark small
-        color="primary">
-            <v-icon dark>mdi-close</v-icon>
-        </v-btn>
-        <v-card-text>				
-            <div class="text--primary">
-                {{text}}
-            </div>
-        </v-card-text>
-    </v-card> -->
+	<md-card v-show="bubble.isShown" :style="xyPosition" class="card">
+		<md-card-header>
+			<md-card-header-text></md-card-header-text>
+			<md-button class="md-icon-button" @click="handleCloseButton()">
+				<md-icon>close</md-icon>
+			</md-button>
+		</md-card-header>
+		<md-card-content>
+			{{ bubble.text }}
+		</md-card-content>
+	</md-card>
 </template>
 
 <script lang="ts">
+import BubbleData from '@/models/BubbleData';
+import BubbleStore from '@/store/BubbleStore';
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { getModule } from 'vuex-module-decorators';
 
 @Component({
 	components: {
 		// sub-components
 	},
 })
-export default class Bubble extends Vue {
+export default class BubbleCmp extends Vue {
 	@Prop({ required: true })
-	private text!: string;
+	private bubble!: BubbleData;
+
 	@Prop({ required: true })
 	private videoDimensions!: { x: number; y: number }; //in px
-	@Prop({ default: 50 })
-	private x!: number;
-	@Prop({ default: 50 })
-	private y!: number;
 
-	private isShown = true;
 	private xyPosition = { top: '50vh', left: '50vw' };
+	private bubbleStore = getModule(BubbleStore, this.$store);
 
 	mounted() {
 		this.setPosition();
@@ -48,19 +42,19 @@ export default class Bubble extends Vue {
 		this.setPosition();
 	}
 	handleCloseButton() {
-		this.isShown = false;
-	}
-
-	showBubble() {
-		this.isShown = true;
+		this.bubbleStore.updateDisplayedBubble({
+			isShown: false,
+			index: this.bubble.index,
+		});
 	}
 
 	setPosition() {
 		if (this.videoDimensions && this.$el) {
 			const topValue =
-				(this.y * (this.videoDimensions.y - this.$el.clientHeight)) / 100;
+				(this.bubble.y * (this.videoDimensions.y - this.$el.clientHeight)) /
+				100;
 			const leftValue =
-				(this.x * (this.videoDimensions.x - this.$el.clientWidth)) / 100;
+				(this.bubble.x * (this.videoDimensions.x - this.$el.clientWidth)) / 100;
 			this.xyPosition.top = topValue + 'px';
 			this.xyPosition.left = leftValue + 'px';
 		}
@@ -69,14 +63,6 @@ export default class Bubble extends Vue {
 </script>
 
 <style scoped lang="scss">
-button.button-close.button-close {
-	height: 32px;
-	width: 32px;
-	min-width: unset;
-	max-width: unset;
-	float: right;
-}
-
 div.card {
 	min-width: 120px;
 	position: fixed;

@@ -48,7 +48,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
-import BubbleModule from '../store/BubbleModule';
+import BubbleStore from '../store/BubbleStore';
 @Component({
 	components: {
 		// sub-components
@@ -56,11 +56,11 @@ import BubbleModule from '../store/BubbleModule';
 })
 export default class Menu extends Vue {
 	handleSwitchToggling() {
-		this.bubbleModule.toggleAreBubleHidden();
+		this.bubbleStore.toggleBubbleVisibility();
 	}
 
-	private bubbleModule = getModule(BubbleModule, this.$store);
-	private areBubblesHidden = !this.bubbleModule.areBubbleDisplayed;
+	private bubbleStore = getModule(BubbleStore, this.$store);
+	private areBubblesHidden = !this.bubbleStore.areBubbleDisplayed;
 	private fav = true;
 	private menu = false;
 	private message = false;

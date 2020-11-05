@@ -1,72 +1,56 @@
 <template>
-	<div class="full-screen-overlay" @click="dbgClick()">
-		video Overlay {{ bubbleModule.areBubbleDisplayed }}
-
-		<!-- <template v-if="videoDimensions.x">
-			<Bubble
-			v-for="(bubble, index) in bubbleDisplayed_list"
-			:key="index"
-			:text="bubble.text"
-			:x="bubble.x"
-			:y="bubble.y"
-			:videoDimensions="videoDimensions"
-			@click="togglePausePlay"
-			></Bubble>
-		</template> -->
+	<div class="full-screen-overlay">
+		<template v-if="videoDimensions.x">
+			<BubbleCmp
+				v-for="(bubble, index) in bubbleStore.displayedBubbles"
+				:key="index"
+				:bubble="bubble"
+				:videoDimensions="videoDimensions"
+				@click="togglePausePlay"
+			></BubbleCmp>
+		</template>
 	</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
-import Bubble from '../components/Bubble.vue';
+import BubbleCmp from '../components/BubbleCmp.vue';
 import Menu from '../components/Menu.vue';
 import { getModule } from 'vuex-module-decorators';
-import BubbleModule from '../store/BubbleModule';
-
-const UtilsConst = {
-	toSeconds: (time: string) => {
-		const timeValues = time.split(':').map(Number.parseInt);
-		if (timeValues.length == 1) {
-			return timeValues[0];
-		} else if (timeValues.length == 2) {
-			return 60 * timeValues[1] + timeValues[0];
-		} else if (timeValues.length == 3)
-			return 60 * 60 * timeValues[2] + 60 * timeValues[1] + timeValues[0];
-		else {
-			return NaN;
-		}
-	},
-};
-
-class BubbleData {
-	public from: number;
-	public to: number;
-	public text: string;
-	private x: number;
-	private y: number;
-
-	constructor(input: {
-		fromStamp: string;
-		toStamp: string;
-		x: number;
-		y: number;
-	}) {
-		this.from = UtilsConst.toSeconds(input.fromStamp);
-		this.to = UtilsConst.toSeconds(input.toStamp);
-		this.text = `text from ${input.fromStamp} sec
-					to ${input.toStamp}, x:${input.x}, y:${input.y}`;
-		this.x = input.x;
-		this.y = input.y;
-	}
-}
+import BubbleStore from '../store/BubbleStore';
+import BubbleData from '../models/BubbleData';
 
 @Component({
 	components: {
-		Bubble,
+		BubbleCmp,
 		Menu,
 	},
 })
 export default class VideoOverlay extends Vue {
+	/* -------------------------------------------------------------------------- */
+	/*                                 properties                                 */
+	/* -------------------------------------------------------------------------- */
+
+	private video!: HTMLVideoElement | null;
+	private videoDimensions: { x: number; y: number } = { x: 0, y: 0 }; //in px
+
+	private bubbleStore = getModule(BubbleStore, this.$store);
+
+	private bubbles: {
+		list: BubbleData[];
+		progressIndex: number;
+		nextBubble: Function;
+	} = {
+		list: this.bubbleStore.bubbles,
+		progressIndex: 0,
+		nextBubble: function(): boolean | BubbleData {
+			return this.list && this.list[this.progressIndex];
+		},
+	};
+	private bubbleDisplayed_list: BubbleData[] = [];
+	private nextInfoTime = this.bubbleStore.bubbles[0]?.from;
+	private previousTime = 0;
+
 	created() {
 		const setVideoDimensions = () => {
 			const videoContainer = document.querySelector('div.VideoContainer');
@@ -87,7 +71,8 @@ export default class VideoOverlay extends Vue {
 				this.video.addEventListener('timeupdate', event => {
 					const currentTime = this.video && this.video.currentTime;
 					if (!currentTime) return;
-					this.handleVideoProgression(currentTime);
+					this.bubbleStore.handleVideoProgression(currentTime);
+					// this.handleVideoProgression(currentTime);
 				});
 				setVideoDimensions();
 			} else {
@@ -103,85 +88,11 @@ export default class VideoOverlay extends Vue {
 			//TODO understand why there is a racecondition between re-rendering and async queue
 		};
 	}
-	private video!: HTMLVideoElement | null;
-	private videoDimensions: { x: number; y: number } = { x: 0, y: 0 }; //in px
-
-	private Utils = UtilsConst;
-
-	private bubbleModule = getModule(BubbleModule, this.$store);
-
-	private bubbleTable = [
-		new BubbleData({
-			fromStamp: '1',
-			toStamp: '4',
-			x: 0,
-			y: 0,
-		}),
-		new BubbleData({
-			fromStamp: '1',
-			toStamp: '4',
-			x: 0,
-			y: 100,
-		}),
-		new BubbleData({
-			fromStamp: '1',
-			toStamp: '4',
-			x: 100,
-			y: 0,
-		}),
-		new BubbleData({
-			fromStamp: '1',
-			toStamp: '4',
-			x: 100,
-			y: 100,
-		}),
-		new BubbleData({
-			fromStamp: '5',
-			toStamp: '7',
-			x: 50,
-			y: 50,
-		}),
-		new BubbleData({
-			fromStamp: '10',
-			toStamp: '15',
-			x: 0,
-			y: 0,
-		}),
-		new BubbleData({
-			fromStamp: '16',
-			toStamp: '20',
-			x: 50,
-			y: 25,
-		}),
-		new BubbleData({
-			fromStamp: '25',
-			toStamp: '30',
-			x: 100,
-			y: 10,
-		}),
-	] as BubbleData[];
-	private bubbles: {
-		list: BubbleData[];
-		progressIndex: number;
-		nextBubble: Function;
-	} = {
-		list: this.bubbleTable,
-		progressIndex: 0,
-		nextBubble: function(): boolean | BubbleData {
-			return this.list && this.list[this.progressIndex];
-		},
-	};
-	private bubbleDisplayed_list: BubbleData[] = [];
-	private nextInfoTime = this.bubbleTable[0].from;
-	private previousTime = 0;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   methods                                  */
 	/* -------------------------------------------------------------------------- */
-	get sharedStateA() {
-		// return this.$shared;
-		return '';
-	}
+
 	handleVideoProgression(currentTime: number) {
 		if (Math.abs(currentTime - this.previousTime) > 1) {
 			//build a queue with the bubbles after current time
