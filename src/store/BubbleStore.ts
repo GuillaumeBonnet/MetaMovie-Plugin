@@ -120,22 +120,24 @@ export default class BubbleStore extends VuexModule {
 				progressIndex = indexNextBubble - 1;
 			}
 		}
-		const nextBubble = this._bubbles[progressIndex];
-		removeExpiredBubble(displayedBubbles, this._currentTime);
-		if (this._currentTime >= nextBubble.from) {
-			progressIndex++;
-			let indexToInsert = 0;
-			for (const bubbleAlreadyDisplayed of this._displayedBubbles) {
-				if (nextBubble.to < bubbleAlreadyDisplayed.to) {
-					break;
+		if (progressIndex < this._bubbles.length) {
+			const nextBubble = this._bubbles[progressIndex];
+			removeExpiredBubble(displayedBubbles, this._currentTime);
+			if (this._currentTime >= nextBubble.from) {
+				progressIndex++;
+				let indexToInsert = 0;
+				for (const bubbleAlreadyDisplayed of this._displayedBubbles) {
+					if (nextBubble.to < bubbleAlreadyDisplayed.to) {
+						break;
+					}
+					indexToInsert++;
 				}
-				indexToInsert++;
+				nextBubble.isShown = this._areBubbleBubbleDisplayed;
+				displayedBubbles.splice(indexToInsert, 0, nextBubble);
 			}
-			nextBubble.isShown = this._areBubbleBubbleDisplayed;
-			displayedBubbles.splice(indexToInsert, 0, nextBubble);
+			removeExpiredBubble(displayedBubbles, this._currentTime);
+			this.context.commit('setDisplayedBubbles', displayedBubbles);
+			this.context.commit('setProgressIndex', progressIndex);
 		}
-		removeExpiredBubble(displayedBubbles, this._currentTime);
-		this.context.commit('setDisplayedBubbles', displayedBubbles);
-		this.context.commit('setProgressIndex', progressIndex);
 	}
 }

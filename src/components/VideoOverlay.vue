@@ -72,7 +72,6 @@ export default class VideoOverlay extends Vue {
 					const currentTime = this.video && this.video.currentTime;
 					if (!currentTime) return;
 					this.bubbleStore.handleVideoProgression(currentTime);
-					// this.handleVideoProgression(currentTime);
 				});
 				setVideoDimensions();
 			} else {
