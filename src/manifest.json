@@ -11,16 +11,16 @@
 		"default_title": "meta-movie-vue-plugin",
 		"default_popup": "pop-up.html"
 	},
-	"web_accessible_resources": ["fonts/*"],
+	"web_accessible_resources": [
+		"fonts/*",
+		"vue.js",
+		"js/chunk-vendors.js",
+		"js/content-overlay.js"
+	],
 	"content_scripts": [
 		{
 			"matches": ["<all_urls>"],
-			"js": [
-				"vue.js",
-				"chrome-scripts/content.js",
-				"js/chunk-vendors.js",
-				"js/content-overlay.js"
-			],
+			"js": ["chrome-scripts/content.js"],
 			"css": ["css/content-overlay.css", "css/chunk-vendors.css"],
 			"run_at": "document_idle",
 			"all_frames": true
