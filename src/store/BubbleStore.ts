@@ -131,6 +131,7 @@ export default class BubbleStore extends VuexModule {
 				}
 				indexToInsert++;
 			}
+			nextBubble.isShown = this._areBubbleBubbleDisplayed;
 			displayedBubbles.splice(indexToInsert, 0, nextBubble);
 		}
 		removeExpiredBubble(displayedBubbles, this._currentTime);

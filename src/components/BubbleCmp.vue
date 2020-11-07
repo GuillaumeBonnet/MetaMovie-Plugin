@@ -41,6 +41,12 @@ export default class BubbleCmp extends Vue {
 	onVideoDimensionsChange() {
 		this.setPosition();
 	}
+	@Watch('bubble.isShown')
+	onBubbleChange() {
+		setTimeout(() => {
+			this.setPosition();
+		});
+	}
 	handleCloseButton() {
 		this.bubbleStore.updateDisplayedBubble({
 			isShown: false,
