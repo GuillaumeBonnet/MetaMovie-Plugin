@@ -48,6 +48,14 @@ function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 	const videoOverlayDiv = document.createElement('div') as HTMLElement;
 	videoOverlayDiv.id = 'plugin-meta-movie-video-overlay';
 	awaitedNodes.videoWrapper?.prepend(videoOverlayDiv);
+
+	const fontsNode = document.createElement('link') as HTMLElement;
+	fontsNode.setAttribute('rel', 'stylesheet');
+	fontsNode.setAttribute(
+		'href',
+		'//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons'
+	);
+	document.querySelector('head')?.appendChild(fontsNode);
 }
 
 function loadScripts() {
