@@ -79,4 +79,28 @@ store.commit('BubbleStore/setBubbles', [
 		x: 100,
 		y: 10,
 	}),
+	new BubbleData({
+		fromStamp: '35',
+		toStamp: '150',
+		x: 0,
+		y: 0,
+	}),
+	new BubbleData({
+		fromStamp: '35',
+		toStamp: '150',
+		x: 0,
+		y: 100,
+	}),
+	new BubbleData({
+		fromStamp: '35',
+		toStamp: '150',
+		x: 100,
+		y: 0,
+	}),
+	new BubbleData({
+		fromStamp: '35',
+		toStamp: '150',
+		x: 100,
+		y: 100,
+	}),
 ]);

@@ -1,48 +1,40 @@
 <template>
-	<md-menu md-direction="top-start" md-align-trigger>
-		<button
-			class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
+	<div
+		class="touchable PlayerControls--control-element nfp-popup-control"
+		@mouseenter="enterMenuIcon()"
+		@mouseleave="leaveMenuIcon()"
+	>
+		<md-menu
+			:md-active="menuHoverState.isMenuOppened"
+			md-direction="top-end"
+			md-align-trigger
+			@mouseenter.native.prevent="enterMenuContent()"
+			@mouseleave.native.prevent="leaveMenuContent()"
 		>
-			<md-button md-menu-trigger class="md-icon-button md-raised md-accent">
-				<md-icon>question_answer</md-icon>
-			</md-button>
-		</button>
-
-		<md-menu-content class="menu-box">
-			<md-switch @change="handleSwitchToggling()" v-model="areBubblesHidden"
-				>Hide bubbles</md-switch
+			<button
+				class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
 			>
-			<md-menu-item>My Item 1</md-menu-item>
-			<md-menu-item>My Item 2</md-menu-item>
-			<md-menu-item>My Item 3</md-menu-item>
-		</md-menu-content>
-	</md-menu>
+				<md-button md-menu-trigger class="md-icon-button md-raised md-accent">
+					<md-icon>question_answer</md-icon>
+				</md-button>
+			</button>
 
-	<!-- <v-menu
-    class="menu-icon-container PlayerControls--control-element touchable nfp-popup-control"
-    v-model="menu"
-    offset-y
-    close-on-click>
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn
-            class="menu-icon touchable PlayerControls--control-element nfp-button-control default-control-button"
-            text dark small
-            v-bind="attrs"
-            v-on="on"
-            color="primary">
-                <v-icon dark>mdi-comment-text-multiple</v-icon>
-            </v-btn>
-        </template>
-
-        <v-list>
-            <v-list-item>
-                <v-list-item-title>toto</v-list-item-title>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-title>titi</v-list-item-title>
-            </v-list-item>
-        </v-list>
-    </v-menu> -->
+			<md-menu-content
+				class="menu-box"
+				@mouseenter.native.prevent="enterMenuContent()"
+				@mouseleave.native.prevent="leaveMenuContent()"
+			>
+				<md-switch @change="handleSwitchToggling()" v-model="areBubblesHidden"
+					>Hide bubbles</md-switch
+				>
+				<md-menu-item @click.native="gboDebugDisplayedBubble()"
+					>displayed Bubble</md-menu-item
+				>
+				<md-menu-item @click.native="gboDebugBubble()">all bubble</md-menu-item>
+				<md-menu-item>My Item 3</md-menu-item>
+			</md-menu-content>
+		</md-menu>
+	</div>
 </template>
 
 <script lang="ts">
@@ -59,8 +51,43 @@ export default class Menu extends Vue {
 		this.bubbleStore.toggleBubbleVisibility();
 	}
 
+	enterMenuIcon() {
+		this.menuHoverState.isMenuOppened = true;
+	}
+	leaveMenuIcon() {
+		this.menuHoverState.timeOutIds.push(
+			setTimeout(() => {
+				if (!this.menuHoverState.isMenuContentHovered) {
+					this.menuHoverState.isMenuOppened = false;
+				}
+			}, 200)
+		);
+	}
+	enterMenuContent() {
+		this.menuHoverState.clearTimeOutIds();
+		this.menuHoverState.isMenuContentHovered = true;
+	}
+	leaveMenuContent() {
+		this.menuHoverState.timeOutIds.push(
+			setTimeout(() => {
+				this.menuHoverState.isMenuContentHovered = false;
+				this.menuHoverState.isMenuOppened = false;
+			}, 200)
+		);
+	}
 	private bubbleStore = getModule(BubbleStore, this.$store);
 	private areBubblesHidden = !this.bubbleStore.areBubbleDisplayed;
+	private menuHoverState = {
+		isMenuOppened: false,
+		isMenuContentHovered: false,
+		timeOutIds: [] as number[],
+		clearTimeOutIds: function() {
+			this.timeOutIds.forEach(timeoutId => {
+				clearTimeout(timeoutId);
+			});
+			this.timeOutIds = [];
+		},
+	};
 	private fav = true;
 	private menu = false;
 	private message = false;
@@ -69,8 +96,11 @@ export default class Menu extends Vue {
 </script>
 
 <style scoped lang="scss">
-.menu-box::v-deep .md-list {
-	padding: 0.8em;
+.menu-box::v-deep {
+	margin-bottom: -1px;
+	& .md-list {
+		padding: 0.8em;
+	}
 }
 .menu-icon-container.menu-icon-container {
 	padding: 0 0 0.6em 0;

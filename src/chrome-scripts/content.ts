@@ -37,13 +37,7 @@ function getAwaitedNode() {
 function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 	const menuDiv = document.createElement('div') as HTMLElement;
 	menuDiv.id = 'plugin-meta-movie-menu';
-
-	const containerMenuDiv = document.createElement('div');
-	containerMenuDiv.className =
-		'touchable PlayerControls--control-element nfp-popup-control';
-	containerMenuDiv.appendChild(menuDiv);
-
-	awaitedNodes.videoTitle?.after(containerMenuDiv);
+	awaitedNodes.videoTitle?.after(menuDiv);
 
 	const videoOverlayDiv = document.createElement('div') as HTMLElement;
 	videoOverlayDiv.id = 'plugin-meta-movie-video-overlay';
