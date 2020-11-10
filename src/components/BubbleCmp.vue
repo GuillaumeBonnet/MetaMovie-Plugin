@@ -69,11 +69,13 @@ export default class BubbleCmp extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/variables.scss';
 div.card {
 	min-width: 120px;
 	position: fixed;
 	top: 30vh;
 	left: calc(50vw - 60px);
+	border-radius: $border-radius;
 	&:not(:hover) {
 		background-color: transparent;
 		& .text--primary {

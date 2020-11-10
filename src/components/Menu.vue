@@ -96,7 +96,10 @@ export default class Menu extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/variables.scss';
 .menu-box::v-deep {
+	border-radius: $border-radius;
+	overflow: hidden;
 	margin-bottom: -1px;
 	& .md-list {
 		padding: 0.8em;
