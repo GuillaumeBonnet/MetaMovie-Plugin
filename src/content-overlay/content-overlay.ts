@@ -10,13 +10,15 @@ import 'vue-material/dist/theme/default-dark.css';
 Vue.use(VueMaterial);
 
 import Vuex from 'vuex';
-import BubbleStore from '../store/BubbleStore';
+import BubbleStore from '@/store/BubbleStore';
+import MainStore from '@/store/MainStore';
 import BubbleData from '@/models/BubbleData';
 Vue.use(Vuex);
 const store = new Vuex.Store({
 	state: {},
 	modules: {
 		BubbleStore,
+		MainStore,
 	},
 });
 

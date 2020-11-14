@@ -4,6 +4,7 @@
 		@mouseenter="enterMenuIcon()"
 		@mouseleave="leaveMenuIcon()"
 	>
+		<!-- todo:menu should be aligned to class="touchable PlayerControls--control-element nfp-popup-control", not  inner button -->
 		<md-menu
 			:md-active="menuHoverState.isMenuOppened"
 			md-direction="top-end"
@@ -38,15 +39,22 @@
 </template>
 
 <script lang="ts">
+import MainStore from '@/store/MainStore';
 import { Component, Vue } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
-import BubbleStore from '../store/BubbleStore';
+import BubbleStore from '@/store/BubbleStore';
 @Component({
 	components: {
 		// sub-components
 	},
 })
 export default class Menu extends Vue {
+	constructor() {
+		super();
+		document.addEventListener('fullscreenchange', event => {
+			this.mainStore.setIsFullScreen(!!document.fullscreenElement);
+		});
+	}
 	handleSwitchToggling() {
 		this.bubbleStore.toggleBubbleVisibility();
 	}
@@ -75,7 +83,22 @@ export default class Menu extends Vue {
 			}, 200)
 		);
 	}
+
+	gboDebugDisplayedBubble() {
+		console.log(
+			'gboDebug:[this.bubbleStore.displayedBubbles]',
+			this.bubbleStore.displayedBubbles
+		);
+	}
+	gboDebugBubble() {
+		console.log(
+			'gboDebug:[this.bubbleStore.bubbles]',
+			this.bubbleStore.bubbles
+		);
+	}
+
 	private bubbleStore = getModule(BubbleStore, this.$store);
+	private mainStore = getModule(MainStore, this.$store);
 	private areBubblesHidden = !this.bubbleStore.areBubbleDisplayed;
 	private menuHoverState = {
 		isMenuOppened: false,

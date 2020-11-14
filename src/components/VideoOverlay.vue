@@ -14,11 +14,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
-import BubbleCmp from '../components/BubbleCmp.vue';
-import Menu from '../components/Menu.vue';
+import BubbleCmp from '@/components/BubbleCmp.vue';
+import Menu from '@/components/Menu.vue';
 import { getModule } from 'vuex-module-decorators';
-import BubbleStore from '../store/BubbleStore';
-import BubbleData from '../models/BubbleData';
+import BubbleStore from '@/store/BubbleStore';
+import BubbleData from '@/models/BubbleData';
+import { IVideoDimensions } from '@/models/Types';
 
 @Component({
 	components: {
@@ -32,7 +33,7 @@ export default class VideoOverlay extends Vue {
 	/* -------------------------------------------------------------------------- */
 
 	private video!: HTMLVideoElement | null;
-	private videoDimensions: { x: number; y: number } = { x: 0, y: 0 }; //in px
+	private videoDimensions: IVideoDimensions = { x: 0, y: 0 }; //in px
 
 	private bubbleStore = getModule(BubbleStore, this.$store);
 
@@ -53,7 +54,9 @@ export default class VideoOverlay extends Vue {
 
 	created() {
 		const setVideoDimensions = () => {
-			const videoContainer = document.querySelector('div.VideoContainer');
+			const videoContainer = document.querySelector(
+				'div.VideoContainer'
+			) as HTMLElement;
 			const bottomController = document.querySelector(
 				'div.PlayerControlsNeo__bottom-controls'
 			);

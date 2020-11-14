@@ -1,8 +1,17 @@
 <template>
-	<md-card v-show="bubble.isShown" :style="xyPosition" class="card">
+	<md-card
+		v-show="bubble.isShown"
+		@mousedown.native="clickToDrag($event)"
+		:style="xyPosition"
+		class="card"
+	>
 		<md-card-header>
 			<md-card-header-text></md-card-header-text>
-			<md-button class="md-icon-button" @click="handleCloseButton()">
+			<md-button
+				class="md-icon-button"
+				@click="handleCloseButton()"
+				@mousedown.native.stop
+			>
 				<md-icon>close</md-icon>
 			</md-button>
 		</md-card-header>
@@ -17,6 +26,13 @@ import BubbleData from '@/models/BubbleData';
 import BubbleStore from '@/store/BubbleStore';
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
+import { IVideoDimensions, IPositionXY } from '@/models/Types';
+import {
+	pxToNumber,
+	toFixedCoordinate,
+	toRelativeCoordinate,
+} from '@/Utils/BubbleUtils';
+import MainStore from '@/store/MainStore';
 
 @Component({
 	components: {
@@ -28,10 +44,12 @@ export default class BubbleCmp extends Vue {
 	private bubble!: BubbleData;
 
 	@Prop({ required: true })
-	private videoDimensions!: { x: number; y: number }; //in px
+	private videoDimensions!: IVideoDimensions; //in px
+	// videoDimensions replacable by .querySelector('.player-timedtext') ?
 
-	private xyPosition = { top: '50vh', left: '50vw' };
+	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
 	private bubbleStore = getModule(BubbleStore, this.$store);
+	private mainStore = getModule(MainStore, this.$store);
 
 	mounted() {
 		this.setPosition();
@@ -54,15 +72,93 @@ export default class BubbleCmp extends Vue {
 		});
 	}
 
+	video = document.querySelector('video');
+	clickToDrag(event: MouseEvent) {
+		//TODO : carte bloqué, mousedown dedans, mouseup dehors(=no mouseup), mousemove listenner not cleared
+		console.log('gboDebug: clickToDrag');
+		const card = event.currentTarget as HTMLElement;
+		const shiftX_cursorCard = event.clientX - card.getBoundingClientRect().left;
+		const shiftY_cursorCard = event.clientY - card.getBoundingClientRect().top;
+		const previousPosition = {
+			clientX: event.clientX,
+			clientY: event.clientY,
+		};
+		const bottomController_borders = document
+			.querySelector('.PlayerControlsNeo__bottom-controls')
+			?.getBoundingClientRect();
+		//TODO mutation to update bottomController_borders
+		if (!bottomController_borders) {
+			return;
+		}
+		function moveAt(clientX: number, clientY: number) {
+			card.style.left = clientX + 'px';
+			card.style.top = clientY + 'px';
+		}
+		// taking initial shifts into account
+
+		const onMouseMove = (event: MouseEvent) => {
+			if (
+				event.clientY <= 0 ||
+				event.clientY >= bottomController_borders.top ||
+				event.clientX <= 0 ||
+				event.clientX >= window.innerWidth - 5
+			) {
+				console.log(
+					'gboDebug:[toRelativeCoordinate]',
+					toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
+				);
+				document.removeEventListener('mousemove', onMouseMove);
+				card.onmouseup = null;
+				return;
+			}
+			if (
+				card.getBoundingClientRect().top +
+					event.clientY -
+					previousPosition.clientY >
+					0 &&
+				card.getBoundingClientRect().bottom +
+					event.clientY -
+					previousPosition.clientY <
+					bottomController_borders.top &&
+				card.getBoundingClientRect().left +
+					event.clientX -
+					previousPosition.clientX >
+					0 &&
+				card.getBoundingClientRect().right +
+					event.clientX -
+					previousPosition.clientX <
+					window.innerWidth
+			) {
+				moveAt(
+					pxToNumber(card.style.left) +
+						event.clientX -
+						previousPosition.clientX,
+					pxToNumber(card.style.top) + event.clientY - previousPosition.clientY
+				);
+			}
+			previousPosition.clientX = event.clientX;
+			previousPosition.clientY = event.clientY;
+		};
+
+		document.addEventListener('mousemove', onMouseMove);
+		card.onmouseup = () => {
+			console.log('gboDebug: onmouseup');
+			console.log(
+				'gboDebug:[toRelativeCoordinate]',
+				toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
+			);
+			document.removeEventListener('mousemove', onMouseMove);
+			card.onmouseup = null;
+		};
+	}
+
 	setPosition() {
 		if (this.videoDimensions && this.$el) {
-			const topValue =
-				(this.bubble.y * (this.videoDimensions.y - this.$el.clientHeight)) /
-				100;
-			const leftValue =
-				(this.bubble.x * (this.videoDimensions.x - this.$el.clientWidth)) / 100;
-			this.xyPosition.top = topValue + 'px';
-			this.xyPosition.left = leftValue + 'px';
+			this.xyPosition = toFixedCoordinate(
+				this.videoDimensions,
+				this.bubble,
+				this.$el
+			);
 		}
 	}
 }
