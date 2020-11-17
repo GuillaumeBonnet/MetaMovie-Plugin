@@ -32,7 +32,7 @@ import {
 	toFixedCoordinate,
 	toRelativeCoordinate,
 } from '@/Utils/BubbleUtils';
-import MainStore from '@/store/MainStore';
+import Store from '@/store/Store';
 
 @Component({
 	components: {
@@ -49,7 +49,7 @@ export default class BubbleCmp extends Vue {
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
 	private bubbleStore = getModule(BubbleStore, this.$store);
-	private mainStore = getModule(MainStore, this.$store);
+	private Store = getModule(Store, this.$store);
 
 	mounted() {
 		this.setPosition();

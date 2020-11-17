@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import MainStore from '@/store/MainStore';
+import Store from '@/store/Store';
 import { Component, Vue } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
 import BubbleStore from '@/store/BubbleStore';
@@ -52,7 +52,7 @@ export default class Menu extends Vue {
 	constructor() {
 		super();
 		document.addEventListener('fullscreenchange', event => {
-			this.mainStore.setIsFullScreen(!!document.fullscreenElement);
+			this.Store.setIsFullScreen(!!document.fullscreenElement);
 		});
 	}
 	handleSwitchToggling() {
@@ -98,7 +98,7 @@ export default class Menu extends Vue {
 	}
 
 	private bubbleStore = getModule(BubbleStore, this.$store);
-	private mainStore = getModule(MainStore, this.$store);
+	private Store = getModule(Store, this.$store);
 	private areBubblesHidden = !this.bubbleStore.areBubbleDisplayed;
 	private menuHoverState = {
 		isMenuOppened: false,

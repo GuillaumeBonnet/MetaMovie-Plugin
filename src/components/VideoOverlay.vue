@@ -2,7 +2,7 @@
 	<div class="full-screen-overlay">
 		<template v-if="videoDimensions.x">
 			<BubbleCmp
-				v-for="(bubble, index) in bubbleStore.displayedBubbles"
+				v-for="(bubble, index) in displayedBubbles"
 				:key="index"
 				:bubble="bubble"
 				:videoDimensions="videoDimensions"
@@ -17,7 +17,6 @@ import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
 import BubbleCmp from '@/components/BubbleCmp.vue';
 import Menu from '@/components/Menu.vue';
 import { getModule } from 'vuex-module-decorators';
-import BubbleStore from '@/store/BubbleStore';
 import BubbleData from '@/models/BubbleData';
 import { IVideoDimensions } from '@/models/Types';
 

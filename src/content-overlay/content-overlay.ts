@@ -10,29 +10,22 @@ import 'vue-material/dist/theme/default-dark.css';
 Vue.use(VueMaterial);
 
 import Vuex from 'vuex';
-import BubbleStore from '@/store/BubbleStore';
-import MainStore from '@/store/MainStore';
+import { compiledStore } from '@/store/store';
 import BubbleData from '@/models/BubbleData';
+import { MutationBubble } from '@/store/BubbleStore';
 Vue.use(Vuex);
-const store = new Vuex.Store({
-	state: {},
-	modules: {
-		BubbleStore,
-		MainStore,
-	},
-});
 
 new Vue({
 	render: h => h(Menu),
-	store,
+	store: compiledStore,
 }).$mount('#plugin-meta-movie-menu');
 
 new Vue({
 	render: h => h(VideoOverlay),
-	store,
+	store: compiledStore,
 }).$mount('#plugin-meta-movie-video-overlay');
 
-store.commit('BubbleStore/setBubbles', [
+compiledStore.commit(`bubbleModule/${MutationBubble.SET_BUBBLES}`, [
 	new BubbleData({
 		fromStamp: '1',
 		toStamp: '4',
