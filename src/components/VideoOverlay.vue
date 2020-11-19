@@ -19,6 +19,9 @@ import Menu from '@/components/Menu.vue';
 import { getModule } from 'vuex-module-decorators';
 import BubbleData from '@/models/BubbleData';
 import { IVideoDimensions } from '@/models/Types';
+import { Action, State } from 'vuex-class';
+import { ActionMain, IState } from '@/store/Store';
+import { ActionBubble, IBubbleState } from '@/store/BubbleStore';
 
 @Component({
 	components: {
@@ -34,22 +37,13 @@ export default class VideoOverlay extends Vue {
 	private video!: HTMLVideoElement | null;
 	private videoDimensions: IVideoDimensions = { x: 0, y: 0 }; //in px
 
-	private bubbleStore = getModule(BubbleStore, this.$store);
+	@State((state: IState) => state.bubbleModule.bubbles)
+	bubblesInStore!: IBubbleState['bubbles'];
 
-	private bubbles: {
-		list: BubbleData[];
-		progressIndex: number;
-		nextBubble: Function;
-	} = {
-		list: this.bubbleStore.bubbles,
-		progressIndex: 0,
-		nextBubble: function(): boolean | BubbleData {
-			return this.list && this.list[this.progressIndex];
-		},
-	};
-	private bubbleDisplayed_list: BubbleData[] = [];
-	private nextInfoTime = this.bubbleStore.bubbles[0]?.from;
-	private previousTime = 0;
+	@State((state: IState) => state.bubbleModule.displayedBubbles)
+	displayedBubbles!: IBubbleState['displayedBubbles'];
+
+	@Action(ActionMain.HANDLE_VIDEO_PROGRESSION) handleVideoProgression: any;
 
 	created() {
 		const setVideoDimensions = () => {
@@ -73,7 +67,7 @@ export default class VideoOverlay extends Vue {
 				this.video.addEventListener('timeupdate', event => {
 					const currentTime = this.video && this.video.currentTime;
 					if (!currentTime) return;
-					this.bubbleStore.handleVideoProgression(currentTime);
+					this.handleVideoProgression(currentTime);
 				});
 				setVideoDimensions();
 			} else {
@@ -93,50 +87,6 @@ export default class VideoOverlay extends Vue {
 	/* -------------------------------------------------------------------------- */
 	/*                                   methods                                  */
 	/* -------------------------------------------------------------------------- */
-
-	handleVideoProgression(currentTime: number) {
-		if (Math.abs(currentTime - this.previousTime) > 1) {
-			//build a queue with the bubbles after current time
-			this.bubbleDisplayed_list = [];
-			this.bubbles.progressIndex = 0;
-			const indexNextBubble = this.bubbles.list.findIndex(
-				bubble => bubble.from >= currentTime
-			);
-
-			if (indexNextBubble == -1) {
-				this.bubbles.progressIndex = this.bubbles.list.length;
-			} else if (indexNextBubble == 0) {
-				this.bubbles.progressIndex = 0;
-			} else {
-				this.bubbles.progressIndex = indexNextBubble - 1;
-			}
-		}
-
-		const removeExpiredBubble = () => {
-			if (
-				this.bubbleDisplayed_list[0] &&
-				this.bubbleDisplayed_list[0].to <= currentTime
-			) {
-				this.bubbleDisplayed_list.shift();
-			}
-		};
-		removeExpiredBubble();
-
-		const nextBubble = this.bubbles.nextBubble();
-		if (nextBubble && currentTime >= nextBubble.from) {
-			this.bubbles.progressIndex++; // = nextBubble index
-			let indexToInsert = 0;
-			for (const bubbleAlreadyDisplayed of this.bubbleDisplayed_list) {
-				if (nextBubble.to < bubbleAlreadyDisplayed.to) {
-					break;
-				}
-				indexToInsert++;
-			}
-			this.bubbleDisplayed_list.splice(indexToInsert, 0, nextBubble);
-		}
-		removeExpiredBubble();
-		this.previousTime = currentTime;
-	}
 
 	/* -------------------------------------------------------------------------- */
 	/*                                  handlers                                  */

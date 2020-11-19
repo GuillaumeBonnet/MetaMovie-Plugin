@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import Vuex from 'vuex';
 import {
 	bubbleModule,
@@ -6,7 +7,7 @@ import {
 } from '@/store/BubbleStore';
 import { removeExpiredBubble } from '@/Utils/BubbleUtils';
 
-interface Istate {
+interface IState {
 	isFullScreen: boolean;
 	currentTime: number;
 	previousTime: number;
@@ -15,48 +16,57 @@ interface Istate {
 }
 
 interface IStore {
-	state: Istate;
+	state: IState;
 	commit: Function;
 }
 
-enum Mutation {
-	SET_IS_FULL_SCREEN,
-	SET_CURRENT_TIME,
-	SET_PREVIOUS_TIME,
-	SET_PROGRESS_INDEX,
-}
-enum Action {
-	HANDLE_VIDEO_PROGRESSION,
-}
+const MutationMain = {
+	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
+	SET_CURRENT_TIME: 'SET_CURRENT_TIME',
+	SET_PREVIOUS_TIME: 'SET_PREVIOUS_TIME',
+	SET_PROGRESS_INDEX: 'SET_PROGRESS_INDEX',
+};
+const ActionMain = {
+	HANDLE_VIDEO_PROGRESSION: 'HANDLE_VIDEO_PROGRESSION',
+};
 
 const store = {
+	modules: {
+		bubbleModule,
+	},
 	state: {
 		progressIndex: 0,
 		currentTime: 0,
 		previousTime: 0,
 		isFullScreen: !!document.fullscreenElement,
-	} as Istate,
+	} as IState,
 	mutations: {
-		[Mutation.SET_IS_FULL_SCREEN]: (state: Istate, isFullScreen: boolean) => {
+		[MutationMain.SET_IS_FULL_SCREEN]: (
+			state: IState,
+			isFullScreen: boolean
+		) => {
 			state.isFullScreen = isFullScreen;
 		},
-		[Mutation.SET_CURRENT_TIME]: (state: Istate, currentTime: number) => {
+		[MutationMain.SET_CURRENT_TIME]: (state: IState, currentTime: number) => {
 			state.currentTime = currentTime;
 		},
-		[Mutation.SET_PREVIOUS_TIME]: (state: Istate, previousTime: number) => {
+		[MutationMain.SET_PREVIOUS_TIME]: (state: IState, previousTime: number) => {
 			state.previousTime = previousTime;
 		},
-		[Mutation.SET_PROGRESS_INDEX]: (state: Istate, progressIndex: number) => {
+		[MutationMain.SET_PROGRESS_INDEX]: (
+			state: IState,
+			progressIndex: number
+		) => {
 			state.progressIndex = progressIndex;
 		},
 	},
 	actions: {
-		[Action.HANDLE_VIDEO_PROGRESSION]: (
+		[ActionMain.HANDLE_VIDEO_PROGRESSION]: (
 			{ commit, state }: IStore,
 			currentTime: number
 		) => {
-			commit(Mutation.SET_PREVIOUS_TIME, state.currentTime);
-			commit(Mutation.SET_CURRENT_TIME, currentTime);
+			commit(MutationMain.SET_PREVIOUS_TIME, state.currentTime);
+			commit(MutationMain.SET_CURRENT_TIME, currentTime);
 			if (
 				!state.bubbleModule.bubbles ||
 				state.bubbleModule.bubbles.length < 1
@@ -96,19 +106,13 @@ const store = {
 					displayedBubbles.splice(indexToInsert, 0, nextBubble);
 				}
 				removeExpiredBubble(displayedBubbles, state.currentTime);
-				commit(
-					`bubbleModule/${MutationBubble.SET_DISPLAYED_BUBBLES}`,
-					displayedBubbles
-				);
-				commit(Mutation.SET_PROGRESS_INDEX, progressIndex);
+				commit(MutationBubble.SET_DISPLAYED_BUBBLES, displayedBubbles);
+				commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
 			}
 		},
 	},
-	modules: {
-		bubbleModule,
-	},
 };
-
+Vue.use(Vuex);
 const compiledStore = new Vuex.Store(store);
 
-export { compiledStore };
+export { compiledStore, IState, IStore, MutationMain, ActionMain };

@@ -23,16 +23,15 @@
 
 <script lang="ts">
 import BubbleData from '@/models/BubbleData';
-import BubbleStore from '@/store/BubbleStore';
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import { getModule } from 'vuex-module-decorators';
 import { IVideoDimensions, IPositionXY } from '@/models/Types';
 import {
 	pxToNumber,
 	toFixedCoordinate,
 	toRelativeCoordinate,
 } from '@/Utils/BubbleUtils';
-import Store from '@/store/Store';
+import { Mutation } from 'vuex-class';
+import { MutationBubble } from '@/store/BubbleStore';
 
 @Component({
 	components: {
@@ -48,9 +47,6 @@ export default class BubbleCmp extends Vue {
 	// videoDimensions replacable by .querySelector('.player-timedtext') ?
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
-	private bubbleStore = getModule(BubbleStore, this.$store);
-	private Store = getModule(Store, this.$store);
-
 	mounted() {
 		this.setPosition();
 	}
@@ -65,11 +61,13 @@ export default class BubbleCmp extends Vue {
 			this.setPosition();
 		});
 	}
+
+	@Mutation(MutationBubble.UPDATE_DISPLAYED_BUBBLE) updateDisplayedBubble: any;
 	handleCloseButton() {
-		this.bubbleStore.updateDisplayedBubble({
+		this.updateDisplayedBubble({
 			isShown: false,
 			index: this.bubble.index,
-		});
+		} as Partial<BubbleData>);
 	}
 
 	video = document.querySelector('video');

@@ -18,6 +18,7 @@ module.exports = {
 		'no-console': process.env.NODE_ENV === 'production' ? 'on' : 'off',
 		'no-debugger': process.env.NODE_ENV === 'production' ? 'on' : 'off',
 		'@typescript-eslint/camelcase': 'off',
+		'@typescript-eslint/interface-name-prefix': 'off',
 	},
 	overrides: [
 		{

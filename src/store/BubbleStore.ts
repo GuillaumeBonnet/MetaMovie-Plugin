@@ -1,16 +1,16 @@
 import { removeExpiredBubble, updateABubble } from '@/Utils/BubbleUtils';
 import BubbleData from '../models/BubbleData';
 
-enum MutationBubble {
-	TOGGLE_ARE_BUBBLE_DISPLAYED,
-	SET_DISPLAYED_BUBBLES,
-	SET_BUBBLES,
-	UPDATE_BUBBLE,
-	UPDATE_DISPLAYED_BUBBLE,
-}
-enum ActionBubble {
-	TOGGLE_BUBBLE_VISIBILITY,
-}
+const MutationBubble = {
+	TOGGLE_ARE_BUBBLE_DISPLAYED: 'TOGGLE_ARE_BUBBLE_DISPLAYED',
+	SET_DISPLAYED_BUBBLES: 'SET_DISPLAYED_BUBBLES',
+	SET_BUBBLES: 'SET_BUBBLES',
+	UPDATE_BUBBLE: 'UPDATE_BUBBLE',
+	UPDATE_DISPLAYED_BUBBLE: 'UPDATE_DISPLAYED_BUBBLE',
+};
+const ActionBubble = {
+	TOGGLE_BUBBLE_VISIBILITY: 'TOGGLE_BUBBLE_VISIBILITY',
+};
 interface IBubbleState {
 	areBubbleBubbleDisplayed: boolean;
 	bubbles: BubbleData[];
@@ -21,6 +21,7 @@ interface IbubbleStore {
 	state: IBubbleState;
 	commit: Function;
 }
+
 const bubbleModule = {
 	state: () =>
 		({
@@ -28,7 +29,7 @@ const bubbleModule = {
 			bubbles: [] as BubbleData[],
 			displayedBubbles: [] as BubbleData[],
 		} as IBubbleState),
-	mutationsBubble: {
+	mutations: {
 		[MutationBubble.TOGGLE_ARE_BUBBLE_DISPLAYED](state: IBubbleState) {
 			state.areBubbleBubbleDisplayed = !state.areBubbleBubbleDisplayed;
 		},
@@ -54,7 +55,7 @@ const bubbleModule = {
 			});
 		},
 	},
-	actionBubbles: {
+	actions: {
 		[ActionBubble.TOGGLE_BUBBLE_VISIBILITY]({ commit, state }: IbubbleStore) {
 			commit(MutationBubble.TOGGLE_ARE_BUBBLE_DISPLAYED);
 			commit(

@@ -25,9 +25,7 @@
 				@mouseenter.native.prevent="enterMenuContent()"
 				@mouseleave.native.prevent="leaveMenuContent()"
 			>
-				<md-switch @change="handleSwitchToggling()" v-model="areBubblesHidden"
-					>Hide bubbles</md-switch
-				>
+				<md-switch v-model="areBubblesHidden_VModel">Hide bubbles</md-switch>
 				<md-menu-item @click.native="gboDebugDisplayedBubble()"
 					>displayed Bubble</md-menu-item
 				>
@@ -39,10 +37,17 @@
 </template>
 
 <script lang="ts">
-import Store from '@/store/Store';
+import {
+	ActionBubble,
+	IBubbleState,
+	MutationBubble,
+} from '@/store/BubbleStore';
 import { Component, Vue } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
-import BubbleStore from '@/store/BubbleStore';
+import { Action, State } from 'vuex-class';
+import { IState } from '@/store/Store';
+import BubbleData from '@/models/BubbleData';
+import { mapState } from 'vuex';
 @Component({
 	components: {
 		// sub-components
@@ -51,12 +56,23 @@ import BubbleStore from '@/store/BubbleStore';
 export default class Menu extends Vue {
 	constructor() {
 		super();
-		document.addEventListener('fullscreenchange', event => {
-			this.Store.setIsFullScreen(!!document.fullscreenElement);
-		});
 	}
-	handleSwitchToggling() {
-		this.bubbleStore.toggleBubbleVisibility();
+
+	@Action(ActionBubble.TOGGLE_BUBBLE_VISIBILITY) handleSwitchToggling: any;
+
+	@State((state: IState) => state.bubbleModule.bubbles)
+	displayedBubbles!: IBubbleState['displayedBubbles'];
+
+	@State((state: IState) => state.bubbleModule.bubbles)
+	bubbles!: IBubbleState['bubbles'];
+
+	@State((state: IState) => !state.bubbleModule.areBubbleBubbleDisplayed)
+	areBubblesHidden!: IBubbleState['areBubbleBubbleDisplayed'];
+	get areBubblesHidden_VModel() {
+		return this.areBubblesHidden;
+	}
+	set areBubblesHidden_VModel(areBubblesHidden: boolean) {
+		this.handleSwitchToggling();
 	}
 
 	enterMenuIcon() {
@@ -85,21 +101,11 @@ export default class Menu extends Vue {
 	}
 
 	gboDebugDisplayedBubble() {
-		console.log(
-			'gboDebug:[this.bubbleStore.displayedBubbles]',
-			this.bubbleStore.displayedBubbles
-		);
+		console.log('gboDebug:[this.displayedBubbles]', this.displayedBubbles);
 	}
 	gboDebugBubble() {
-		console.log(
-			'gboDebug:[this.bubbleStore.bubbles]',
-			this.bubbleStore.bubbles
-		);
+		console.log('gboDebug:[this.bubbles]', this.bubbles);
 	}
-
-	private bubbleStore = getModule(BubbleStore, this.$store);
-	private Store = getModule(Store, this.$store);
-	private areBubblesHidden = !this.bubbleStore.areBubbleDisplayed;
 	private menuHoverState = {
 		isMenuOppened: false,
 		isMenuContentHovered: false,

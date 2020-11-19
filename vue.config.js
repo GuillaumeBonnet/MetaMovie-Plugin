@@ -20,7 +20,6 @@ module.exports = {
 			]),
 		],
 	},
-	transpileDependencies: ['vuetify'],
 	pages: {
 		['pop-up']: {
 			// entry for the page

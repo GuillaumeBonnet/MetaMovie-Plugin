@@ -9,11 +9,9 @@ import 'vue-material/dist/vue-material.min.css';
 import 'vue-material/dist/theme/default-dark.css';
 Vue.use(VueMaterial);
 
-import Vuex from 'vuex';
-import { compiledStore } from '@/store/store';
+import { compiledStore, MutationMain } from '@/store/Store';
 import BubbleData from '@/models/BubbleData';
 import { MutationBubble } from '@/store/BubbleStore';
-Vue.use(Vuex);
 
 new Vue({
 	render: h => h(Menu),
@@ -25,7 +23,14 @@ new Vue({
 	store: compiledStore,
 }).$mount('#plugin-meta-movie-video-overlay');
 
-compiledStore.commit(`bubbleModule/${MutationBubble.SET_BUBBLES}`, [
+document.addEventListener('fullscreenchange', event => {
+	compiledStore.commit(
+		MutationMain.SET_IS_FULL_SCREEN,
+		!!document.fullscreenElement
+	);
+});
+
+compiledStore.commit(MutationBubble.SET_BUBBLES, [
 	new BubbleData({
 		fromStamp: '1',
 		toStamp: '4',
