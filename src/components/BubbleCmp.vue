@@ -8,6 +8,7 @@
 		<md-card-header>
 			<md-card-header-text></md-card-header-text>
 			<md-button
+				id="close-button"
 				class="md-icon-button"
 				@click="handleCloseButton()"
 				@mousedown.native.stop
@@ -94,10 +95,14 @@ export default class BubbleCmp extends Vue {
 		}
 		// taking initial shifts into account
 
+		const closeButtonHeight = (this.$el.querySelector(
+			'button#close-button'
+		) as HTMLElement)?.clientHeight;
+		bottomController_borders.top + closeButtonHeight;
 		const onMouseMove = (event: MouseEvent) => {
 			if (
 				event.clientY <= 0 ||
-				event.clientY >= bottomController_borders.top ||
+				event.clientY >= bottomController_borders.top + closeButtonHeight ||
 				event.clientX <= 0 ||
 				event.clientX >= window.innerWidth - 5
 			) {
@@ -117,7 +122,7 @@ export default class BubbleCmp extends Vue {
 				card.getBoundingClientRect().bottom +
 					event.clientY -
 					previousPosition.clientY <
-					bottomController_borders.top &&
+					bottomController_borders.top + closeButtonHeight &&
 				card.getBoundingClientRect().left +
 					event.clientX -
 					previousPosition.clientX >
@@ -170,13 +175,14 @@ div.card {
 	top: 30vh;
 	left: calc(50vw - 60px);
 	border-radius: $border-radius;
+	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	&:not(:hover) {
-		background-color: transparent;
+		background-color: rgba($color: #000000, $alpha: 0.7);
 		& .text--primary {
 			text-shadow: 2px 2px 2px black;
 		}
 		& button {
-			opacity: 0;
+			height: 0px;
 		}
 		box-shadow: none;
 	}
