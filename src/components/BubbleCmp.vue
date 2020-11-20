@@ -16,7 +16,7 @@
 				<md-icon>close</md-icon>
 			</md-button>
 		</md-card-header>
-		<md-card-content>
+		<md-card-content id="card-text">
 			{{ bubble.text }}
 		</md-card-content>
 	</md-card>
@@ -95,14 +95,14 @@ export default class BubbleCmp extends Vue {
 		}
 		// taking initial shifts into account
 
-		const closeButtonHeight = (this.$el.querySelector(
-			'button#close-button'
+		const headerHeight = (this.$el.querySelector(
+			'div.md-card-header'
 		) as HTMLElement)?.clientHeight;
-		bottomController_borders.top + closeButtonHeight;
+		bottomController_borders.top + headerHeight;
 		const onMouseMove = (event: MouseEvent) => {
 			if (
 				event.clientY <= 0 ||
-				event.clientY >= bottomController_borders.top + closeButtonHeight ||
+				event.clientY >= bottomController_borders.top + headerHeight ||
 				event.clientX <= 0 ||
 				event.clientX >= window.innerWidth - 5
 			) {
@@ -122,7 +122,7 @@ export default class BubbleCmp extends Vue {
 				card.getBoundingClientRect().bottom +
 					event.clientY -
 					previousPosition.clientY <
-					bottomController_borders.top + closeButtonHeight &&
+					bottomController_borders.top + headerHeight &&
 				card.getBoundingClientRect().left +
 					event.clientX -
 					previousPosition.clientX >
@@ -176,12 +176,16 @@ div.card {
 	left: calc(50vw - 60px);
 	border-radius: $border-radius;
 	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	& #card-text {
+		font-size: 36px;
+		color: bisque;
+	}
 	&:not(:hover) {
 		background-color: rgba($color: #000000, $alpha: 0.7);
 		& .text--primary {
 			text-shadow: 2px 2px 2px black;
 		}
-		& button {
+		& .md-card-header * {
 			height: 0px;
 		}
 		box-shadow: none;
