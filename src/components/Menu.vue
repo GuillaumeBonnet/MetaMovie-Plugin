@@ -20,6 +20,15 @@
 				</md-button>
 			</button>
 
+			<md-dialog :md-active.sync="isBubbleListDisplayed" :md-backdrop="false">
+				<md-dialog-title>Current Fact List</md-dialog-title>
+				<md-dialog-actions>
+					<md-button class="md-primary" @click="isBubbleListDisplayed = false"
+						>Close</md-button
+					></md-dialog-actions
+				>
+			</md-dialog>
+
 			<md-menu-content
 				class="menu-box"
 				@mouseenter.native.prevent="menu.enterMenuContent()"
@@ -31,7 +40,9 @@
 					></md-menu-item
 				>
 				<md-menu-item>Fact lists library</md-menu-item>
-				<md-menu-item @click.native="seeCurrentFactList()"
+				<md-menu-item
+					@click.native.prevent
+					@click.prevent="isBubbleListDisplayed = !isBubbleListDisplayed"
 					>Detail current list</md-menu-item
 				>
 				<md-menu-item @click.native="gboDebugDisplayedBubble()"
@@ -65,6 +76,10 @@ export default class Menu extends Vue {
 		super();
 	}
 
+	/* -------------------------------------------------------------------------- */
+	/*                         store methods & properties                         */
+	/* -------------------------------------------------------------------------- */
+
 	@Action(ActionBubble.TOGGLE_BUBBLE_VISIBILITY) handleSwitchToggling: any;
 
 	@State((state: IState) => state.bubbleModule.bubbles)
@@ -81,6 +96,27 @@ export default class Menu extends Vue {
 	set areBubblesHidden_VModel(areBubblesHidden: boolean) {
 		this.handleSwitchToggling();
 	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                               internal logic                               */
+	/* -------------------------------------------------------------------------- */
+
+	isBubbleListDisplayed = false;
+
+	seeCurrentFactList() {
+		console.log('gboDebug:[seeCurrentFactList]');
+	}
+
+	gboDebugDisplayedBubble() {
+		console.log('gboDebug:[this.displayedBubbles]', this.displayedBubbles);
+	}
+	gboDebugBubble() {
+		console.log('gboDebug:[this.bubbles]', this.bubbles);
+	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                           display menu behaviour                           */
+	/* -------------------------------------------------------------------------- */
 
 	menu = {
 		enterMenuIcon: () => {
@@ -119,17 +155,6 @@ export default class Menu extends Vue {
 			},
 		},
 	};
-
-	seeCurrentFactList() {
-		console.log('gboDebug:[seeCurrentFactList]');
-	}
-
-	gboDebugDisplayedBubble() {
-		console.log('gboDebug:[this.displayedBubbles]', this.displayedBubbles);
-	}
-	gboDebugBubble() {
-		console.log('gboDebug:[this.bubbles]', this.bubbles);
-	}
 }
 </script>
 
