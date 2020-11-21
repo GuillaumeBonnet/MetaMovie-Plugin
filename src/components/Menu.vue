@@ -1,16 +1,16 @@
 <template>
 	<div
 		class="touchable PlayerControls--control-element nfp-popup-control"
-		@mouseenter="enterMenuIcon()"
-		@mouseleave="leaveMenuIcon()"
+		@mouseenter="menu.enterMenuIcon()"
+		@mouseleave="menu.leaveMenuIcon()"
 	>
 		<!-- todo:menu should be aligned to class="touchable PlayerControls--control-element nfp-popup-control", not  inner button -->
 		<md-menu
-			:md-active="menuHoverState.isMenuOppened"
+			:md-active="menu.menuHoverState.isMenuOppened"
 			md-direction="top-end"
 			md-align-trigger
-			@mouseenter.native.prevent="enterMenuContent()"
-			@mouseleave.native.prevent="leaveMenuContent()"
+			@mouseenter.native.prevent="menu.enterMenuContent()"
+			@mouseleave.native.prevent="menu.leaveMenuContent()"
 		>
 			<button
 				class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
@@ -22,15 +22,22 @@
 
 			<md-menu-content
 				class="menu-box"
-				@mouseenter.native.prevent="enterMenuContent()"
-				@mouseleave.native.prevent="leaveMenuContent()"
+				@mouseenter.native.prevent="menu.enterMenuContent()"
+				@mouseleave.native.prevent="menu.leaveMenuContent()"
 			>
-				<md-switch v-model="areBubblesHidden_VModel">Hide bubbles</md-switch>
+				<md-menu-item
+					><md-switch v-model="areBubblesHidden_VModel"
+						>Hide bubbles</md-switch
+					></md-menu-item
+				>
+				<md-menu-item>Fact lists library</md-menu-item>
+				<md-menu-item @click.native="seeCurrentFactList()"
+					>Detail current list</md-menu-item
+				>
 				<md-menu-item @click.native="gboDebugDisplayedBubble()"
 					>displayed Bubble</md-menu-item
 				>
 				<md-menu-item @click.native="gboDebugBubble()">all bubble</md-menu-item>
-				<md-menu-item>My Item 3</md-menu-item>
 			</md-menu-content>
 		</md-menu>
 	</div>
@@ -75,29 +82,46 @@ export default class Menu extends Vue {
 		this.handleSwitchToggling();
 	}
 
-	enterMenuIcon() {
-		this.menuHoverState.isMenuOppened = true;
-	}
-	leaveMenuIcon() {
-		this.menuHoverState.timeOutIds.push(
-			setTimeout(() => {
-				if (!this.menuHoverState.isMenuContentHovered) {
-					this.menuHoverState.isMenuOppened = false;
-				}
-			}, 200)
-		);
-	}
-	enterMenuContent() {
-		this.menuHoverState.clearTimeOutIds();
-		this.menuHoverState.isMenuContentHovered = true;
-	}
-	leaveMenuContent() {
-		this.menuHoverState.timeOutIds.push(
-			setTimeout(() => {
-				this.menuHoverState.isMenuContentHovered = false;
-				this.menuHoverState.isMenuOppened = false;
-			}, 200)
-		);
+	menu = {
+		enterMenuIcon: () => {
+			this.menu.menuHoverState.isMenuOppened = true;
+		},
+		leaveMenuIcon: () => {
+			this.menu.menuHoverState.timeOutIds.push(
+				setTimeout(() => {
+					if (!this.menu.menuHoverState.isMenuContentHovered) {
+						this.menu.menuHoverState.isMenuOppened = false;
+					}
+				}, 200)
+			);
+		},
+		enterMenuContent: () => {
+			this.menu.menuHoverState.clearTimeOutIds();
+			this.menu.menuHoverState.isMenuContentHovered = true;
+		},
+		leaveMenuContent: () => {
+			this.menu.menuHoverState.timeOutIds.push(
+				setTimeout(() => {
+					this.menu.menuHoverState.isMenuContentHovered = false;
+					this.menu.menuHoverState.isMenuOppened = false;
+				}, 200)
+			);
+		},
+		menuHoverState: {
+			isMenuOppened: false,
+			isMenuContentHovered: false,
+			timeOutIds: [] as number[],
+			clearTimeOutIds: function() {
+				this.timeOutIds.forEach(timeoutId => {
+					clearTimeout(timeoutId);
+				});
+				this.timeOutIds = [];
+			},
+		},
+	};
+
+	seeCurrentFactList() {
+		console.log('gboDebug:[seeCurrentFactList]');
 	}
 
 	gboDebugDisplayedBubble() {
@@ -106,26 +130,17 @@ export default class Menu extends Vue {
 	gboDebugBubble() {
 		console.log('gboDebug:[this.bubbles]', this.bubbles);
 	}
-	private menuHoverState = {
-		isMenuOppened: false,
-		isMenuContentHovered: false,
-		timeOutIds: [] as number[],
-		clearTimeOutIds: function() {
-			this.timeOutIds.forEach(timeoutId => {
-				clearTimeout(timeoutId);
-			});
-			this.timeOutIds = [];
-		},
-	};
-	private fav = true;
-	private menu = false;
-	private message = false;
-	private hints = true;
 }
 </script>
 
 <style scoped lang="scss">
 @import '@/styles/variables.scss';
+
+.md-menu-item:hover {
+	background-color: rgb(73, 79, 82);
+	color: rgb(232, 230, 227);
+}
+
 .menu-box::v-deep {
 	border-radius: $border-radius;
 	overflow: hidden;
