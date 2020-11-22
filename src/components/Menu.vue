@@ -19,16 +19,11 @@
 					<md-icon>question_answer</md-icon>
 				</md-button>
 			</button>
-
-			<md-dialog :md-active.sync="isBubbleListDisplayed" :md-backdrop="false">
-				<md-dialog-title>Current Fact List</md-dialog-title>
-				<md-dialog-actions>
-					<md-button class="md-primary" @click="isBubbleListDisplayed = false"
-						>Close</md-button
-					></md-dialog-actions
-				>
-			</md-dialog>
-
+			<bubble-details-list
+				:isBubbleListDisplayed="isBubbleListDisplayed"
+				:bubbles="displayedBubbles"
+				@close-bubble-list="isBubbleListDisplayed = false"
+			></bubble-details-list>
 			<md-menu-content
 				class="menu-box"
 				@mouseenter.native.prevent="menu.enterMenuContent()"
@@ -66,9 +61,11 @@ import { Action, State } from 'vuex-class';
 import { IState } from '@/store/Store';
 import BubbleData from '@/models/BubbleData';
 import { mapState } from 'vuex';
+import BubbleDetailsList from '@/components/BubbleDetailsList.vue';
+
 @Component({
 	components: {
-		// sub-components
+		BubbleDetailsList,
 	},
 })
 export default class Menu extends Vue {

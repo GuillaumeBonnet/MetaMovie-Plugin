@@ -171,6 +171,7 @@ export default class BubbleCmp extends Vue {
 @import '@/styles/variables.scss';
 div.card {
 	min-width: 120px;
+	max-width: 90vw;
 	position: fixed;
 	top: 30vh;
 	left: calc(50vw - 60px);
