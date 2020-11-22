@@ -102,11 +102,24 @@ export default class BubbleDetailsList extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/variables-and-mixins.scss';
+
 $padding-card: 20px;
+
+.md-dialog-content {
+	width: 50vw;
+	max-height: 50vh;
+	@include scrollbar;
+}
+
 .md-card {
 	margin: 20px;
 	padding: $padding-card;
 	background-color: #212121 !important;
+
+	& textarea {
+		@include scrollbar;
+	}
 	& .md-title {
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -118,26 +131,6 @@ $padding-card: 20px;
 	}
 	& .md-card-actions {
 		background-color: inherit !important;
-	}
-}
-.md-dialog-content {
-	width: 50vw;
-	max-height: 50vh;
-	overflow-y: scroll;
-	$width-scrollbar: 12px;
-	&::-webkit-scrollbar {
-		width: $width-scrollbar;
-	}
-	&::-webkit-scrollbar-track {
-		background: md-get-palette-color(green, 200);
-		border-radius: $width-scrollbar;
-	}
-	&::-webkit-scrollbar-thumb {
-		border-radius: $width-scrollbar;
-		background: #757575;
-	}
-	&::-webkit-scrollbar-button {
-		display: none;
 	}
 }
 </style>

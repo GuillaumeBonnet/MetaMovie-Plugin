@@ -156,7 +156,7 @@ export default class Menu extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/variables.scss';
+@import '@/styles/variables-and-mixins.scss';
 
 .md-menu-item:hover {
 	background-color: rgb(73, 79, 82);

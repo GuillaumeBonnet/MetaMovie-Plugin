@@ -1,0 +1,19 @@
+$border-radius: 4px;
+@mixin scrollbar {
+	overflow-y: scroll;
+	$width-scrollbar: 12px;
+
+	&::-webkit-scrollbar {
+		width: $width-scrollbar;
+	}
+	&::-webkit-scrollbar-track {
+		border-radius: $width-scrollbar;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: $width-scrollbar;
+		background: #757575;
+	}
+	&::-webkit-scrollbar-button {
+		display: none;
+	}
+}
