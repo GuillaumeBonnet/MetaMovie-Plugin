@@ -25,39 +25,48 @@
 
 					<md-card-expand-content>
 						<md-card-content>
+							<!-- this next div mysteriously fix the bug where 1 or 2 sides of
+								the text areas are not displayed after rendering -->
+							<div class="md-layout md-gutter" style="opacity:0;">
+								<div class="md-layout-item">{{ bubble.text }}</div>
+							</div>
 							<div class="md-layout md-gutter">
 								<div class="md-layout-item">
-									<md-field>
+									<md-field class="textarea-field">
 										<label>Text</label>
-										<md-textarea v-model="bubble.text" readonly></md-textarea>
+										<md-textarea v-model="bubble.text" disabled></md-textarea>
 									</md-field>
 								</div>
 							</div>
-							<div class="md-layout md-gutter">
+							<div class="md-layout md-gutter" style="margin-top: 10px:">
 								<div class="md-layout-item">
 									<md-field>
+										<md-icon>schedule</md-icon>
 										<label>From</label>
-										<md-input v-model="bubble.from" readonly></md-input>
+										<md-input v-model="bubble.formatedFrom" readonly></md-input>
 									</md-field>
 								</div>
 								<div class="md-layout-item">
 									<md-field>
+										<md-icon>schedule</md-icon>
 										<label>To</label>
-										<md-input v-model="bubble.to" readonly></md-input>
+										<md-input v-model="bubble.formatedTo" readonly></md-input>
 									</md-field>
 								</div>
 							</div>
 							<div class="md-layout md-gutter">
 								<div class="md-layout-item">
 									<md-field>
+										<md-icon>place</md-icon>
 										<label>Horizontal</label>
-										<md-input v-model="bubble.x" readonly></md-input>
+										<md-input v-model="bubble.formatedX" readonly></md-input>
 									</md-field>
 								</div>
 								<div class="md-layout-item">
 									<md-field>
+										<md-icon>place</md-icon>
 										<label>Vertical</label>
-										<md-input v-model="bubble.y" readonly></md-input>
+										<md-input v-model="bubble.formatedY" readonly></md-input>
 									</md-field>
 								</div>
 							</div>
@@ -76,7 +85,14 @@
 
 <script lang="ts">
 import BubbleData from '@/models/BubbleData';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+
+type formatedBubble = BubbleData & {
+	formatedFrom: string;
+	formatedTo: string;
+	formatedX: string;
+	formatedY: string;
+};
 
 @Component({
 	components: {
@@ -87,22 +103,38 @@ export default class BubbleDetailsList extends Vue {
 	@Prop()
 	isBubbleListDisplayed = false;
 	@Prop()
-	bubbles!: BubbleData[];
+	bubbles!: Array<formatedBubble>;
+
+	@Watch('bubbles')
+	onBubblesChanged(newBubblesValue: Array<formatedBubble>) {
+		for (const bubble of newBubblesValue) {
+			bubble.formatedFrom = this.readableTime(bubble.from);
+			bubble.formatedTo = this.readableTime(bubble.to);
+			bubble.formatedX = bubble.x + '%';
+			bubble.formatedY = bubble.y + '%';
+		}
+	}
+
+	public readableTime(timeInSeconds: number) {
+		const hours = Math.floor(timeInSeconds / 3600);
+		timeInSeconds -= hours * 3600;
+		const minutes = Math.floor(timeInSeconds / 60);
+		timeInSeconds -= minutes * 60;
+		return `${hours}:${minutes
+			.toString()
+			.padStart(2, '0')}:${timeInSeconds.toString().padStart(2, '0')}`;
+	}
 
 	onExpandLineClick(event: Event) {
 		((event.target as HTMLElement)?.querySelector(
 			'.md-button'
 		) as HTMLElement)?.click();
 	}
-
-	form = {
-		firstName: null,
-	};
 }
 </script>
 
 <style scoped lang="scss">
-@import '@/styles/variables-and-mixins.scss';
+@import '~@/styles/variables-and-mixins.scss';
 
 $padding-card: 20px;
 
@@ -119,6 +151,7 @@ $padding-card: 20px;
 
 	& textarea {
 		@include scrollbar;
+		resize: none !important;
 	}
 	& .md-title {
 		text-overflow: ellipsis;
