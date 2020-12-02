@@ -9,6 +9,7 @@ import { removeExpiredBubble } from '@/Utils/BubbleUtils';
 
 interface IState {
 	isFullScreen: boolean;
+	idCardEdited?: string;
 	currentTime: number;
 	previousTime: number;
 	progressIndex: number;
@@ -22,6 +23,7 @@ interface IStore {
 
 const MutationMain = {
 	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
+	SET_ID_CARD_EDITED: 'SET_ID_CARD_EDITED',
 	SET_CURRENT_TIME: 'SET_CURRENT_TIME',
 	SET_PREVIOUS_TIME: 'SET_PREVIOUS_TIME',
 	SET_PROGRESS_INDEX: 'SET_PROGRESS_INDEX',
@@ -36,6 +38,7 @@ const store = {
 	},
 	state: {
 		progressIndex: 0,
+		idCardEdited: undefined,
 		currentTime: 0,
 		previousTime: 0,
 		isFullScreen: !!document.fullscreenElement,
@@ -43,19 +46,31 @@ const store = {
 	mutations: {
 		[MutationMain.SET_IS_FULL_SCREEN]: (
 			state: IState,
-			isFullScreen: boolean
+			isFullScreen: IState['isFullScreen']
 		) => {
 			state.isFullScreen = isFullScreen;
 		},
-		[MutationMain.SET_CURRENT_TIME]: (state: IState, currentTime: number) => {
+		[MutationMain.SET_ID_CARD_EDITED]: (
+			state: IState,
+			idCardEdited: IState['idCardEdited']
+		) => {
+			state.idCardEdited = idCardEdited;
+		},
+		[MutationMain.SET_CURRENT_TIME]: (
+			state: IState,
+			currentTime: IState['currentTime']
+		) => {
 			state.currentTime = currentTime;
 		},
-		[MutationMain.SET_PREVIOUS_TIME]: (state: IState, previousTime: number) => {
+		[MutationMain.SET_PREVIOUS_TIME]: (
+			state: IState,
+			previousTime: IState['previousTime']
+		) => {
 			state.previousTime = previousTime;
 		},
 		[MutationMain.SET_PROGRESS_INDEX]: (
 			state: IState,
-			progressIndex: number
+			progressIndex: IState['progressIndex']
 		) => {
 			state.progressIndex = progressIndex;
 		},
@@ -63,7 +78,7 @@ const store = {
 	actions: {
 		[ActionMain.HANDLE_VIDEO_PROGRESSION]: (
 			{ commit, state }: IStore,
-			currentTime: number
+			currentTime: IState['currentTime']
 		) => {
 			commit(MutationMain.SET_PREVIOUS_TIME, state.currentTime);
 			commit(MutationMain.SET_CURRENT_TIME, currentTime);

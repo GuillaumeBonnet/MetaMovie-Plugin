@@ -1,20 +1,34 @@
+//TODO global edit mode when a bubble is in edit mode it is always displayed
+regardless of the time clicking on times goes there in the video X Y displays
+Icon 'is it displayed right now' when a bubble is in edit mode it is removed
+from displayedBubbles and put back at the right place when the edit is done
+//TODO add a bubble button
 <template>
 	<md-card
 		v-show="bubble.isShown"
 		@mousedown.native="clickToDrag($event)"
 		:style="xyPosition"
-		class="card"
+		:class="isInEdition ? 'card-edit' : 'card'"
 	>
 		<md-card-header>
-			<md-card-header-text></md-card-header-text>
-			<md-button
-				id="close-button"
-				class="md-icon-button"
-				@click="handleCloseButton()"
-				@mousedown.native.stop
-			>
-				<md-icon>close</md-icon>
-			</md-button>
+			<div class="md-layout md-alignment-center-space-between">
+				<md-button
+					class="md-icon-button md-icon-button md-raised"
+					:class="isInEdition ? 'edit-button--active' : 'edit-button'"
+					@click="handleEditButton()"
+					@mousedown.native.stop
+				>
+					<md-icon>edit</md-icon>
+				</md-button>
+				<md-button
+					id="close-button"
+					class="md-icon-button"
+					@click="handleCloseButton()"
+					@mousedown.native.stop
+				>
+					<md-icon>close</md-icon>
+				</md-button>
+			</div>
 		</md-card-header>
 		<md-card-content id="card-text">
 			{{ bubble.text }}
@@ -31,8 +45,9 @@ import {
 	toFixedCoordinate,
 	toRelativeCoordinate,
 } from '@/Utils/BubbleUtils';
-import { Mutation } from 'vuex-class';
+import { Mutation, State } from 'vuex-class';
 import { MutationBubble } from '@/store/BubbleStore';
+import { IState, MutationMain } from '@/store/Store';
 
 @Component({
 	components: {
@@ -52,6 +67,13 @@ export default class BubbleCmp extends Vue {
 		this.setPosition();
 	}
 
+	@State((state: IState) => state.idCardEdited)
+	idCardEdited!: IState['idCardEdited'];
+
+	get isInEdition() {
+		return this.idCardEdited == this.bubble.id;
+	}
+
 	@Watch('videoDimensions')
 	onVideoDimensionsChange() {
 		this.setPosition();
@@ -67,8 +89,14 @@ export default class BubbleCmp extends Vue {
 	handleCloseButton() {
 		this.updateDisplayedBubble({
 			isShown: false,
-			index: this.bubble.index,
+			id: this.bubble.id,
 		} as Partial<BubbleData>);
+	}
+	handleEditButton() {
+		this.$store.commit(
+			MutationMain.SET_ID_CARD_EDITED,
+			this.isInEdition ? undefined : this.bubble.id
+		);
 	}
 
 	video = document.querySelector('video');
@@ -169,7 +197,19 @@ export default class BubbleCmp extends Vue {
 
 <style scoped lang="scss">
 @import '@/styles/variables-and-mixins.scss';
-div.card {
+
+div.card:not(:hover) {
+	background-color: rgba($color: #000000, $alpha: 0.7);
+	& .text--primary {
+		text-shadow: 2px 2px 2px black;
+	}
+	& .md-card-header * {
+		height: 0px;
+	}
+	box-shadow: none;
+}
+div.card,
+div.card-edit {
 	min-width: 120px;
 	max-width: 90vw;
 	position: fixed;
@@ -181,15 +221,14 @@ div.card {
 		font-size: 36px;
 		color: bisque;
 	}
-	&:not(:hover) {
-		background-color: rgba($color: #000000, $alpha: 0.7);
-		& .text--primary {
-			text-shadow: 2px 2px 2px black;
+	& button.edit-button {
+		background-color: #212121 !important;
+		&--active {
+			@extend .edit-button;
+			& i {
+				color: #ff6f00 !important;
+			}
 		}
-		& .md-card-header * {
-			height: 0px;
-		}
-		box-shadow: none;
 	}
 }
 </style>
