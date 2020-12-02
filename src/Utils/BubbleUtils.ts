@@ -21,10 +21,8 @@ function removeExpiredBubble(bubbles: BubbleData[], currentTime: number): void {
 }
 
 function updateABubble(bubbles: BubbleData[], bubble: Partial<BubbleData>) {
-	if (bubble?.index != null) {
-		const index = bubbles.findIndex(
-			bubbleElem => bubbleElem.index == bubble.index
-		);
+	if (bubble?.id != null) {
+		const index = bubbles.findIndex(bubbleElem => bubbleElem.id == bubble.id);
 		if (index != -1) {
 			Object.assign(bubbles[index], bubble);
 		}

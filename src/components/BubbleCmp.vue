@@ -87,6 +87,7 @@ export default class BubbleCmp extends Vue {
 
 	@Mutation(MutationBubble.UPDATE_DISPLAYED_BUBBLE) updateDisplayedBubble: any;
 	handleCloseButton() {
+		this.$store.commit(MutationMain.SET_ID_CARD_EDITED, undefined);
 		this.updateDisplayedBubble({
 			isShown: false,
 			id: this.bubble.id,
