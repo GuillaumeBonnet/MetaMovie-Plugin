@@ -44,6 +44,7 @@
 					>displayed Bubble</md-menu-item
 				>
 				<md-menu-item @click.native="gboDebugBubble()">all bubble</md-menu-item>
+				<md-menu-item>add a new bubble at this time</md-menu-item>
 			</md-menu-content>
 		</md-menu>
 	</div>
