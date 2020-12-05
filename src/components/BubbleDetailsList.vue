@@ -137,7 +137,11 @@ export default class BubbleDetailsList extends Vue {
 @import '~@/styles/variables-and-mixins.scss';
 
 $padding-card: 20px;
-
+.md-dialog-container {
+	& > * {
+		background-color: #424242;
+	}
+}
 .md-dialog-content {
 	width: 50vw;
 	max-height: 50vh;
@@ -145,9 +149,15 @@ $padding-card: 20px;
 }
 
 .md-card {
-	margin: 20px;
-	padding: $padding-card;
-	background-color: #212121 !important;
+	margin: 10px;
+	padding: 0 $padding-card 0 $padding-card;
+	background-color: #616161 !important;
+
+	& .md-card-header {
+		padding: 0;
+		display: flex;
+		align-items: center;
+	}
 
 	& textarea {
 		@include scrollbar;
@@ -157,6 +167,7 @@ $padding-card: 20px;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
+		font-size: 18px;
 	}
 	& .md-divider {
 		margin-left: -$padding-card;
@@ -164,6 +175,7 @@ $padding-card: 20px;
 	}
 	& .md-card-actions {
 		background-color: inherit !important;
+		padding: 0;
 	}
 }
 </style>
