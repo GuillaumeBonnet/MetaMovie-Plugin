@@ -1,8 +1,8 @@
 import { toSeconds } from '../Utils/BubbleUtils';
 
 export default class BubbleData {
-	public from: number;
-	public to: number;
+	public from: string;
+	public to: string;
 	public text: string;
 	public x: number;
 	public y: number;
@@ -17,10 +17,16 @@ export default class BubbleData {
 		y: number;
 		id?: string;
 	}) {
-		this.from = toSeconds(input.fromStamp);
-		this.to = toSeconds(input.toStamp);
+		const timeStampRegex = /\d:\d\d:\d\d/;
+		if (!timeStampRegex.test(input.fromStamp)) {
+			throw Error('fromStamp should have a 0:00:00 format.');
+		} else if (!timeStampRegex.test(input.toStamp)) {
+			throw Error('toStamp should have a 0:00:00 format.');
+		}
 		this.text = `text from ${input.fromStamp} sec
 to ${input.toStamp}, x:${input.x}, y:${input.y}`;
+		this.from = input.fromStamp;
+		this.to = input.toStamp;
 		this.x = input.x;
 		this.y = input.y;
 		if (input.id) {

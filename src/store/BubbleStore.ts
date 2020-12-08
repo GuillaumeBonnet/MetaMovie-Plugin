@@ -49,10 +49,7 @@ const bubbleModule = {
 			state: IBubbleState,
 			bubbles: BubbleData[]
 		) {
-			state.displayedBubbles = bubbles.map((bubble, index) => {
-				bubble.index = index;
-				return bubble;
-			});
+			state.displayedBubbles = bubbles;
 		},
 	},
 	actions: {

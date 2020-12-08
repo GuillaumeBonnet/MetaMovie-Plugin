@@ -40,18 +40,22 @@
 							</div>
 							<div class="md-layout md-gutter" style="margin-top: 10px:">
 								<div class="md-layout-item">
-									<md-field>
-										<md-icon>schedule</md-icon>
-										<label>From</label>
-										<md-input v-model="bubble.formatedFrom" readonly></md-input>
-									</md-field>
+									<div>
+										<time-selector
+											v-model="bubble.from"
+											label="From"
+											readonly="true"
+										></time-selector>
+									</div>
 								</div>
 								<div class="md-layout-item">
-									<md-field>
-										<md-icon>schedule</md-icon>
-										<label>To</label>
-										<md-input v-model="bubble.formatedTo" readonly></md-input>
-									</md-field>
+									<div>
+										<time-selector
+											v-model="bubble.to"
+											label="To"
+											readonly="true"
+										></time-selector>
+									</div>
 								</div>
 							</div>
 							<div class="md-layout md-gutter">
@@ -84,19 +88,28 @@
 </template>
 
 <script lang="ts">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                     TS                                     */
+/* -------------------------------------------------------------------------- */
 import BubbleData from '@/models/BubbleData';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import TimeSelector from '@/components/TimeSelector.vue';
 
 type formatedBubble = BubbleData & {
-	formatedFrom: string;
-	formatedTo: string;
 	formatedX: string;
 	formatedY: string;
 };
 
 @Component({
 	components: {
-		// sub-components
+		TimeSelector,
 	},
 })
 export default class BubbleDetailsList extends Vue {
@@ -108,8 +121,6 @@ export default class BubbleDetailsList extends Vue {
 	@Watch('bubbles')
 	onBubblesChanged(newBubblesValue: Array<formatedBubble>) {
 		for (const bubble of newBubblesValue) {
-			bubble.formatedFrom = this.readableTime(bubble.from);
-			bubble.formatedTo = this.readableTime(bubble.to);
 			bubble.formatedX = bubble.x + '%';
 			bubble.formatedY = bubble.y + '%';
 		}
@@ -134,6 +145,17 @@ export default class BubbleDetailsList extends Vue {
 </script>
 
 <style scoped lang="scss">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                    SCSS                                    */
+/* -------------------------------------------------------------------------- */
 @import '~@/styles/variables-and-mixins.scss';
 
 $padding-card: 20px;

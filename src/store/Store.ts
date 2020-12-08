@@ -5,9 +5,10 @@ import {
 	IBubbleState,
 	MutationBubble,
 } from '@/store/BubbleStore';
-import { removeExpiredBubble } from '@/Utils/BubbleUtils';
+import { removeExpiredBubble, timestampToSeconds } from '@/Utils/BubbleUtils';
 
 interface IState {
+	video: HTMLVideoElement;
 	isFullScreen: boolean;
 	idCardEdited?: string;
 	currentTime: number;
@@ -22,6 +23,7 @@ interface IStore {
 }
 
 const MutationMain = {
+	SET_VIDEO: 'SET_VIDEO',
 	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
 	SET_ID_CARD_EDITED: 'SET_ID_CARD_EDITED',
 	SET_CURRENT_TIME: 'SET_CURRENT_TIME',
@@ -44,6 +46,9 @@ const store = {
 		isFullScreen: !!document.fullscreenElement,
 	} as IState,
 	mutations: {
+		[MutationMain.SET_VIDEO]: (state: IState, video: IState['video']) => {
+			state.video = video;
+		},
 		[MutationMain.SET_IS_FULL_SCREEN]: (
 			state: IState,
 			isFullScreen: IState['isFullScreen']
@@ -94,7 +99,7 @@ const store = {
 				displayedBubbles = [];
 				progressIndex = 0;
 				const indexNextBubble = state.bubbleModule.bubbles.findIndex(
-					bubble => bubble.from >= state.currentTime
+					bubble => timestampToSeconds(bubble.from) >= state.currentTime
 				);
 				if (indexNextBubble == -1) {
 					progressIndex = state.bubbleModule.bubbles.length;
@@ -107,7 +112,7 @@ const store = {
 			if (progressIndex < state.bubbleModule.bubbles.length) {
 				const nextBubble = state.bubbleModule.bubbles[progressIndex];
 				removeExpiredBubble(displayedBubbles, state.currentTime);
-				if (state.currentTime >= nextBubble.from) {
+				if (state.currentTime >= timestampToSeconds(nextBubble.from)) {
 					progressIndex++;
 					let indexToInsert = 0;
 					for (const bubbleAlreadyDisplayed of state.bubbleModule

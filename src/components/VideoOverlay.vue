@@ -13,6 +13,16 @@
 </template>
 
 <script lang="ts">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                     TS                                     */
+/* -------------------------------------------------------------------------- */
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
 import BubbleCmp from '@/components/BubbleCmp.vue';
 import Menu from '@/components/Menu.vue';
@@ -20,7 +30,7 @@ import { getModule } from 'vuex-module-decorators';
 import BubbleData from '@/models/BubbleData';
 import { IVideoDimensions } from '@/models/Types';
 import { Action, State } from 'vuex-class';
-import { ActionMain, IState } from '@/store/Store';
+import { ActionMain, IState, MutationMain } from '@/store/Store';
 import { ActionBubble, IBubbleState } from '@/store/BubbleStore';
 
 @Component({
@@ -34,7 +44,8 @@ export default class VideoOverlay extends Vue {
 	/*                                 properties                                 */
 	/* -------------------------------------------------------------------------- */
 
-	private video!: HTMLVideoElement | null;
+	@State((state: IState) => state.video)
+	private video!: IState['video'];
 	private videoDimensions: IVideoDimensions = { x: 0, y: 0 }; //in px
 
 	@State((state: IState) => state.bubbleModule.bubbles)
@@ -62,10 +73,12 @@ export default class VideoOverlay extends Vue {
 			};
 		};
 		const videoEvent = () => {
-			this.video = document.querySelector('video');
-			if (this.video) {
-				this.video.addEventListener('timeupdate', event => {
-					const currentTime = this.video && this.video.currentTime;
+			const video = document.querySelector('video');
+			if (video) {
+				this.$store.commit(MutationMain.SET_VIDEO, video);
+				video.addEventListener('timeupdate', event => {
+					const video = event.target as HTMLVideoElement;
+					const currentTime = video && video.currentTime;
 					if (!currentTime) return;
 					this.handleVideoProgression(currentTime);
 				});
@@ -102,6 +115,17 @@ export default class VideoOverlay extends Vue {
 </script>
 
 <style lang="scss">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                    SCSS                                    */
+/* -------------------------------------------------------------------------- */
 div.full-screen-overlay {
 	position: absolute;
 	z-index: 1000000;

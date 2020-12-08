@@ -14,8 +14,20 @@ function toSeconds(time: string) {
 	}
 }
 
+function timestampToSeconds(timestamp: string) {
+	if (!/\d:\d\d:\d\d/.test(timestamp)) {
+		throw Error('timestamp should have a format like 0:00:00.');
+	}
+	const [hours, minutes, seconds] = timestamp.split(':');
+	return (
+		Number.parseInt(hours) * 60 * 60 +
+		Number.parseInt(minutes) * 60 +
+		Number.parseInt(seconds)
+	);
+}
+
 function removeExpiredBubble(bubbles: BubbleData[], currentTime: number): void {
-	if (bubbles[0] && bubbles[0].to <= currentTime) {
+	if (bubbles[0] && timestampToSeconds(bubbles[0].to) <= currentTime) {
 		bubbles.shift();
 	}
 }
@@ -68,4 +80,5 @@ export {
 	toFixedCoordinate,
 	toRelativeCoordinate,
 	pxToNumber,
+	timestampToSeconds,
 };

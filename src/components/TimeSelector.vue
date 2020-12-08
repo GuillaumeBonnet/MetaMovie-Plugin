@@ -1,6 +1,11 @@
 <template>
 	<div
-		:class="timeInputs.isOneOrMoreFocused ? 'container--focused' : 'container'"
+		:class="[
+			{
+				readonly: readonly,
+			},
+			timeInputs.isOneOrMoreFocused ? 'container--focused' : 'container',
+		]"
 	>
 		<md-icon @click.native="handleIconClick()">schedule</md-icon>
 		<div class="non-icon-part">
@@ -11,11 +16,10 @@
 					@blur="handleBlur($event, 'hours')"
 					@focus="handleFocus($event, 'hours')"
 					v-model="timeInputs.hours.value"
-					id="hours"
 					ref="hours"
 					class="digit--hour"
 					type="text"
-					value="0"
+					:disabled="readonly"
 				/>
 				<div class="separator">:</div>
 				<input
@@ -23,10 +27,9 @@
 					@blur="handleBlur($event, 'minutes')"
 					@focus="handleFocus($event, 'minutes')"
 					v-model="timeInputs.minutes.value"
-					id="minutes"
 					class="digit--minute"
 					type="text"
-					value="20"
+					:disabled="readonly"
 				/>
 				<div class="separator">:</div>
 				<input
@@ -34,10 +37,9 @@
 					@blur="handleBlur($event, 'seconds')"
 					@focus="handleFocus($event, 'seconds')"
 					v-model="timeInputs.seconds.value"
-					id="seconds"
 					class="digit--second"
 					type="text"
-					value="31"
+					:disabled="readonly"
 				/>
 			</div>
 		</div>
@@ -45,6 +47,16 @@
 </template>
 
 <script lang="ts">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                     TS                                     */
+/* -------------------------------------------------------------------------- */
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
@@ -53,18 +65,18 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 	},
 })
 export default class TimeSelector extends Vue {
-	emit() {
-		const emitValue = `${this.timeInputs.hours.value}:${this.timeInputs.minutes.value}:${this.timeInputs.seconds.value}`;
-		if (/\d:\d\d:\d\d/.test(emitValue)) {
-			this.$emit('input', emitValue);
-		}
+	created() {
+		this.onValueChange(this.value, '');
 	}
 	@Prop()
 	label!: string;
 	@Prop()
 	value!: string;
+	@Prop({ default: false })
+	readonly!: boolean;
 	@Watch('value')
 	onValueChange(newValue: string, oldValue: string) {
+		console.log('gboDebug:[newValue]', newValue);
 		if (/\d+:\d+:\d+/.test(newValue)) {
 			// Destructuring assignment
 			[
@@ -76,6 +88,14 @@ export default class TimeSelector extends Vue {
 			console.warn('TimeSelector input value is wrong.');
 		}
 	}
+
+	emit() {
+		const emitValue = `${this.timeInputs.hours.value}:${this.timeInputs.minutes.value}:${this.timeInputs.seconds.value}`;
+		if (/\d:\d\d:\d\d/.test(emitValue)) {
+			this.$emit('input', emitValue);
+		}
+	}
+
 	digitClicked(event: MouseEvent) {
 		(event.target as HTMLInputElement).select();
 	}
@@ -177,10 +197,21 @@ export default class TimeSelector extends Vue {
 </script>
 
 <style scoped lang="scss">
-.container:hover,
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                    SCSS                                    */
+/* -------------------------------------------------------------------------- */
+.container:hover:not(.readonly),
 .container--focused {
-	border-width: 2px;
-	margin: 3px;
+	border-width: 2px !important;
+	margin: 3px !important;
 }
 .container {
 	&--focused {
@@ -191,6 +222,7 @@ export default class TimeSelector extends Vue {
 	align-items: center;
 	font-size: 14px;
 	border: solid #616161 1px;
+	margin: 4px;
 	border-radius: 0.6em;
 	overflow: hidden;
 	background-color: #212121;
@@ -200,6 +232,7 @@ export default class TimeSelector extends Vue {
 		font-size: 20px !important;
 	}
 	& .non-icon-part {
+		flex-grow: 1;
 		border-left: solid #616161 1px;
 		& label {
 			display: block;

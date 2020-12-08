@@ -12,14 +12,28 @@ from displayedBubbles and put back at the right place when the edit is done
 	>
 		<md-card-header>
 			<div class="md-layout md-alignment-center-space-between">
-				<md-button
-					class="md-icon-button md-icon-button md-raised"
-					:class="isInEdition ? 'edit-button--active' : 'edit-button'"
-					@click="handleEditButton()"
-					@mousedown.native.stop
-				>
-					<md-icon>edit</md-icon>
-				</md-button>
+				<div class="card-actions">
+					<md-button
+						class="md-icon-button md-icon-button md-raised"
+						:class="isInEdition ? 'edit-button--active' : 'edit-button'"
+						@click="handleEditButton()"
+						@mousedown.native.stop
+					>
+						<md-icon>edit</md-icon>
+					</md-button>
+					<template v-if="isInEdition">
+						<time-selector
+							v-model="bubble.from"
+							@mousedown.native.stop
+							label="From"
+						></time-selector>
+						<time-selector
+							v-model="bubble.to"
+							@mousedown.native.stop
+							label="To"
+						></time-selector>
+					</template>
+				</div>
 				<md-button
 					id="close-button"
 					class="md-icon-button"
@@ -37,21 +51,35 @@ from displayedBubbles and put back at the right place when the edit is done
 </template>
 
 <script lang="ts">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                     TS                                     */
+/* -------------------------------------------------------------------------- */
+
 import BubbleData from '@/models/BubbleData';
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { IVideoDimensions, IPositionXY } from '@/models/Types';
 import {
 	pxToNumber,
+	timestampToSeconds,
 	toFixedCoordinate,
 	toRelativeCoordinate,
 } from '@/Utils/BubbleUtils';
 import { Mutation, State } from 'vuex-class';
 import { MutationBubble } from '@/store/BubbleStore';
 import { IState, MutationMain } from '@/store/Store';
+import TimeSelector from '@/components/TimeSelector.vue';
 
 @Component({
 	components: {
 		// sub-components
+		TimeSelector,
 	},
 })
 export default class BubbleCmp extends Vue {
@@ -60,7 +88,11 @@ export default class BubbleCmp extends Vue {
 
 	@Prop({ required: true })
 	private videoDimensions!: IVideoDimensions; //in px
-	// videoDimensions replacable by .querySelector('.player-timedtext') ?
+
+	@Watch('bubble.from')
+	onBubbleFromChange() {
+		this.video.currentTime = timestampToSeconds(this.bubble.from);
+	}
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
 	mounted() {
@@ -69,6 +101,9 @@ export default class BubbleCmp extends Vue {
 
 	@State((state: IState) => state.idCardEdited)
 	idCardEdited!: IState['idCardEdited'];
+
+	@State((state: IState) => state.video)
+	video!: IState['video'];
 
 	get isInEdition() {
 		return this.idCardEdited == this.bubble.id;
@@ -99,8 +134,6 @@ export default class BubbleCmp extends Vue {
 			this.isInEdition ? undefined : this.bubble.id
 		);
 	}
-
-	video = document.querySelector('video');
 	clickToDrag(event: MouseEvent) {
 		//TODO : carte bloqué, mousedown dedans, mouseup dehors(=no mouseup), mousemove listenner not cleared
 		console.log('gboDebug: clickToDrag');
@@ -197,15 +230,39 @@ export default class BubbleCmp extends Vue {
 </script>
 
 <style scoped lang="scss">
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                    SCSS                                    */
+/* -------------------------------------------------------------------------- */
+
 @import '@/styles/variables-and-mixins.scss';
+
+$transitionTiming: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+.card-actions {
+	display: flex;
+	align-items: center;
+	& * {
+		margin: 4px;
+	}
+}
 
 div.card:not(:hover) {
 	background-color: rgba($color: #000000, $alpha: 0.7);
 	& .text--primary {
 		text-shadow: 2px 2px 2px black;
 	}
-	& .md-card-header * {
+	& .md-card-header *,
+	& .md-card-header .card-actions * {
 		height: 0px;
+		opacity: 0;
 	}
 	box-shadow: none;
 }
@@ -217,10 +274,14 @@ div.card-edit {
 	top: 30vh;
 	left: calc(50vw - 60px);
 	border-radius: $border-radius;
-	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: background-color $transitionTiming;
 	& #card-text {
 		font-size: 36px;
 		color: bisque;
+	}
+	& .md-card-header .card-actions * {
+		transition: height $transitionTiming;
+		transition: opacity $transitionTiming;
 	}
 	& button.edit-button {
 		background-color: #212121 !important;
