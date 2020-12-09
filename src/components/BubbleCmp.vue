@@ -162,20 +162,6 @@ export default class BubbleCmp extends Vue {
 		bottomController_borders.top + headerHeight;
 		const onMouseMove = (event: MouseEvent) => {
 			if (
-				event.clientY <= 0 ||
-				event.clientY >= bottomController_borders.top + headerHeight ||
-				event.clientX <= 0 ||
-				event.clientX >= window.innerWidth - 5
-			) {
-				console.log(
-					'gboDebug:[toRelativeCoordinate]',
-					toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
-				);
-				document.removeEventListener('mousemove', onMouseMove);
-				card.onmouseup = null;
-				return;
-			}
-			if (
 				card.getBoundingClientRect().top +
 					event.clientY -
 					previousPosition.clientY >
@@ -205,6 +191,13 @@ export default class BubbleCmp extends Vue {
 		};
 
 		document.addEventListener('mousemove', onMouseMove);
+
+		card.onmouseleave = (event: MouseEvent) => {
+			document.removeEventListener('mousemove', onMouseMove);
+			card.onmouseleave = null;
+			card.onmouseup = null;
+		};
+
 		card.onmouseup = () => {
 			console.log('gboDebug: onmouseup');
 			console.log(
@@ -212,6 +205,7 @@ export default class BubbleCmp extends Vue {
 				toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
 			);
 			document.removeEventListener('mousemove', onMouseMove);
+			card.onmouseleave = null;
 			card.onmouseup = null;
 		};
 	}

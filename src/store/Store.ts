@@ -95,7 +95,6 @@ const store = {
 			let progressIndex = state.progressIndex;
 			let displayedBubbles = [] as Array<BubbleData>;
 			if (Math.abs(state.currentTime - state.previousTime) > 1 /*sec*/) {
-				console.log('gboDebug: first if');
 				progressIndex = 0;
 				while (
 					progressIndex < bubbleList.length &&
@@ -109,12 +108,7 @@ const store = {
 				// removeExpiredBubbles(displayedBubbles, state.currentTime);
 			} else if (progressIndex < bubbleList.length) {
 				displayedBubbles = [...state.bubbleModule.displayedBubbles];
-				console.log('gboDebug:[displayedBubbles]', displayedBubbles);
 				removeExpiredBubbles(displayedBubbles, state.currentTime);
-				console.log(
-					'gboDebug:[displayedBubbles after removeExpiredBubbles]',
-					displayedBubbles
-				);
 				while (progressIndex < bubbleList.length) {
 					const nextBubble = bubbleList[progressIndex];
 					if (nextBubble.fromInSeconds() > state.currentTime) {

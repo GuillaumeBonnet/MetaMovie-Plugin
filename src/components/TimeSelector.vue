@@ -76,7 +76,6 @@ export default class TimeSelector extends Vue {
 	readonly!: boolean;
 	@Watch('value')
 	onValueChange(newValue: string, oldValue: string) {
-		console.log('gboDebug:[newValue]', newValue);
 		if (/\d+:\d+:\d+/.test(newValue)) {
 			// Destructuring assignment
 			[
@@ -190,7 +189,6 @@ export default class TimeSelector extends Vue {
 		this.timeInputs.isOneOrMoreFocused = true;
 	}
 	handleIconClick() {
-		console.log('gboDebug:[this.label]', this.label);
 		(this.$refs.hours as HTMLElement).focus();
 	}
 }
