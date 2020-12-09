@@ -1,4 +1,4 @@
-import { toSeconds } from '../Utils/BubbleUtils';
+import { timestampToSeconds, toSeconds } from '../Utils/BubbleUtils';
 
 export default class BubbleData {
 	public from: string;
@@ -35,5 +35,12 @@ to ${input.toStamp}, x:${input.x}, y:${input.y}`;
 			this.id = `newCard-${BubbleData.newCardCounter}`;
 			BubbleData.newCardCounter++;
 		}
+	}
+
+	fromInSeconds() {
+		return timestampToSeconds(this.from);
+	}
+	toInSeconds() {
+		return timestampToSeconds(this.to);
 	}
 }

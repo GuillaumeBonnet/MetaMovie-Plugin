@@ -5,7 +5,8 @@ import {
 	IBubbleState,
 	MutationBubble,
 } from '@/store/BubbleStore';
-import { removeExpiredBubble, timestampToSeconds } from '@/Utils/BubbleUtils';
+import { removeExpiredBubbles } from '@/Utils/BubbleUtils';
+import BubbleData from '@/models/BubbleData';
 
 interface IState {
 	video: HTMLVideoElement;
@@ -87,36 +88,40 @@ const store = {
 		) => {
 			commit(MutationMain.SET_PREVIOUS_TIME, state.currentTime);
 			commit(MutationMain.SET_CURRENT_TIME, currentTime);
-			if (
-				!state.bubbleModule.bubbles ||
-				state.bubbleModule.bubbles.length < 1
-			) {
+			const bubbleList = state.bubbleModule.bubbles;
+			if (!bubbleList || bubbleList.length < 1) {
 				return;
 			}
-			let displayedBubbles = [...state.bubbleModule.displayedBubbles];
 			let progressIndex = state.progressIndex;
-			if (Math.abs(state.currentTime - state.previousTime) > 1) {
-				displayedBubbles = [];
+			let displayedBubbles = [] as Array<BubbleData>;
+			if (Math.abs(state.currentTime - state.previousTime) > 1 /*sec*/) {
+				console.log('gboDebug: first if');
 				progressIndex = 0;
-				const indexNextBubble = state.bubbleModule.bubbles.findIndex(
-					bubble => timestampToSeconds(bubble.from) >= state.currentTime
-				);
-				if (indexNextBubble == -1) {
-					progressIndex = state.bubbleModule.bubbles.length;
-				} else if (indexNextBubble == 0) {
-					progressIndex = 0;
-				} else {
-					progressIndex = indexNextBubble - 1;
-				}
-			}
-			if (progressIndex < state.bubbleModule.bubbles.length) {
-				const nextBubble = state.bubbleModule.bubbles[progressIndex];
-				removeExpiredBubble(displayedBubbles, state.currentTime);
-				if (state.currentTime >= timestampToSeconds(nextBubble.from)) {
+				while (
+					progressIndex < bubbleList.length &&
+					bubbleList[progressIndex].fromInSeconds() < state.currentTime
+				) {
+					if (bubbleList[progressIndex].toInSeconds() > state.currentTime) {
+						displayedBubbles.push(bubbleList[progressIndex]);
+					}
 					progressIndex++;
+				}
+				// removeExpiredBubbles(displayedBubbles, state.currentTime);
+			} else if (progressIndex < bubbleList.length) {
+				displayedBubbles = [...state.bubbleModule.displayedBubbles];
+				console.log('gboDebug:[displayedBubbles]', displayedBubbles);
+				removeExpiredBubbles(displayedBubbles, state.currentTime);
+				console.log(
+					'gboDebug:[displayedBubbles after removeExpiredBubbles]',
+					displayedBubbles
+				);
+				while (progressIndex < bubbleList.length) {
+					const nextBubble = bubbleList[progressIndex];
+					if (nextBubble.fromInSeconds() > state.currentTime) {
+						break;
+					}
 					let indexToInsert = 0;
-					for (const bubbleAlreadyDisplayed of state.bubbleModule
-						.displayedBubbles) {
+					for (const bubbleAlreadyDisplayed of displayedBubbles) {
 						if (nextBubble.to < bubbleAlreadyDisplayed.to) {
 							break;
 						}
@@ -124,11 +129,13 @@ const store = {
 					}
 					nextBubble.isShown = state.bubbleModule.areBubbleBubbleDisplayed;
 					displayedBubbles.splice(indexToInsert, 0, nextBubble);
+					progressIndex++;
 				}
-				removeExpiredBubble(displayedBubbles, state.currentTime);
-				commit(MutationBubble.SET_DISPLAYED_BUBBLES, displayedBubbles);
-				commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
+			} else {
+				return;
 			}
+			commit(MutationBubble.SET_DISPLAYED_BUBBLES, displayedBubbles);
+			commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
 		},
 	},
 };

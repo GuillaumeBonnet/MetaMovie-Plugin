@@ -67,7 +67,6 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { IVideoDimensions, IPositionXY } from '@/models/Types';
 import {
 	pxToNumber,
-	timestampToSeconds,
 	toFixedCoordinate,
 	toRelativeCoordinate,
 } from '@/Utils/BubbleUtils';
@@ -91,7 +90,7 @@ export default class BubbleCmp extends Vue {
 
 	@Watch('bubble.from')
 	onBubbleFromChange() {
-		this.video.currentTime = timestampToSeconds(this.bubble.from);
+		this.video.currentTime = this.bubble.fromInSeconds();
 	}
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };

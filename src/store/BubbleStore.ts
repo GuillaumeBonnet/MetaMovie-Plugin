@@ -1,4 +1,4 @@
-import { removeExpiredBubble, updateABubble } from '@/Utils/BubbleUtils';
+import { removeExpiredBubbles, updateABubble } from '@/Utils/BubbleUtils';
 import BubbleData from '../models/BubbleData';
 
 const MutationBubble = {

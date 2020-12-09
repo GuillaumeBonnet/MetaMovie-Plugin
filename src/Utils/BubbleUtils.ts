@@ -26,8 +26,11 @@ function timestampToSeconds(timestamp: string) {
 	);
 }
 
-function removeExpiredBubble(bubbles: BubbleData[], currentTime: number): void {
-	if (bubbles[0] && timestampToSeconds(bubbles[0].to) <= currentTime) {
+function removeExpiredBubbles(
+	bubbles: BubbleData[],
+	currentTime: number
+): void {
+	while (bubbles && bubbles[0] && bubbles[0].toInSeconds() <= currentTime) {
 		bubbles.shift();
 	}
 }
@@ -75,7 +78,7 @@ function toRelativeCoordinate(
 }
 export {
 	toSeconds,
-	removeExpiredBubble,
+	removeExpiredBubbles,
 	updateABubble,
 	toFixedCoordinate,
 	toRelativeCoordinate,
