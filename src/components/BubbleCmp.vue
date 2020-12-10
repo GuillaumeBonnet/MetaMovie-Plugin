@@ -119,9 +119,6 @@ export default class BubbleCmp extends Vue {
 	video!: IState['video'];
 
 	get isInEdition() {
-		console.log(
-			`gboDebug: cardEdited${this.cardEdited?.id} vs ${this.bubble?.id}`
-		);
 		return this.bubble.id && this.cardEdited?.id == this.bubble.id;
 	}
 
@@ -221,6 +218,10 @@ export default class BubbleCmp extends Vue {
 			console.log(
 				'gboDebug:[toRelativeCoordinate]',
 				toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
+			);
+			this.bubble.userPosition = toRelativeCoordinate(
+				this.videoDimensions,
+				this.$el as HTMLElement
 			);
 			document.removeEventListener('mousemove', onMouseMove);
 			card.onmouseleave = null;

@@ -121,8 +121,8 @@ export default class BubbleDetailsList extends Vue {
 	@Watch('bubbles')
 	onBubblesChanged(newBubblesValue: Array<formatedBubble>) {
 		for (const bubble of newBubblesValue) {
-			bubble.formatedX = bubble.x + '%';
-			bubble.formatedY = bubble.y + '%';
+			bubble.formatedX = bubble.position.x + '%';
+			bubble.formatedY = bubble.position.y + '%';
 		}
 	}
 

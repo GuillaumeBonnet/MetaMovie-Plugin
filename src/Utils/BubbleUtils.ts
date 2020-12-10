@@ -47,9 +47,11 @@ function toFixedCoordinate(
 	renderedBubble: Element
 ): IPositionXY {
 	const topValue =
-		(bubble.y * (videoDimensions.y - renderedBubble.clientHeight)) / 100;
+		(bubble.position.y * (videoDimensions.y - renderedBubble.clientHeight)) /
+		100;
 	const leftValue =
-		(bubble.x * (videoDimensions.x - renderedBubble.clientWidth)) / 100;
+		(bubble.position.x * (videoDimensions.x - renderedBubble.clientWidth)) /
+		100;
 	return {
 		top: topValue + 'px',
 		left: leftValue + 'px',

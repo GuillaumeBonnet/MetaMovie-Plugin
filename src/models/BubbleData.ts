@@ -4,8 +4,14 @@ export default class BubbleData {
 	public from: string;
 	public to: string;
 	public text: string;
-	public x: number;
-	public y: number;
+	public position: {
+		x: number;
+		y: number;
+	};
+	public userPosition?: {
+		x: number;
+		y: number;
+	};
 	public isShown = true;
 	public id: string;
 	public static newCardCounter = 0;
@@ -27,8 +33,10 @@ export default class BubbleData {
 to ${input.toStamp}, x:${input.x}, y:${input.y}`;
 		this.from = input.fromStamp;
 		this.to = input.toStamp;
-		this.x = input.x;
-		this.y = input.y;
+		this.position = {
+			x: input.x,
+			y: input.y,
+		};
 		if (input.id) {
 			this.id = input.id;
 		} else {

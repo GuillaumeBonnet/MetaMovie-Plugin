@@ -84,6 +84,7 @@ const store = {
 					state.bubbleModule.displayedBubbles,
 					bubble => bubble.id == cardEdited.id
 				);
+				cardEdited.position = cardEdited.userPosition || cardEdited.position;
 			}
 			state.cardEdited = cardEdited;
 		},
