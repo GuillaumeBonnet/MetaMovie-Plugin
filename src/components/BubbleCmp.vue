@@ -98,14 +98,17 @@ export default class BubbleCmp extends Vue {
 		this.setPosition();
 	}
 
-	@State((state: IState) => state.idCardEdited)
-	idCardEdited!: IState['idCardEdited'];
+	@State((state: IState) => state.cardEdited)
+	cardEdited!: IState['cardEdited'];
 
 	@State((state: IState) => state.video)
 	video!: IState['video'];
 
 	get isInEdition() {
-		return this.idCardEdited == this.bubble.id;
+		console.log(
+			`gboDebug: cardEdited${this.cardEdited?.id} vs ${this.bubble?.id}`
+		);
+		return this.bubble.id && this.cardEdited?.id == this.bubble.id;
 	}
 
 	@Watch('videoDimensions')
@@ -121,16 +124,17 @@ export default class BubbleCmp extends Vue {
 
 	@Mutation(MutationBubble.UPDATE_DISPLAYED_BUBBLE) updateDisplayedBubble: any;
 	handleCloseButton() {
-		this.$store.commit(MutationMain.SET_ID_CARD_EDITED, undefined);
+		this.$store.commit(MutationMain.SET_CARD_EDITED, undefined);
 		this.updateDisplayedBubble({
 			isShown: false,
 			id: this.bubble.id,
 		} as Partial<BubbleData>);
 	}
 	handleEditButton() {
+		console.log('gboDebug:[this.bubble]', this.bubble);
 		this.$store.commit(
-			MutationMain.SET_ID_CARD_EDITED,
-			this.isInEdition ? undefined : this.bubble.id
+			MutationMain.SET_CARD_EDITED,
+			this.isInEdition ? null : this.bubble
 		);
 	}
 	clickToDrag(event: MouseEvent) {

@@ -2,9 +2,15 @@
 	<div class="full-screen-overlay">
 		<template v-if="videoDimensions.x">
 			<BubbleCmp
-				v-for="(bubble, index) in displayedBubbles"
-				:key="index"
+				v-for="bubble in displayedBubbles"
+				:key="bubble.id"
 				:bubble="bubble"
+				:videoDimensions="videoDimensions"
+				@click="togglePausePlay"
+			></BubbleCmp>
+			<BubbleCmp
+				v-if="cardEdited"
+				:bubble="cardEdited"
 				:videoDimensions="videoDimensions"
 				@click="togglePausePlay"
 			></BubbleCmp>
@@ -50,6 +56,9 @@ export default class VideoOverlay extends Vue {
 
 	@State((state: IState) => state.bubbleModule.bubbles)
 	bubblesInStore!: IBubbleState['bubbles'];
+
+	@State((state: IState) => state.cardEdited)
+	cardEdited!: IState['cardEdited'];
 
 	@State((state: IState) => state.bubbleModule.displayedBubbles)
 	displayedBubbles!: IBubbleState['displayedBubbles'];

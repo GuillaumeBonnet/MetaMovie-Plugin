@@ -7,11 +7,12 @@ import {
 } from '@/store/BubbleStore';
 import { removeExpiredBubbles } from '@/Utils/BubbleUtils';
 import BubbleData from '@/models/BubbleData';
+import { removeElemIf } from '@/Utils/MainUtils';
 
 interface IState {
 	video: HTMLVideoElement;
 	isFullScreen: boolean;
-	idCardEdited?: string;
+	cardEdited?: BubbleData;
 	currentTime: number;
 	previousTime: number;
 	progressIndex: number;
@@ -26,7 +27,7 @@ interface IStore {
 const MutationMain = {
 	SET_VIDEO: 'SET_VIDEO',
 	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
-	SET_ID_CARD_EDITED: 'SET_ID_CARD_EDITED',
+	SET_CARD_EDITED: 'SET_CARD_EDITED',
 	SET_CURRENT_TIME: 'SET_CURRENT_TIME',
 	SET_PREVIOUS_TIME: 'SET_PREVIOUS_TIME',
 	SET_PROGRESS_INDEX: 'SET_PROGRESS_INDEX',
@@ -41,7 +42,7 @@ const store = {
 	},
 	state: {
 		progressIndex: 0,
-		idCardEdited: undefined,
+		cardEdited: undefined,
 		currentTime: 0,
 		previousTime: 0,
 		isFullScreen: !!document.fullscreenElement,
@@ -56,11 +57,35 @@ const store = {
 		) => {
 			state.isFullScreen = isFullScreen;
 		},
-		[MutationMain.SET_ID_CARD_EDITED]: (
+		[MutationMain.SET_CARD_EDITED]: (
 			state: IState,
-			idCardEdited: IState['idCardEdited']
+			cardEdited: IState['cardEdited']
 		) => {
-			state.idCardEdited = idCardEdited;
+			if (state.cardEdited && !cardEdited /*editCardDone*/) {
+				let iInsert = 0;
+				const bubbles = state.bubbleModule.bubbles;
+				while (iInsert < bubbles.length) {
+					if (
+						state.cardEdited.fromInSeconds() < bubbles[iInsert].fromInSeconds()
+					) {
+						break;
+					}
+					iInsert++;
+				}
+				state.bubbleModule.bubbles.splice(iInsert, 0, state.cardEdited);
+				state.video.currentTime = state.cardEdited?.fromInSeconds() - 2;
+				state.video.play();
+			} else if (cardEdited) {
+				removeElemIf(
+					state.bubbleModule.bubbles,
+					bubble => bubble.id == cardEdited.id
+				);
+				removeElemIf(
+					state.bubbleModule.displayedBubbles,
+					bubble => bubble.id == cardEdited.id
+				);
+			}
+			state.cardEdited = cardEdited;
 		},
 		[MutationMain.SET_CURRENT_TIME]: (
 			state: IState,
@@ -127,6 +152,12 @@ const store = {
 				}
 			} else {
 				return;
+			}
+			if (state.cardEdited) {
+				removeElemIf(
+					displayedBubbles,
+					bubble => bubble.id == state.cardEdited?.id
+				);
 			}
 			commit(MutationBubble.SET_DISPLAYED_BUBBLES, displayedBubbles);
 			commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
