@@ -1,4 +1,4 @@
-import { timestampToSeconds, toSeconds } from '../Utils/BubbleUtils';
+import { timestampToSeconds } from '../Utils/BubbleUtils';
 
 export default class BubbleData {
 	public from: string;

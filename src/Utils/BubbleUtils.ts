@@ -1,19 +1,6 @@
 import BubbleData from '@/models/BubbleData';
 import { IPositionXY, IVideoDimensions } from '@/models/Types';
 
-function toSeconds(time: string) {
-	const timeValues = time.split(':').map(Number.parseInt);
-	if (timeValues.length == 1) {
-		return timeValues[0];
-	} else if (timeValues.length == 2) {
-		return 60 * timeValues[1] + timeValues[0];
-	} else if (timeValues.length == 3)
-		return 60 * 60 * timeValues[2] + 60 * timeValues[1] + timeValues[0];
-	else {
-		return NaN;
-	}
-}
-
 function timestampToSeconds(timestamp: string) {
 	if (!/\d:\d\d:\d\d/.test(timestamp)) {
 		throw Error('timestamp should have a format like 0:00:00.');
@@ -24,6 +11,16 @@ function timestampToSeconds(timestamp: string) {
 		Number.parseInt(minutes) * 60 +
 		Number.parseInt(seconds)
 	);
+}
+
+function readableTime(timeInSeconds: number) {
+	const hours = Math.floor(timeInSeconds / 3600);
+	timeInSeconds -= hours * 3600;
+	const minutes = Math.floor(timeInSeconds / 60);
+	timeInSeconds -= minutes * 60;
+	return `${hours}:${minutes
+		.toString()
+		.padStart(2, '0')}:${timeInSeconds.toString().padStart(2, '0')}`;
 }
 
 function removeExpiredBubbles(
@@ -77,11 +74,11 @@ function toRelativeCoordinate(
 	};
 }
 export {
-	toSeconds,
 	removeExpiredBubbles,
 	updateABubble,
 	toFixedCoordinate,
 	toRelativeCoordinate,
 	pxToNumber,
 	timestampToSeconds,
+	readableTime,
 };

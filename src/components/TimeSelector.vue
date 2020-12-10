@@ -175,7 +175,7 @@ export default class TimeSelector extends Vue {
 		} else if (
 			input.value.length == 1 &&
 			(inputType == 'minutes' || inputType == 'seconds') &&
-			Number.parseInt(input.value) >= 1 &&
+			Number.parseInt(input.value) >= 0 &&
 			Number.parseInt(input.value) <= 9
 		) {
 			this.timeInputs[inputType].value = '0' + this.timeInputs[inputType].value;
