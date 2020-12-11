@@ -5,9 +5,8 @@ from displayedBubbles and put back at the right place when the edit is done
 //TODO add a bubble button
 <template>
 	<md-card
-		v-show="bubble.isShown"
 		@mousedown.native="clickToDrag($event)"
-		:style="xyPosition"
+		:style="dynamicCardStyle"
 		:class="isInEdition ? 'card-edit' : 'card'"
 	>
 		<md-card-header>
@@ -44,8 +43,18 @@ from displayedBubbles and put back at the right place when the edit is done
 				</md-button>
 			</div>
 		</md-card-header>
-		<md-card-content id="card-text">
-			{{ bubble.text }}
+		<md-card-content>
+			<md-field v-if="isInEdition" class="textarea-field">
+				<md-textarea
+					v-model="bubble.text"
+					md-autogrow
+					md-counter="100"
+					@mousedown.native.stop
+				></md-textarea>
+			</md-field>
+			<div class="card-text" v-else>
+				{{ bubble.text }}
+			</div>
 		</md-card-content>
 	</md-card>
 </template>
@@ -110,6 +119,16 @@ export default class BubbleCmp extends Vue {
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
 	mounted() {
 		this.setPosition();
+	}
+
+	get dynamicCardStyle() {
+		const dynamicStyle = {
+			...this.xyPosition,
+		};
+		if (!this.bubble.isShown) {
+			dynamicStyle.top = '-100vh';
+		}
+		return dynamicStyle;
 	}
 
 	@State((state: IState) => state.cardEdited)
@@ -287,8 +306,10 @@ div.card-edit {
 	left: calc(50vw - 60px);
 	border-radius: $border-radius;
 	transition: background-color $transitionTiming;
-	& #card-text {
+	& .card-text {
 		font-size: 36px;
+		line-height: 1em;
+		white-space: pre-wrap;
 		color: bisque;
 	}
 	& .md-card-header .card-actions * {
