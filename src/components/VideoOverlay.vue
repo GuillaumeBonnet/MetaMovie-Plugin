@@ -1,19 +1,19 @@
 <template>
 	<div class="full-screen-overlay">
 		<template v-if="videoDimensions.x">
-			<BubbleCmp
-				v-for="bubble in displayedBubbles"
-				:key="bubble.id"
-				:bubble="bubble"
+			<CardCmp
+				v-for="card in displayedCards"
+				:key="card.id"
+				:card="card"
 				:videoDimensions="videoDimensions"
 				@click="togglePausePlay"
-			></BubbleCmp>
-			<BubbleCmp
+			></CardCmp>
+			<CardCmp
 				v-if="cardEdited"
-				:bubble="cardEdited"
+				:card="cardEdited"
 				:videoDimensions="videoDimensions"
 				@click="togglePausePlay"
-			></BubbleCmp>
+			></CardCmp>
 		</template>
 	</div>
 </template>
@@ -30,18 +30,18 @@
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
-import BubbleCmp from '@/components/BubbleCmp.vue';
+import CardCmp from '@/components/CardCmp.vue';
 import Menu from '@/components/Menu.vue';
 import { getModule } from 'vuex-module-decorators';
-import BubbleData from '@/models/BubbleData';
+import CardData from '@/models/CardData';
 import { IVideoDimensions } from '@/models/Types';
 import { Action, State } from 'vuex-class';
 import { ActionMain, IState, MutationMain } from '@/store/Store';
-import { ActionBubble, IBubbleState } from '@/store/BubbleStore';
+import { ActionCard, ICardState } from '@/store/CardStore';
 
 @Component({
 	components: {
-		BubbleCmp,
+		CardCmp,
 		Menu,
 	},
 })
@@ -54,14 +54,14 @@ export default class VideoOverlay extends Vue {
 	private video!: IState['video'];
 	private videoDimensions: IVideoDimensions = { x: 0, y: 0 }; //in px
 
-	@State((state: IState) => state.bubbleModule.bubbles)
-	bubblesInStore!: IBubbleState['bubbles'];
+	@State((state: IState) => state.cardModule.cards)
+	cardsInStore!: ICardState['cards'];
 
 	@State((state: IState) => state.cardEdited)
 	cardEdited!: IState['cardEdited'];
 
-	@State((state: IState) => state.bubbleModule.displayedBubbles)
-	displayedBubbles!: IBubbleState['displayedBubbles'];
+	@State((state: IState) => state.cardModule.displayedCards)
+	displayedCards!: ICardState['displayedCards'];
 
 	@Action(ActionMain.HANDLE_VIDEO_PROGRESSION) handleVideoProgression: any;
 

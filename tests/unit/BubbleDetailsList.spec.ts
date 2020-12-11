@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import BubbleDetailsList from '@/components/BubbleDetailsList.vue';
+import CardDetailsList from '@/components/CardDetailsList.vue';
 
-describe('BubbleDetailsList.vue', () => {
+describe('CardDetailsList.vue', () => {
 	it('test the ', () => {
 		// cannot launch tests with current configuration
-		const wrapper = shallowMount(BubbleDetailsList, {
+		const wrapper = shallowMount(CardDetailsList, {
 			propsData: {},
 		});
 		const cmpDetailsList = wrapper.vm as any;

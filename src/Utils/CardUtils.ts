@@ -1,4 +1,4 @@
-import BubbleData from '@/models/BubbleData';
+import CardData from '@/models/CardData';
 import { IPositionXY, IVideoDimensions } from '@/models/Types';
 
 function timestampToSeconds(timestamp: string) {
@@ -23,35 +23,30 @@ function readableTime(timeInSeconds: number) {
 		.padStart(2, '0')}:${timeInSeconds.toString().padStart(2, '0')}`;
 }
 
-function removeExpiredBubbles(
-	bubbles: BubbleData[],
-	currentTime: number
-): void {
-	while (bubbles && bubbles[0] && bubbles[0].toInSeconds() <= currentTime) {
-		bubbles.shift();
+function removeExpiredCards(cards: CardData[], currentTime: number): void {
+	while (cards && cards[0] && cards[0].toInSeconds() <= currentTime) {
+		cards.shift();
 	}
 }
 
-function updateABubble(bubbles: BubbleData[], bubble: Partial<BubbleData>) {
-	if (bubble?.id != null) {
-		const index = bubbles.findIndex(bubbleElem => bubbleElem.id == bubble.id);
+function updateACard(cards: CardData[], card: Partial<CardData>) {
+	if (card?.id != null) {
+		const index = cards.findIndex(cardElem => cardElem.id == card.id);
 		if (index != -1) {
-			Object.assign(bubbles[index], bubble);
+			Object.assign(cards[index], card);
 		}
 	}
 }
 
 function toFixedCoordinate(
 	videoDimensions: IVideoDimensions,
-	bubble: BubbleData,
-	renderedBubble: Element
+	card: CardData,
+	renderedCard: Element
 ): IPositionXY {
 	const topValue =
-		(bubble.position.y * (videoDimensions.y - renderedBubble.clientHeight)) /
-		100;
+		(card.position.y * (videoDimensions.y - renderedCard.clientHeight)) / 100;
 	const leftValue =
-		(bubble.position.x * (videoDimensions.x - renderedBubble.clientWidth)) /
-		100;
+		(card.position.x * (videoDimensions.x - renderedCard.clientWidth)) / 100;
 	return {
 		top: topValue + 'px',
 		left: leftValue + 'px',
@@ -64,20 +59,20 @@ function pxToNumber(pxString: string) {
 
 function toRelativeCoordinate(
 	videoDimensions: IVideoDimensions,
-	renderedBubble: HTMLElement
+	renderedCard: HTMLElement
 ) {
 	return {
 		x:
-			(100 * pxToNumber(renderedBubble.style.left)) /
-			(videoDimensions.x - renderedBubble.clientWidth),
+			(100 * pxToNumber(renderedCard.style.left)) /
+			(videoDimensions.x - renderedCard.clientWidth),
 		y:
-			(100 * pxToNumber(renderedBubble.style.top)) /
-			(videoDimensions.y - renderedBubble.clientHeight),
+			(100 * pxToNumber(renderedCard.style.top)) /
+			(videoDimensions.y - renderedCard.clientHeight),
 	};
 }
 export {
-	removeExpiredBubbles,
-	updateABubble,
+	removeExpiredCards,
+	updateACard,
 	toFixedCoordinate,
 	toRelativeCoordinate,
 	pxToNumber,

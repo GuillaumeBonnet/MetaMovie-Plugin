@@ -1,6 +1,6 @@
-import { timestampToSeconds } from '../Utils/BubbleUtils';
+import { timestampToSeconds } from '../Utils/CardUtils';
 
-export default class BubbleData {
+export default class CardData {
 	public from: string;
 	public to: string;
 	public text: string;
@@ -40,8 +40,8 @@ to ${input.toStamp}, x:${input.x}, y:${input.y}`;
 		if (input.id) {
 			this.id = input.id;
 		} else {
-			this.id = `newCard-${BubbleData.newCardCounter}`;
-			BubbleData.newCardCounter++;
+			this.id = `newCard-${CardData.newCardCounter}`;
+			CardData.newCardCounter++;
 		}
 	}
 

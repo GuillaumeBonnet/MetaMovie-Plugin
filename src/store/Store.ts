@@ -1,22 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {
-	bubbleModule,
-	IBubbleState,
-	MutationBubble,
-} from '@/store/BubbleStore';
-import { removeExpiredBubbles } from '@/Utils/BubbleUtils';
-import BubbleData from '@/models/BubbleData';
+import { cardModule, ICardState, MutationCard } from '@/store/CardStore';
+import { removeExpiredCards } from '@/Utils/CardUtils';
+import CardData from '@/models/CardData';
 import { removeElemIf } from '@/Utils/MainUtils';
 
 interface IState {
 	video: HTMLVideoElement;
 	isFullScreen: boolean;
-	cardEdited?: BubbleData;
+	cardEdited?: CardData;
 	currentTime: number;
 	previousTime: number;
 	progressIndex: number;
-	bubbleModule: IBubbleState;
+	cardModule: ICardState;
 }
 
 interface IStore {
@@ -38,7 +34,7 @@ const ActionMain = {
 
 const store = {
 	modules: {
-		bubbleModule,
+		cardModule,
 	},
 	state: {
 		progressIndex: 0,
@@ -63,26 +59,23 @@ const store = {
 		) => {
 			if (state.cardEdited && !cardEdited /*editCardDone*/) {
 				let iInsert = 0;
-				const bubbles = state.bubbleModule.bubbles;
-				while (iInsert < bubbles.length) {
+				const cards = state.cardModule.cards;
+				while (iInsert < cards.length) {
 					if (
-						state.cardEdited.fromInSeconds() < bubbles[iInsert].fromInSeconds()
+						state.cardEdited.fromInSeconds() < cards[iInsert].fromInSeconds()
 					) {
 						break;
 					}
 					iInsert++;
 				}
-				state.bubbleModule.bubbles.splice(iInsert, 0, state.cardEdited);
+				state.cardModule.cards.splice(iInsert, 0, state.cardEdited);
 				state.video.currentTime = state.cardEdited?.fromInSeconds() - 2;
 				state.video.play();
 			} else if (cardEdited) {
+				removeElemIf(state.cardModule.cards, card => card.id == cardEdited.id);
 				removeElemIf(
-					state.bubbleModule.bubbles,
-					bubble => bubble.id == cardEdited.id
-				);
-				removeElemIf(
-					state.bubbleModule.displayedBubbles,
-					bubble => bubble.id == cardEdited.id
+					state.cardModule.displayedCards,
+					card => card.id == cardEdited.id
 				);
 				cardEdited.position = cardEdited.userPosition || cardEdited.position;
 			}
@@ -114,53 +107,50 @@ const store = {
 		) => {
 			commit(MutationMain.SET_PREVIOUS_TIME, state.currentTime);
 			commit(MutationMain.SET_CURRENT_TIME, currentTime);
-			const bubbleList = state.bubbleModule.bubbles;
-			if (!bubbleList || bubbleList.length < 1) {
+			const cardList = state.cardModule.cards;
+			if (!cardList || cardList.length < 1) {
 				return;
 			}
 			let progressIndex = state.progressIndex;
-			let displayedBubbles = [] as Array<BubbleData>;
+			let displayedCards = [] as Array<CardData>;
 			if (Math.abs(state.currentTime - state.previousTime) > 1 /*sec*/) {
 				progressIndex = 0;
 				while (
-					progressIndex < bubbleList.length &&
-					bubbleList[progressIndex].fromInSeconds() < state.currentTime
+					progressIndex < cardList.length &&
+					cardList[progressIndex].fromInSeconds() < state.currentTime
 				) {
-					if (bubbleList[progressIndex].toInSeconds() > state.currentTime) {
-						displayedBubbles.push(bubbleList[progressIndex]);
+					if (cardList[progressIndex].toInSeconds() > state.currentTime) {
+						displayedCards.push(cardList[progressIndex]);
 					}
 					progressIndex++;
 				}
-				// removeExpiredBubbles(displayedBubbles, state.currentTime);
-			} else if (progressIndex < bubbleList.length) {
-				displayedBubbles = [...state.bubbleModule.displayedBubbles];
-				removeExpiredBubbles(displayedBubbles, state.currentTime);
-				while (progressIndex < bubbleList.length) {
-					const nextBubble = bubbleList[progressIndex];
-					if (nextBubble.fromInSeconds() > state.currentTime) {
+				// removeExpiredCards(displayedCards, state.currentTime);
+			} else if (progressIndex < cardList.length) {
+				displayedCards = [...state.cardModule.displayedCards];
+				removeExpiredCards(displayedCards, state.currentTime);
+				while (progressIndex < cardList.length) {
+					const nextCard = cardList[progressIndex];
+					if (nextCard.fromInSeconds() > state.currentTime) {
 						break;
 					}
 					let indexToInsert = 0;
-					for (const bubbleAlreadyDisplayed of displayedBubbles) {
-						if (nextBubble.to < bubbleAlreadyDisplayed.to) {
+					for (const cardAlreadyDisplayed of displayedCards) {
+						if (nextCard.to < cardAlreadyDisplayed.to) {
 							break;
 						}
 						indexToInsert++;
 					}
-					nextBubble.isShown = state.bubbleModule.areBubbleBubbleDisplayed;
-					displayedBubbles.splice(indexToInsert, 0, nextBubble);
+					nextCard.isShown = state.cardModule.areCardCardDisplayed;
+					displayedCards.splice(indexToInsert, 0, nextCard);
 					progressIndex++;
 				}
 			} else {
 				return;
 			}
 			if (state.cardEdited) {
-				removeElemIf(
-					displayedBubbles,
-					bubble => bubble.id == state.cardEdited?.id
-				);
+				removeElemIf(displayedCards, card => card.id == state.cardEdited?.id);
 			}
-			commit(MutationBubble.SET_DISPLAYED_BUBBLES, displayedBubbles);
+			commit(MutationCard.SET_DISPLAYED_CARDS, displayedCards);
 			commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
 		},
 	},

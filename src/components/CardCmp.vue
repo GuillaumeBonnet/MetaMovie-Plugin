@@ -1,8 +1,8 @@
-//TODO global edit mode when a bubble is in edit mode it is always displayed
+//TODO global edit mode when a card is in edit mode it is always displayed
 regardless of the time clicking on times goes there in the video X Y displays
-Icon 'is it displayed right now' when a bubble is in edit mode it is removed
-from displayedBubbles and put back at the right place when the edit is done
-//TODO add a bubble button
+Icon 'is it displayed right now' when a card is in edit mode it is removed from
+displayedCards and put back at the right place when the edit is done //TODO add
+a card button
 <template>
 	<md-card
 		@mousedown.native="clickToDrag($event)"
@@ -22,12 +22,12 @@ from displayedBubbles and put back at the right place when the edit is done
 					</md-button>
 					<template v-if="isInEdition">
 						<time-selector
-							v-model="bubble.from"
+							v-model="card.from"
 							@mousedown.native.stop
 							label="From"
 						></time-selector>
 						<time-selector
-							v-model="bubble.to"
+							v-model="card.to"
 							@mousedown.native.stop
 							label="To"
 						></time-selector>
@@ -46,14 +46,14 @@ from displayedBubbles and put back at the right place when the edit is done
 		<md-card-content>
 			<md-field v-if="isInEdition" class="textarea-field">
 				<md-textarea
-					v-model="bubble.text"
+					v-model="card.text"
 					md-autogrow
 					md-counter="100"
 					@mousedown.native.stop
 				></md-textarea>
 			</md-field>
 			<div class="card-text" v-else>
-				{{ bubble.text }}
+				{{ card.text }}
 			</div>
 		</md-card-content>
 	</md-card>
@@ -71,7 +71,7 @@ from displayedBubbles and put back at the right place when the edit is done
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 
-import BubbleData from '@/models/BubbleData';
+import CardData from '@/models/CardData';
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { IVideoDimensions, IPositionXY } from '@/models/Types';
 import {
@@ -79,9 +79,9 @@ import {
 	readableTime,
 	toFixedCoordinate,
 	toRelativeCoordinate,
-} from '@/Utils/BubbleUtils';
+} from '@/Utils/CardUtils';
 import { Mutation, State } from 'vuex-class';
-import { MutationBubble } from '@/store/BubbleStore';
+import { MutationCard } from '@/store/CardStore';
 import { IState, MutationMain } from '@/store/Store';
 import TimeSelector from '@/components/TimeSelector.vue';
 
@@ -91,29 +91,29 @@ import TimeSelector from '@/components/TimeSelector.vue';
 		TimeSelector,
 	},
 })
-export default class BubbleCmp extends Vue {
+export default class CardCmp extends Vue {
 	@Prop({ required: true })
-	private bubble!: BubbleData;
+	private card!: CardData;
 
 	@Prop({ required: true })
 	private videoDimensions!: IVideoDimensions; //in px
 
-	@Watch('bubble.from')
-	onBubbleFromChange() {
-		if (this.bubble.toInSeconds() - this.bubble.fromInSeconds() < 1) {
-			this.bubble.to = readableTime(this.bubble.fromInSeconds() + 1);
+	@Watch('card.from')
+	onCardFromChange() {
+		if (this.card.toInSeconds() - this.card.fromInSeconds() < 1) {
+			this.card.to = readableTime(this.card.fromInSeconds() + 1);
 		}
-		this.video.currentTime = this.bubble.fromInSeconds();
+		this.video.currentTime = this.card.fromInSeconds();
 	}
-	@Watch('bubble.to')
-	onBubbleToChange() {
-		if (this.bubble.toInSeconds() < 1) {
-			this.bubble.from = readableTime(0);
-			this.bubble.to = readableTime(1);
-		} else if (this.bubble.toInSeconds() - this.bubble.fromInSeconds() < 1) {
-			this.bubble.from = readableTime(this.bubble.toInSeconds() - 1);
+	@Watch('card.to')
+	onCardToChange() {
+		if (this.card.toInSeconds() < 1) {
+			this.card.from = readableTime(0);
+			this.card.to = readableTime(1);
+		} else if (this.card.toInSeconds() - this.card.fromInSeconds() < 1) {
+			this.card.from = readableTime(this.card.toInSeconds() - 1);
 		}
-		this.video.currentTime = this.bubble.toInSeconds();
+		this.video.currentTime = this.card.toInSeconds();
 	}
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
@@ -125,7 +125,7 @@ export default class BubbleCmp extends Vue {
 		const dynamicStyle = {
 			...this.xyPosition,
 		};
-		if (!this.bubble.isShown) {
+		if (!this.card.isShown) {
 			dynamicStyle.top = '-100vh';
 		}
 		return dynamicStyle;
@@ -138,33 +138,33 @@ export default class BubbleCmp extends Vue {
 	video!: IState['video'];
 
 	get isInEdition() {
-		return this.bubble.id && this.cardEdited?.id == this.bubble.id;
+		return this.card.id && this.cardEdited?.id == this.card.id;
 	}
 
 	@Watch('videoDimensions')
 	onVideoDimensionsChange() {
 		this.setPosition();
 	}
-	@Watch('bubble.isShown')
-	onBubbleChange() {
+	@Watch('card.isShown')
+	onCardChange() {
 		setTimeout(() => {
 			this.setPosition();
 		});
 	}
 
-	@Mutation(MutationBubble.UPDATE_DISPLAYED_BUBBLE) updateDisplayedBubble: any;
+	@Mutation(MutationCard.UPDATE_DISPLAYED_CARD) updateDisplayedCard: any;
 	handleCloseButton() {
 		this.$store.commit(MutationMain.SET_CARD_EDITED, undefined);
-		this.updateDisplayedBubble({
+		this.updateDisplayedCard({
 			isShown: false,
-			id: this.bubble.id,
-		} as Partial<BubbleData>);
+			id: this.card.id,
+		} as Partial<CardData>);
 	}
 	handleEditButton() {
-		console.log('gboDebug:[this.bubble]', this.bubble);
+		console.log('gboDebug:[this.card]', this.card);
 		this.$store.commit(
 			MutationMain.SET_CARD_EDITED,
-			this.isInEdition ? null : this.bubble
+			this.isInEdition ? null : this.card
 		);
 	}
 	clickToDrag(event: MouseEvent) {
@@ -238,7 +238,7 @@ export default class BubbleCmp extends Vue {
 				'gboDebug:[toRelativeCoordinate]',
 				toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
 			);
-			this.bubble.userPosition = toRelativeCoordinate(
+			this.card.userPosition = toRelativeCoordinate(
 				this.videoDimensions,
 				this.$el as HTMLElement
 			);
@@ -252,7 +252,7 @@ export default class BubbleCmp extends Vue {
 		if (this.videoDimensions && this.$el) {
 			this.xyPosition = toFixedCoordinate(
 				this.videoDimensions,
-				this.bubble,
+				this.card,
 				this.$el
 			);
 		}

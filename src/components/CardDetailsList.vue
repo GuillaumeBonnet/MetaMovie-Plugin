@@ -1,10 +1,10 @@
 <template>
-	<md-dialog :md-active="isBubbleListDisplayed" :md-backdrop="false">
+	<md-dialog :md-active="isCardListDisplayed" :md-backdrop="false">
 		<md-dialog-title>Current Fact List</md-dialog-title>
 		<md-dialog-content>
-			<md-card v-for="(bubble, index) in bubbles" :key="index">
+			<md-card v-for="(card, index) in cards" :key="index">
 				<md-card-header>
-					<div class="md-title">{{ bubble.text }}</div>
+					<div class="md-title">{{ card.text }}</div>
 				</md-card-header>
 				<md-divider />
 
@@ -28,13 +28,13 @@
 							<!-- this next div mysteriously fix the bug where 1 or 2 sides of
 								the text areas are not displayed after rendering -->
 							<div class="md-layout md-gutter" style="opacity:0;">
-								<div class="md-layout-item">{{ bubble.text }}</div>
+								<div class="md-layout-item">{{ card.text }}</div>
 							</div>
 							<div class="md-layout md-gutter">
 								<div class="md-layout-item">
 									<md-field class="textarea-field">
 										<label>Text</label>
-										<md-textarea v-model="bubble.text" disabled></md-textarea>
+										<md-textarea v-model="card.text" disabled></md-textarea>
 									</md-field>
 								</div>
 							</div>
@@ -42,7 +42,7 @@
 								<div class="md-layout-item">
 									<div>
 										<time-selector
-											v-model="bubble.from"
+											v-model="card.from"
 											label="From"
 											readonly="true"
 										></time-selector>
@@ -51,7 +51,7 @@
 								<div class="md-layout-item">
 									<div>
 										<time-selector
-											v-model="bubble.to"
+											v-model="card.to"
 											label="To"
 											readonly="true"
 										></time-selector>
@@ -63,14 +63,14 @@
 									<md-field>
 										<md-icon>place</md-icon>
 										<label>Horizontal</label>
-										<md-input v-model="bubble.formatedX" readonly></md-input>
+										<md-input v-model="card.formatedX" readonly></md-input>
 									</md-field>
 								</div>
 								<div class="md-layout-item">
 									<md-field>
 										<md-icon>place</md-icon>
 										<label>Vertical</label>
-										<md-input v-model="bubble.formatedY" readonly></md-input>
+										<md-input v-model="card.formatedY" readonly></md-input>
 									</md-field>
 								</div>
 							</div>
@@ -80,7 +80,7 @@
 			</md-card>
 		</md-dialog-content>
 		<md-dialog-actions>
-			<md-button class="md-primary" @click="$emit('close-bubble-list')"
+			<md-button class="md-primary" @click="$emit('close-card-list')"
 				>Close</md-button
 			></md-dialog-actions
 		>
@@ -98,11 +98,11 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import BubbleData from '@/models/BubbleData';
+import CardData from '@/models/CardData';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import TimeSelector from '@/components/TimeSelector.vue';
 
-type formatedBubble = BubbleData & {
+type formatedCard = CardData & {
 	formatedX: string;
 	formatedY: string;
 };
@@ -112,17 +112,17 @@ type formatedBubble = BubbleData & {
 		TimeSelector,
 	},
 })
-export default class BubbleDetailsList extends Vue {
+export default class CardDetailsList extends Vue {
 	@Prop()
-	isBubbleListDisplayed = false;
+	isCardListDisplayed = false;
 	@Prop()
-	bubbles!: Array<formatedBubble>;
+	cards!: Array<formatedCard>;
 
-	@Watch('bubbles')
-	onBubblesChanged(newBubblesValue: Array<formatedBubble>) {
-		for (const bubble of newBubblesValue) {
-			bubble.formatedX = bubble.position.x + '%';
-			bubble.formatedY = bubble.position.y + '%';
+	@Watch('cards')
+	onCardsChanged(newCardsValue: Array<formatedCard>) {
+		for (const card of newCardsValue) {
+			card.formatedX = card.position.x + '%';
+			card.formatedY = card.position.y + '%';
 		}
 	}
 
