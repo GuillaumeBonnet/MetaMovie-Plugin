@@ -40,38 +40,34 @@
 							</div>
 							<div class="md-layout md-gutter" style="margin-top: 10px:">
 								<div class="md-layout-item">
-									<div>
-										<time-selector
-											v-model="card.from"
-											label="From"
-											readonly="true"
-										></time-selector>
-									</div>
+									<time-selector
+										v-model="card.from"
+										label="From"
+										readonly="true"
+									></time-selector>
 								</div>
 								<div class="md-layout-item">
-									<div>
-										<time-selector
-											v-model="card.to"
-											label="To"
-											readonly="true"
-										></time-selector>
-									</div>
-								</div>
-							</div>
-							<div class="md-layout md-gutter">
-								<div class="md-layout-item">
-									<md-field>
-										<md-icon>place</md-icon>
-										<label>Horizontal</label>
-										<md-input v-model="card.formatedX" readonly></md-input>
-									</md-field>
+									<time-selector
+										v-model="card.to"
+										label="To"
+										readonly="true"
+									></time-selector>
 								</div>
 								<div class="md-layout-item">
-									<md-field>
-										<md-icon>place</md-icon>
-										<label>Vertical</label>
-										<md-input v-model="card.formatedY" readonly></md-input>
-									</md-field>
+									<percentage-input
+										:value="card.position.x"
+										label="x: horizontal position(%)"
+										@mousedown.native.stop
+										readonly="true"
+									></percentage-input>
+								</div>
+								<div class="md-layout-item">
+									<percentage-input
+										:value="card.position.y"
+										label="y: vertical position(%)"
+										@mousedown.native.stop
+										readonly="true"
+									></percentage-input>
 								</div>
 							</div>
 						</md-card-content>
@@ -101,30 +97,18 @@
 import CardData from '@/models/CardData';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import TimeSelector from '@/components/TimeSelector.vue';
-
-type formatedCard = CardData & {
-	formatedX: string;
-	formatedY: string;
-};
-
+import PercentageInput from '@/components/PercentageInput.vue';
 @Component({
 	components: {
 		TimeSelector,
+		PercentageInput,
 	},
 })
 export default class CardDetailsList extends Vue {
 	@Prop()
 	isCardListDisplayed = false;
 	@Prop()
-	cards!: Array<formatedCard>;
-
-	@Watch('cards')
-	onCardsChanged(newCardsValue: Array<formatedCard>) {
-		for (const card of newCardsValue) {
-			card.formatedX = card.position.x + '%';
-			card.formatedY = card.position.y + '%';
-		}
-	}
+	cards!: Array<CardData>;
 
 	onExpandLineClick(event: Event) {
 		((event.target as HTMLElement)?.querySelector(

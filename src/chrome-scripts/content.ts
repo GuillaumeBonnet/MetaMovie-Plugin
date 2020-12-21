@@ -6,7 +6,7 @@ interface IAwaitedNodes {
 	videoWrapper: Element | null;
 }
 
-const maxLoadingTime = 5000,
+const maxLoadingTime = 10000,
 	initialTimestamp = Date.now(); //ms
 const intervalId = setInterval(() => {
 	const awaitedNodes = getAwaitedNode();

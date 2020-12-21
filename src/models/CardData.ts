@@ -8,10 +8,6 @@ export default class CardData {
 		x: number;
 		y: number;
 	};
-	public userPosition?: {
-		x: number;
-		y: number;
-	};
 	public isShown = true;
 	public id: string;
 	public static newCardCounter = 0;

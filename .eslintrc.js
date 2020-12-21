@@ -15,10 +15,10 @@ module.exports = {
 		ecmaVersion: 2020,
 	},
 	rules: {
-		'no-console': process.env.NODE_ENV === 'production' ? 'on' : 'off',
-		'no-debugger': process.env.NODE_ENV === 'production' ? 'on' : 'off',
-		'@typescript-eslint/camelcase': 'off',
-		'@typescript-eslint/interface-name-prefix': 'off',
+		'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
+		'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 1,
+		'@typescript-eslint/camelcase': 0,
+		'@typescript-eslint/interface-name-prefix': 0,
 	},
 	overrides: [
 		{

@@ -206,44 +206,12 @@ export default class TimeSelector extends Vue {
 /* -------------------------------------------------------------------------- */
 /*                                    SCSS                                    */
 /* -------------------------------------------------------------------------- */
-.container:hover:not(.readonly),
-.container--focused {
-	border-width: 2px !important;
-	margin: 3px !important;
-}
-.container {
-	&--focused {
-		@extend .container;
-		border-color: #ff6f00;
-	}
+
+@import '~@/styles/variables-and-mixins.scss';
+@include input('.container');
+
+.digit-container {
 	display: flex;
-	align-items: center;
-	font-size: 14px;
-	border: solid #616161 1px;
-	margin: 4px;
-	border-radius: 0.6em;
-	overflow: hidden;
-	background-color: #212121;
-	& i {
-		margin-left: 4px;
-		padding-right: 4px;
-		font-size: 20px !important;
-	}
-	& .non-icon-part {
-		flex-grow: 1;
-		border-left: solid #616161 1px;
-		& label {
-			display: block;
-			margin-left: 4px;
-			margin-top: 4px;
-			margin-bottom: -4px;
-			font-size: 0.5em;
-			line-height: 0.8em;
-		}
-		& .digit-container {
-			display: flex;
-		}
-	}
 }
 .separator {
 	display: flex;

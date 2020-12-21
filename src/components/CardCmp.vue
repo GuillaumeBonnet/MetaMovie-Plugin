@@ -23,17 +23,28 @@ a card button
 					<template v-if="isInEdition">
 						<time-selector
 							v-model="card.from"
-							@mousedown.native.stop
 							label="From"
+							@mousedown.native.stop
 						></time-selector>
 						<time-selector
 							v-model="card.to"
-							@mousedown.native.stop
 							label="To"
+							@mousedown.native.stop
 						></time-selector>
+						<percentage-input
+							:value="card.position.x"
+							label="x: horizontal position(%)"
+							@mousedown.native.stop
+						></percentage-input>
+						<percentage-input
+							:value="card.position.y"
+							label="y: vertical position(%)"
+							@mousedown.native.stop
+						></percentage-input>
 					</template>
 				</div>
 				<md-button
+					v-if="!isInEdition"
 					id="close-button"
 					class="md-icon-button"
 					@click="handleCloseButton()"
@@ -82,13 +93,15 @@ import {
 } from '@/Utils/CardUtils';
 import { Mutation, State } from 'vuex-class';
 import { MutationCard } from '@/store/CardStore';
-import { IState, MutationMain } from '@/store/Store';
+import { IState, MutationMain, ActionMain, IStore } from '@/store/Store';
 import TimeSelector from '@/components/TimeSelector.vue';
+import PercentageInput from '@/components/PercentageInput.vue';
 
 @Component({
 	components: {
 		// sub-components
 		TimeSelector,
+		PercentageInput,
 	},
 })
 export default class CardCmp extends Vue {
@@ -103,7 +116,10 @@ export default class CardCmp extends Vue {
 		if (this.card.toInSeconds() - this.card.fromInSeconds() < 1) {
 			this.card.to = readableTime(this.card.fromInSeconds() + 1);
 		}
-		this.video.currentTime = this.card.fromInSeconds();
+		this.$store.commit(
+			MutationMain.SET_VIDEO_CURRENT_TIME_S,
+			this.card.fromInSeconds()
+		);
 	}
 	@Watch('card.to')
 	onCardToChange() {
@@ -113,7 +129,10 @@ export default class CardCmp extends Vue {
 		} else if (this.card.toInSeconds() - this.card.fromInSeconds() < 1) {
 			this.card.from = readableTime(this.card.toInSeconds() - 1);
 		}
-		this.video.currentTime = this.card.toInSeconds();
+		this.$store.commit(
+			MutationMain.SET_VIDEO_CURRENT_TIME_S,
+			this.card.toInSeconds()
+		);
 	}
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
@@ -154,22 +173,22 @@ export default class CardCmp extends Vue {
 
 	@Mutation(MutationCard.UPDATE_DISPLAYED_CARD) updateDisplayedCard: any;
 	handleCloseButton() {
-		this.$store.commit(MutationMain.SET_CARD_EDITED, undefined);
+		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, undefined);
 		this.updateDisplayedCard({
 			isShown: false,
 			id: this.card.id,
 		} as Partial<CardData>);
 	}
 	handleEditButton() {
-		console.log('gboDebug:[this.card]', this.card);
-		this.$store.commit(
-			MutationMain.SET_CARD_EDITED,
+		if (!this.isInEdition) {
+			(this.$store as IStore).state.video.pause();
+		}
+		this.$store.dispatch(
+			ActionMain.TOGGLE_CARD_EDITED,
 			this.isInEdition ? null : this.card
 		);
 	}
 	clickToDrag(event: MouseEvent) {
-		//TODO : carte bloqué, mousedown dedans, mouseup dehors(=no mouseup), mousemove listenner not cleared
-		console.log('gboDebug: clickToDrag');
 		const card = event.currentTarget as HTMLElement;
 		const shiftX_cursorCard = event.clientX - card.getBoundingClientRect().left;
 		const shiftY_cursorCard = event.clientY - card.getBoundingClientRect().top;
@@ -226,25 +245,27 @@ export default class CardCmp extends Vue {
 
 		document.addEventListener('mousemove', onMouseMove);
 
+		const storePosition = () => {
+			this.$store.commit(MutationMain.UPDATE_CARD_EDITED, {
+				position: toRelativeCoordinate(
+					this.videoDimensions,
+					this.$el as HTMLElement
+				),
+			} as Partial<CardData>);
+		};
+
 		card.onmouseleave = (event: MouseEvent) => {
 			document.removeEventListener('mousemove', onMouseMove);
 			card.onmouseleave = null;
 			card.onmouseup = null;
+			storePosition();
 		};
 
 		card.onmouseup = () => {
-			console.log('gboDebug: onmouseup');
-			console.log(
-				'gboDebug:[toRelativeCoordinate]',
-				toRelativeCoordinate(this.videoDimensions, this.$el as HTMLElement)
-			);
-			this.card.userPosition = toRelativeCoordinate(
-				this.videoDimensions,
-				this.$el as HTMLElement
-			);
 			document.removeEventListener('mousemove', onMouseMove);
 			card.onmouseleave = null;
 			card.onmouseup = null;
+			storePosition();
 		};
 	}
 

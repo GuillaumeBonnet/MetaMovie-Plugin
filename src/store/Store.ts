@@ -7,6 +7,7 @@ import { removeElemIf } from '@/Utils/MainUtils';
 
 interface IState {
 	video: HTMLVideoElement;
+	netflixPlayer: any;
 	isFullScreen: boolean;
 	cardEdited?: CardData;
 	currentTime: number;
@@ -22,14 +23,16 @@ interface IStore {
 
 const MutationMain = {
 	SET_VIDEO: 'SET_VIDEO',
+	SET_VIDEO_CURRENT_TIME_S: 'SET_VIDEO_CURRENT_TIME_S',
 	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
-	SET_CARD_EDITED: 'SET_CARD_EDITED',
 	SET_CURRENT_TIME: 'SET_CURRENT_TIME',
 	SET_PREVIOUS_TIME: 'SET_PREVIOUS_TIME',
 	SET_PROGRESS_INDEX: 'SET_PROGRESS_INDEX',
+	UPDATE_CARD_EDITED: 'UPDATE_CARD_EDITED',
 };
 const ActionMain = {
 	HANDLE_VIDEO_PROGRESSION: 'HANDLE_VIDEO_PROGRESSION',
+	TOGGLE_CARD_EDITED: 'TOGGLE_CARD_EDITED',
 };
 
 const store = {
@@ -46,40 +49,30 @@ const store = {
 	mutations: {
 		[MutationMain.SET_VIDEO]: (state: IState, video: IState['video']) => {
 			state.video = video;
+			if (process.env.VUE_APP_MODE != 'DEV_SERVE') {
+				const netflix = (window as any).netflix;
+				const videoPlayer = netflix.appContext.state.playerApp.getAPI()
+					.videoPlayer;
+				state.netflixPlayer = videoPlayer.getVideoPlayerBySessionId(
+					videoPlayer.getAllPlayerSessionIds()[0]
+				);
+			}
+		},
+		[MutationMain.SET_VIDEO_CURRENT_TIME_S]: (
+			state: IState,
+			timeInS: number
+		) => {
+			if (process.env.VUE_APP_MODE == 'DEV_SERVE') {
+				state.video.currentTime = timeInS;
+			} else {
+				state.netflixPlayer.seek(timeInS * 1000);
+			}
 		},
 		[MutationMain.SET_IS_FULL_SCREEN]: (
 			state: IState,
 			isFullScreen: IState['isFullScreen']
 		) => {
 			state.isFullScreen = isFullScreen;
-		},
-		[MutationMain.SET_CARD_EDITED]: (
-			state: IState,
-			cardEdited: IState['cardEdited']
-		) => {
-			if (state.cardEdited && !cardEdited /*editCardDone*/) {
-				let iInsert = 0;
-				const cards = state.cardModule.cards;
-				while (iInsert < cards.length) {
-					if (
-						state.cardEdited.fromInSeconds() < cards[iInsert].fromInSeconds()
-					) {
-						break;
-					}
-					iInsert++;
-				}
-				state.cardModule.cards.splice(iInsert, 0, state.cardEdited);
-				state.video.currentTime = state.cardEdited?.fromInSeconds() - 2;
-				state.video.play();
-			} else if (cardEdited) {
-				removeElemIf(state.cardModule.cards, card => card.id == cardEdited.id);
-				removeElemIf(
-					state.cardModule.displayedCards,
-					card => card.id == cardEdited.id
-				);
-				cardEdited.position = cardEdited.userPosition || cardEdited.position;
-			}
-			state.cardEdited = cardEdited;
 		},
 		[MutationMain.SET_CURRENT_TIME]: (
 			state: IState,
@@ -99,8 +92,47 @@ const store = {
 		) => {
 			state.progressIndex = progressIndex;
 		},
+		[MutationMain.UPDATE_CARD_EDITED]: (
+			state: IState,
+			card: Partial<CardData>
+		) => {
+			if (state.cardEdited) {
+				Object.assign(state.cardEdited, card);
+			}
+		},
 	},
 	actions: {
+		[ActionMain.TOGGLE_CARD_EDITED]: (
+			{ commit, state }: IStore,
+			cardEdited: IState['cardEdited']
+		) => {
+			if (state.cardEdited && !cardEdited /*editCardDone*/) {
+				let iInsert = 0;
+				const cards = state.cardModule.cards;
+				while (iInsert < cards.length) {
+					if (
+						state.cardEdited.fromInSeconds() < cards[iInsert].fromInSeconds()
+					) {
+						break;
+					}
+					iInsert++;
+				}
+				state.cardModule.cards.splice(iInsert, 0, state.cardEdited);
+
+				commit(
+					MutationMain.SET_VIDEO_CURRENT_TIME_S,
+					state.cardEdited?.fromInSeconds() - 2
+				);
+				state.video.play();
+			} else if (cardEdited) {
+				removeElemIf(state.cardModule.cards, card => card.id == cardEdited.id);
+				removeElemIf(
+					state.cardModule.displayedCards,
+					card => card.id == cardEdited.id
+				);
+			}
+			state.cardEdited = cardEdited;
+		},
 		[ActionMain.HANDLE_VIDEO_PROGRESSION]: (
 			{ commit, state }: IStore,
 			currentTime: IState['currentTime']
@@ -124,8 +156,7 @@ const store = {
 					}
 					progressIndex++;
 				}
-				// removeExpiredCards(displayedCards, state.currentTime);
-			} else if (progressIndex < cardList.length) {
+			} else if (progressIndex <= cardList.length) {
 				displayedCards = [...state.cardModule.displayedCards];
 				removeExpiredCards(displayedCards, state.currentTime);
 				while (progressIndex < cardList.length) {

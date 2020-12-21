@@ -3,9 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"serve": "vue-cli-service serve",
+		"serve": "vue-cli-service serve --mode dev-serve",
 		"build": "vue-cli-service build --mode dev-build && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
-		"build-prod": "vue-cli-service build && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
+		"build-prod": "vue-cli-service build --mode prod-build && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
 		"test:unit": "vue-cli-service test:unit",
 		"lint": "vue-cli-service lint"
 	},

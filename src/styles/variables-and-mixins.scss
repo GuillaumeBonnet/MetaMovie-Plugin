@@ -17,3 +17,58 @@ $border-radius: 4px;
 		display: none;
 	}
 }
+
+@mixin input($main_class_with_dot) {
+	#{$main_class_with_dot}:hover:not(.readonly),
+	#{$main_class_with_dot}--focused {
+		border-width: 2px !important;
+		margin: 3px !important;
+	}
+	#{$main_class_with_dot} {
+		&--focused,
+		&:focus {
+			@extend #{$main_class_with_dot};
+			border-color: #ff6f00;
+		}
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		outline: none;
+		border: solid #616161 1px;
+		margin: 4px;
+		border-radius: 0.6em;
+		overflow: hidden;
+		background-color: #212121;
+		& i {
+			margin-left: 4px;
+			padding-right: 4px;
+			font-size: 20px !important;
+		}
+		& .non-icon-part {
+			flex-grow: 1;
+			border-left: solid #616161 1px;
+			display: inline-block;
+			padding-right: 2px;
+			& label {
+				display: block;
+				margin-left: 4px;
+				margin-top: 4px;
+				margin-bottom: -4px;
+				font-size: 0.5em;
+				line-height: 0.8em;
+			}
+			& input {
+				height: 2em;
+				margin-top: -1px;
+				margin-bottom: -1px;
+				background-color: transparent;
+				font-size: 1.1em;
+				font-weight: 800;
+				border: none;
+				&:focus {
+					outline: none;
+				}
+			}
+		}
+	}
+}
