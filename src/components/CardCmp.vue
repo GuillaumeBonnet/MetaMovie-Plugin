@@ -35,11 +35,13 @@ a card button
 							:value="card.position.x"
 							label="x: horizontal position(%)"
 							@mousedown.native.stop
+							@input="updatePositionChanged('x', $event)"
 						></percentage-input>
 						<percentage-input
 							:value="card.position.y"
 							label="y: vertical position(%)"
 							@mousedown.native.stop
+							@input="updatePositionChanged('y', $event)"
 						></percentage-input>
 					</template>
 				</div>
@@ -187,6 +189,10 @@ export default class CardCmp extends Vue {
 			ActionMain.TOGGLE_CARD_EDITED,
 			this.isInEdition ? null : this.card
 		);
+	}
+	updatePositionChanged(axis: 'x' | 'y', value: number) {
+		this.card.position[axis] = value;
+		this.setPosition();
 	}
 	clickToDrag(event: MouseEvent) {
 		const card = event.currentTarget as HTMLElement;

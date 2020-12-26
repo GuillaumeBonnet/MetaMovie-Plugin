@@ -29,6 +29,28 @@
 /*                                      -                                     */
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
+/*                                    UTILS                                   */
+/* -------------------------------------------------------------------------- */
+function isValueGood(value: string) {
+	if (
+		/^\d+((\.|,)\d{0,2})?$/.test(
+			value
+		) /* number decimal, 2 decimal digit max, coma or point*/
+	) {
+		const valueAsNumber = Number.parseFloat(value.replace(',', '.'));
+		if (valueAsNumber >= 0 && valueAsNumber <= 200) {
+			return true;
+		}
+	}
+	return false;
+}
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                      -                                     */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
@@ -47,13 +69,16 @@ export default class PercentageInput extends Vue {
 	readonly!: boolean;
 
 	@Watch('value')
-	onValueChange(newValue: string, oldValue: string) {
-		this.inputText.value = parseFloat(newValue)
-			.toFixed(2)
-			.toString();
+	onValueChange(newValue: number, oldValue: number) {
+		const decPrecis = 2;
+		const roundedValue =
+			Math.round(this.value * Math.pow(10, decPrecis)) /
+			Math.pow(10, decPrecis);
+		this.$emit('input', roundedValue);
+		this.inputText.value = roundedValue.toString();
 	}
 	created() {
-		this.onValueChange(this.value.toString(), '');
+		this.onValueChange(this.value, this.value);
 	}
 
 	isFocused = false;
@@ -66,16 +91,8 @@ export default class PercentageInput extends Vue {
 		set value(value) {
 			if (value == '') {
 				this._value = value;
-			} else if (
-				/^\d+((\.|,)\d{0,2})?$/.test(
-					value
-				) /* number decimal, 2 decimal digit max, coma or point*/
-			) {
-				const valueAsNumber = Number.parseFloat(value.replace(',', '.'));
-				if (valueAsNumber >= 0 && valueAsNumber <= 200) {
-					this._value = value;
-					this.cmpRef.$emit('input', valueAsNumber);
-				}
+			} else if (isValueGood(value)) {
+				this._value = value;
 			}
 		},
 	};
@@ -88,6 +105,9 @@ export default class PercentageInput extends Vue {
 		this.isFocused = false;
 		if (this.inputText.value == '') {
 			this.inputText.value = '50';
+		}
+		if (isValueGood(this.inputText._value)) {
+			this.$emit('input', this.inputText._value);
 		}
 	}
 	handleFocus(event: Event) {
