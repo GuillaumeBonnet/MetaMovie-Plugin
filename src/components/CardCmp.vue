@@ -5,9 +5,15 @@ displayedCards and put back at the right place when the edit is done //TODO add
 a card button
 <template>
 	<md-card
-		@mousedown.native="clickToDrag($event)"
+		@mousedown.native="handleCardMouseDown($event)"
 		:style="dynamicCardStyle"
-		:class="isInEdition ? 'card-edit' : 'card'"
+		:class="
+			isEditDraggingPreview
+				? 'card--dragging-preview'
+				: isInEdition
+				? 'card--edit'
+				: 'card'
+		"
 	>
 		<md-card-header>
 			<div class="md-layout md-alignment-center-space-between">
@@ -21,6 +27,12 @@ a card button
 						<md-icon>edit</md-icon>
 					</md-button>
 					<template v-if="isInEdition">
+						<md-button
+							class="md-icon-button md-icon-button md-raised"
+							:class="isInEdition ? 'edit-button--active' : 'edit-button'"
+							@mousedown.native="handleDragButton($event)"
+							><md-icon>dynamic_feed</md-icon></md-button
+						>
 						<time-selector
 							v-model="card.from"
 							label="From"
@@ -57,7 +69,10 @@ a card button
 			</div>
 		</md-card-header>
 		<md-card-content>
-			<md-field v-if="isInEdition" class="textarea-field">
+			<md-field
+				v-if="isInEdition && !isEditDraggingPreview"
+				class="textarea-field"
+			>
 				<md-textarea
 					v-model="card.text"
 					md-autogrow
@@ -142,6 +157,8 @@ export default class CardCmp extends Vue {
 		this.setPosition();
 	}
 
+	private isEditDraggingPreview = false;
+
 	get dynamicCardStyle() {
 		const dynamicStyle = {
 			...this.xyPosition,
@@ -173,10 +190,9 @@ export default class CardCmp extends Vue {
 		});
 	}
 
-	@Mutation(MutationCard.UPDATE_DISPLAYED_CARD) updateDisplayedCard: any;
 	handleCloseButton() {
 		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, undefined);
-		this.updateDisplayedCard({
+		this.$store.dispatch(MutationCard.UPDATE_DISPLAYED_CARD, {
 			isShown: false,
 			id: this.card.id,
 		} as Partial<CardData>);
@@ -190,12 +206,21 @@ export default class CardCmp extends Vue {
 			this.isInEdition ? null : this.card
 		);
 	}
+	handleCardMouseDown(event: MouseEvent) {
+		if (!this.isInEdition) {
+			this.clickToDrag(event);
+		}
+	}
+	handleDragButton(event: MouseEvent) {
+		this.isEditDraggingPreview = true;
+		this.clickToDrag(event);
+	}
 	updatePositionChanged(axis: 'x' | 'y', value: number) {
 		this.card.position[axis] = value;
 		this.setPosition();
 	}
 	clickToDrag(event: MouseEvent) {
-		const card = event.currentTarget as HTMLElement;
+		const card = this.$el as HTMLElement;
 		const shiftX_cursorCard = event.clientX - card.getBoundingClientRect().left;
 		const shiftY_cursorCard = event.clientY - card.getBoundingClientRect().top;
 		const previousPosition = {
@@ -215,9 +240,10 @@ export default class CardCmp extends Vue {
 		}
 		// taking initial shifts into account
 
-		const headerHeight = (this.$el.querySelector(
-			'div.md-card-header'
-		) as HTMLElement)?.clientHeight;
+		const headerHeight = this.isEditDraggingPreview
+			? 0
+			: (this.$el.querySelector('div.md-card-header') as HTMLElement)
+					?.clientHeight;
 		bottomController_borders.top + headerHeight;
 		const onMouseMove = (event: MouseEvent) => {
 			if (
@@ -251,27 +277,25 @@ export default class CardCmp extends Vue {
 
 		document.addEventListener('mousemove', onMouseMove);
 
-		const storePosition = () => {
+		const endDragging = () => {
+			document.removeEventListener('mousemove', onMouseMove);
+			card.onmouseleave = null;
+			card.onmouseup = null;
 			this.$store.commit(MutationMain.UPDATE_CARD_EDITED, {
 				position: toRelativeCoordinate(
 					this.videoDimensions,
 					this.$el as HTMLElement
 				),
 			} as Partial<CardData>);
+			this.isEditDraggingPreview = false; // put at the end in case it'd change $el's dimensions
 		};
 
 		card.onmouseleave = (event: MouseEvent) => {
-			document.removeEventListener('mousemove', onMouseMove);
-			card.onmouseleave = null;
-			card.onmouseup = null;
-			storePosition();
+			endDragging();
 		};
 
 		card.onmouseup = () => {
-			document.removeEventListener('mousemove', onMouseMove);
-			card.onmouseleave = null;
-			card.onmouseup = null;
-			storePosition();
+			endDragging();
 		};
 	}
 
@@ -301,31 +325,9 @@ export default class CardCmp extends Vue {
 /* -------------------------------------------------------------------------- */
 
 @import '@/styles/variables-and-mixins.scss';
-
 $transitionTiming: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-.card-actions {
-	display: flex;
-	align-items: center;
-	& * {
-		margin: 4px;
-	}
-}
-
-div.card:not(:hover) {
-	background-color: rgba($color: #000000, $alpha: 0.7);
-	& .text--primary {
-		text-shadow: 2px 2px 2px black;
-	}
-	& .md-card-header *,
-	& .md-card-header .card-actions * {
-		height: 0px;
-		opacity: 0;
-	}
-	box-shadow: none;
-}
-div.card,
-div.card-edit {
+%card {
 	min-width: 120px;
 	max-width: 90vw;
 	position: fixed;
@@ -333,15 +335,17 @@ div.card-edit {
 	left: calc(50vw - 60px);
 	border-radius: $border-radius;
 	transition: background-color $transitionTiming;
-	& .card-text {
-		font-size: 36px;
-		line-height: 1em;
-		white-space: pre-wrap;
-		color: bisque;
-	}
 	& .md-card-header .card-actions * {
 		transition: height $transitionTiming;
 		transition: opacity $transitionTiming;
+	}
+
+	.card-actions {
+		display: flex;
+		align-items: center;
+		& * {
+			margin: 4px;
+		}
 	}
 	& button.edit-button {
 		background-color: #212121 !important;
@@ -352,5 +356,38 @@ div.card-edit {
 			}
 		}
 	}
+	& .card-text {
+		font-size: 36px;
+		line-height: 1em;
+		white-space: pre-wrap;
+		color: bisque;
+	}
+}
+
+.card {
+	@extend %card;
+}
+.card--edit {
+	@extend %card;
+}
+.card--dragging-preview {
+	@extend %card;
+	& .card-actions {
+		width: 0;
+	}
+}
+
+.card:not(:hover),
+.card--dragging-preview.card--dragging-preview {
+	background-color: rgba($color: #000000, $alpha: 0.7);
+	& .text--primary {
+		text-shadow: 2px 2px 2px black;
+	}
+	& .md-card-header *,
+	& .md-card-header .card-actions * {
+		height: 0px;
+		opacity: 0;
+	}
+	box-shadow: none;
 }
 </style>
