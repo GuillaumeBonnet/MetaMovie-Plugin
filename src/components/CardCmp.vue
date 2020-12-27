@@ -158,6 +158,7 @@ export default class CardCmp extends Vue {
 	}
 
 	private isEditDraggingPreview = false;
+	private dragTimeOutId?: number = undefined;
 
 	get dynamicCardStyle() {
 		const dynamicStyle = {
@@ -278,6 +279,8 @@ export default class CardCmp extends Vue {
 		document.addEventListener('mousemove', onMouseMove);
 
 		const endDragging = () => {
+			clearTimeout(this.dragTimeOutId);
+			this.dragTimeOutId = undefined;
 			document.removeEventListener('mousemove', onMouseMove);
 			card.onmouseleave = null;
 			card.onmouseup = null;
@@ -290,6 +293,11 @@ export default class CardCmp extends Vue {
 			this.isEditDraggingPreview = false; // put at the end in case it'd change $el's dimensions
 		};
 
+		if (!this.dragTimeOutId) {
+			this.dragTimeOutId = setTimeout(() => {
+				endDragging();
+			}, 5000);
+		}
 		card.onmouseleave = (event: MouseEvent) => {
 			endDragging();
 		};
