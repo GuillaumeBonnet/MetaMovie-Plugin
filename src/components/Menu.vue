@@ -69,6 +69,7 @@ import { IState } from '@/store/Store';
 import CardData from '@/models/CardData';
 import { mapState } from 'vuex';
 import CardDetailsList from '@/components/CardDetailsList.vue';
+import axios, { AxiosResponse } from 'axios';
 
 @Component({
 	components: {
@@ -78,6 +79,16 @@ import CardDetailsList from '@/components/CardDetailsList.vue';
 export default class Menu extends Vue {
 	constructor() {
 		super();
+		console.log('gboDebug:[process.env]', process.env.VUE_APP_API_URL);
+		const errorCB = (error: any) => {
+			console.error('error', error);
+		};
+		axios
+			.get(`${process.env.VUE_APP_API_URL}/decks`)
+			.then((decks: AxiosResponse<any>) => {
+				console.log('gboDebug:[decks]', decks);
+			})
+			.catch(errorCB);
 	}
 
 	/* -------------------------------------------------------------------------- */
