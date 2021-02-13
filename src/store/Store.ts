@@ -125,10 +125,10 @@ const store = {
 				);
 				state.video.play();
 			} else if (cardEdited) {
-				removeElemIf(state.cardModule.cards, card => card.id == cardEdited.id);
+				removeElemIf(state.cardModule.cards, card => card == cardEdited);
 				removeElemIf(
 					state.cardModule.displayedCards,
-					card => card.id == cardEdited.id
+					card => card == cardEdited
 				);
 			}
 			state.cardEdited = cardEdited;
@@ -179,7 +179,7 @@ const store = {
 				return;
 			}
 			if (state.cardEdited) {
-				removeElemIf(displayedCards, card => card.id == state.cardEdited?.id);
+				removeElemIf(displayedCards, card => card == state.cardEdited);
 			}
 			commit(MutationCard.SET_DISPLAYED_CARDS, displayedCards);
 			commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);

@@ -29,6 +29,26 @@
 				@mouseenter.native.prevent="menu.enterMenuContent()"
 				@mouseleave.native.prevent="menu.leaveMenuContent()"
 			>
+				<md-menu-item @click.native.prevent @click.prevent>
+					<md-field>
+						<label for="movie">Movie</label>
+						<md-select
+							@click.native.prevent
+							@click.prevent
+							v-model="movie"
+							name="movie"
+							id="movie"
+						>
+							<md-option value="fight-club">Fight Club</md-option>
+							<md-option value="godfather">Godfather</md-option>
+							<md-option value="godfather-ii">Godfather II</md-option>
+							<md-option value="godfather-iii">Godfather III</md-option>
+							<md-option value="godfellas">Godfellas</md-option>
+							<md-option value="pulp-fiction">Pulp Fiction</md-option>
+							<md-option value="scarface">Scarface</md-option>
+						</md-select>
+					</md-field>
+				</md-menu-item>
 				<md-menu-item
 					><md-switch v-model="areCardsHidden_VModel"
 						>Hide cards</md-switch
@@ -65,11 +85,12 @@ import { ActionCard, ICardState, MutationCard } from '@/store/CardStore';
 import { Component, Vue } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
 import { Action, State } from 'vuex-class';
-import { IState } from '@/store/Store';
+import { IState, MutationMain } from '@/store/Store';
 import CardData from '@/models/CardData';
 import { mapState } from 'vuex';
 import CardDetailsList from '@/components/CardDetailsList.vue';
 import axios, { AxiosResponse } from 'axios';
+import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 
 @Component({
 	components: {
@@ -84,8 +105,23 @@ export default class Menu extends Vue {
 			console.error('error', error);
 		};
 		axios
+			.get(`${process.env.VUE_APP_API_URL}/decks/7093`)
+			.then((deck: AxiosResponse<DeckApi>) => {
+				const cards: CardData[] = deck.data.cards.map(card => {
+					return new CardData({
+						fromStamp: card.from,
+						toStamp: card.to,
+						x: card.position.x,
+						y: card.position.y,
+						text: card.text,
+					});
+				});
+				console.log('gboDebug:[cards]', cards);
+				this.$store.commit(MutationCard.SET_CARDS, cards);
+			});
+		axios
 			.get(`${process.env.VUE_APP_API_URL}/decks`)
-			.then((decks: AxiosResponse<any>) => {
+			.then((decks: AxiosResponse<DeckApi_WithoutCards[]>) => {
 				console.log('gboDebug:[decks]', decks);
 			})
 			.catch(errorCB);
@@ -111,6 +147,11 @@ export default class Menu extends Vue {
 	set areCardsHidden_VModel(areCardsHidden: boolean) {
 		this.handleSwitchToggling();
 	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                                 menu state                                 */
+	/* -------------------------------------------------------------------------- */
+	movie?: string = '';
 
 	/* -------------------------------------------------------------------------- */
 	/*                               internal logic                               */

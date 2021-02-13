@@ -9,7 +9,6 @@ export default class CardData {
 		y: number;
 	};
 	public isShown = true;
-	public id: string;
 	public static newCardCounter = 0;
 
 	constructor(input: {
@@ -17,7 +16,7 @@ export default class CardData {
 		toStamp: string;
 		x: number;
 		y: number;
-		id?: string;
+		text: string;
 	}) {
 		const timeStampRegex = /\d:\d\d:\d\d/;
 		if (!timeStampRegex.test(input.fromStamp)) {
@@ -33,12 +32,7 @@ to ${input.toStamp}, x:${input.x}, y:${input.y}`;
 			x: input.x,
 			y: input.y,
 		};
-		if (input.id) {
-			this.id = input.id;
-		} else {
-			this.id = `newCard-${CardData.newCardCounter}`;
-			CardData.newCardCounter++;
-		}
+		this.text = input.text;
 	}
 
 	fromInSeconds() {
