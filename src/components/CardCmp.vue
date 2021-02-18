@@ -1,90 +1,118 @@
-//TODO global edit mode when a card is in edit mode it is always displayed
-regardless of the time clicking on times goes there in the video X Y displays
+//TODO global edit mode when a card is in edit mode it is always displayed //
+regardless of the time clicking on times goes there in the video X Y displays //
 Icon 'is it displayed right now' when a card is in edit mode it is removed from
-displayedCards and put back at the right place when the edit is done //TODO add
-a card button
+// displayedCards and put back at the right place when the edit is done //TODO
+add // a card button
 <template>
-	<md-card
-		@mousedown.native="handleCardMouseDown($event)"
+	<div
 		:style="dynamicCardStyle"
+		class="
+			group absolute p-3 text-4xl rounded-md min-w-card text-center
+		"
 		:class="
 			isEditDraggingPreview
-				? 'card--dragging-preview'
+				? 'bg-black bg-opacity-70 text-yellow-100 text-5xl'
 				: isInEdition
-				? 'card--edit'
-				: 'card'
+				? 'bg-gray-600'
+				: 'text-yellow-100 text-5xl hover:text-4xl hover:text-white bg-opacity-70 hover:bg-opacity-100 bg-black hover:bg-gray-600'
 		"
+		@mousedown="handleCardMouseDown($event)"
 	>
-		<md-card-header>
-			<div class="md-layout md-alignment-center-space-between">
-				<div class="card-actions">
-					<md-button
-						class="md-icon-button md-icon-button md-raised"
-						:class="isInEdition ? 'edit-button--active' : 'edit-button'"
-						@click="handleEditButton()"
-						@mousedown.native.stop
-					>
-						<md-icon>edit</md-icon>
-					</md-button>
-					<template v-if="isInEdition">
-						<md-button
-							class="md-icon-button md-icon-button md-raised"
-							:class="isInEdition ? 'edit-button--active' : 'edit-button'"
-							@mousedown.native="handleDragButton($event)"
-							><md-icon>dynamic_feed</md-icon></md-button
-						>
-						<time-selector
-							v-model="card.from"
-							label="From"
-							@mousedown.native.stop
-						></time-selector>
-						<time-selector
-							v-model="card.to"
-							label="To"
-							@mousedown.native.stop
-						></time-selector>
-						<percentage-input
-							:value="card.position.x"
-							label="x: horizontal position(%)"
-							@mousedown.native.stop
-							@input="updatePositionChanged('x', $event)"
-						></percentage-input>
-						<percentage-input
-							:value="card.position.y"
-							label="y: vertical position(%)"
-							@mousedown.native.stop
-							@input="updatePositionChanged('y', $event)"
-						></percentage-input>
-					</template>
-				</div>
-				<md-button
-					v-if="!isInEdition"
-					id="close-button"
-					class="md-icon-button"
-					@click="handleCloseButton()"
-					@mousedown.native.stop
-				>
-					<md-icon>close</md-icon>
-				</md-button>
-			</div>
-		</md-card-header>
-		<md-card-content>
-			<md-field
-				v-if="isInEdition && !isEditDraggingPreview"
-				class="textarea-field"
+		<div
+			id="header"
+			class="flex justify-between overflow-hidden transition-all duration-100 ease-in-out"
+			:class="
+				isEditDraggingPreview
+					? 'h-0 w-0'
+					: isInEdition
+					? 'h-14'
+					: 'h-0 group-hover:h-14'
+			"
+		>
+			<button
+				class="material-icons rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
+				:class="
+					isInEdition
+						? 'text-yellow-700 hover:text-yellow-800'
+						: 'hover:text-gray-300 scale-0 group-hover:scale-100'
+				"
+				@click="handleEditButton()"
+				@mousedown.stop
 			>
-				<md-textarea
-					v-model="card.text"
-					md-autogrow
-					md-counter="100"
+				edit
+			</button>
+			<template v-if="isInEdition">
+				<button
+					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
+					:class="
+						isInEdition
+							? ''
+							: isEditDraggingPreview
+							? 'text-yellow-700 hover:text-yellow-800'
+							: 'hover:text-gray-300'
+					"
+					@mousedown="handleDragButton($event)"
+				>
+					dynamic_feed
+				</button>
+				<time-selector
+					class="mx-2"
+					v-model="card.from"
+					label="From"
 					@mousedown.native.stop
-				></md-textarea>
-			</md-field>
-			<div class="card-text" v-else>
-				{{ card.text }}
+				></time-selector>
+				<time-selector
+					class="mx-2"
+					v-model="card.to"
+					label="To"
+					@mousedown.native.stop
+				></time-selector>
+				<percentage-input
+					class="mx-2"
+					:value="card.position.x"
+					label="x: horizontal position(%)"
+					@mousedown.native.stop
+					@input="updatePositionChanged('x', $event)"
+				></percentage-input>
+				<percentage-input
+					class="mx-2"
+					:value="card.position.y"
+					label="y: vertical position(%)"
+					@mousedown.native.stop
+					@input="updatePositionChanged('y', $event)"
+				></percentage-input>
+			</template>
+			<button
+				class="material-icons rounded-full w-12 h-12 text-3xl  hover:shadow-sm hover:text-gray-300 outline-none focus:outline-none hover:bg-gray-700 hover:shadow transform transition-transform duration-300 ease-in-out"
+				:class="
+					isInEdition
+						? ''
+						: isEditDraggingPreview
+						? ''
+						: 'scale-0 group-hover:scale-100'
+				"
+				id="close-button"
+				@click="handleCloseButton()"
+				@mousedown.stop
+			>
+				close
+			</button>
+		</div>
+		<div v-if="isInEdition && !isEditDraggingPreview" class="px-10 my-5">
+			<div
+				class="rounded-2xl border-solid border-2 border-gray-800 hover:border-gray-900 p-2 focus-within:border-gray-900"
+			>
+				<textarea
+					class="mb-4 bg-transparent border-gray-900 hover:border-black focus:border-yellow-600 border-solid border-b-1 p-2 block outline-none resize-none w-full"
+					v-model="card.text"
+					@mousedown.stop
+				></textarea>
 			</div>
-		</md-card-content>
-	</md-card>
+		</div>
+		<p v-else class="p-2 whitespace-pre-wrap">
+			{{ card.text }}
+		</p>
+	</div>
 </template>
 
 <script lang="ts">
@@ -157,7 +185,7 @@ export default class CardCmp extends Vue {
 		this.setPosition();
 	}
 
-	private isEditDraggingPreview = false;
+	public isEditDraggingPreview = false;
 	private dragTimeOutId?: number = undefined;
 
 	get dynamicCardStyle() {
@@ -177,7 +205,9 @@ export default class CardCmp extends Vue {
 	video!: IState['video'];
 
 	get isInEdition() {
-		return this.card.id && this.cardEdited?.id == this.card.id;
+		console.log('gboDebug:[this.card.id]', this.card.id);
+		console.log('gboDebug:[this.cardEdited?.id]', this.cardEdited?.id);
+		return this.cardEdited?.id == this.card.id;
 	}
 
 	@Watch('videoDimensions')
@@ -193,7 +223,7 @@ export default class CardCmp extends Vue {
 
 	handleCloseButton() {
 		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, undefined);
-		this.$store.dispatch(MutationCard.UPDATE_DISPLAYED_CARD, {
+		this.$store.commit(MutationCard.UPDATE_DISPLAYED_CARD, {
 			isShown: false,
 			id: this.card.id,
 		} as Partial<CardData>);
@@ -243,8 +273,7 @@ export default class CardCmp extends Vue {
 
 		const headerHeight = this.isEditDraggingPreview
 			? 0
-			: (this.$el.querySelector('div.md-card-header') as HTMLElement)
-					?.clientHeight;
+			: (this.$el.querySelector('#header') as HTMLElement)?.clientHeight;
 		bottomController_borders.top + headerHeight;
 		const onMouseMove = (event: MouseEvent) => {
 			if (
@@ -255,7 +284,7 @@ export default class CardCmp extends Vue {
 				card.getBoundingClientRect().bottom +
 					event.clientY -
 					previousPosition.clientY <
-					bottomController_borders.top + headerHeight &&
+					bottomController_borders.top + headerHeight + 1 &&
 				card.getBoundingClientRect().left +
 					event.clientX -
 					previousPosition.clientX >
@@ -319,7 +348,7 @@ export default class CardCmp extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="postcss">
 /* -------------------------------------------------------------------------- */
 /*                                      -                                     */
 /* -------------------------------------------------------------------------- */
@@ -329,73 +358,6 @@ export default class CardCmp extends Vue {
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-/*                                    SCSS                                    */
+/*                                   postcss                                  */
 /* -------------------------------------------------------------------------- */
-
-@import '@/styles/variables-and-mixins.scss';
-$transitionTiming: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-%card {
-	min-width: 120px;
-	max-width: 90vw;
-	position: fixed;
-	top: 30vh;
-	left: calc(50vw - 60px);
-	border-radius: $border-radius;
-	transition: background-color $transitionTiming;
-	& .md-card-header .card-actions * {
-		transition: height $transitionTiming;
-		transition: opacity $transitionTiming;
-	}
-
-	.card-actions {
-		display: flex;
-		align-items: center;
-		& * {
-			margin: 4px;
-		}
-	}
-	& button.edit-button {
-		background-color: #212121 !important;
-		&--active {
-			@extend .edit-button;
-			& i {
-				color: #ff6f00 !important;
-			}
-		}
-	}
-	& .card-text {
-		font-size: 36px;
-		line-height: 1em;
-		white-space: pre-wrap;
-		color: bisque;
-	}
-}
-
-.card {
-	@extend %card;
-}
-.card--edit {
-	@extend %card;
-}
-.card--dragging-preview {
-	@extend %card;
-	& .card-actions {
-		width: 0;
-	}
-}
-
-.card:not(:hover),
-.card--dragging-preview.card--dragging-preview {
-	background-color: rgba($color: #000000, $alpha: 0.7);
-	& .text--primary {
-		text-shadow: 2px 2px 2px black;
-	}
-	& .md-card-header *,
-	& .md-card-header .card-actions * {
-		height: 0px;
-		opacity: 0;
-	}
-	box-shadow: none;
-}
 </style>

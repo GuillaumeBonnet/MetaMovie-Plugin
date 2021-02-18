@@ -5,11 +5,6 @@ const path = require('path');
 module.exports = {
 	css: {
 		extract: process.env.npm_lifecycle_event == 'build',
-		// loaderOptions: {
-		// 	scss: {
-		// 		additionalData: `@import "~@/styles/variables.scss";`,
-		// 	},
-		// },
 	},
 	filenameHashing: false,
 	configureWebpack: {

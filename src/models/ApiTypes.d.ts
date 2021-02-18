@@ -16,6 +16,7 @@ type CardApi = {
 		x: number;
 		y: number;
 	};
+	id: number;
 };
 
 export { CreateFields, DeckApi, CardApi, DeckApi_WithoutCards };

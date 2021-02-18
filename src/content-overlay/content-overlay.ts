@@ -12,6 +12,8 @@ Vue.use(VueMaterial);
 import { compiledStore, MutationMain } from '@/store/Store';
 import CardData from '@/models/CardData';
 import { MutationCard } from '@/store/CardStore';
+console.log('gboDebug: content overlay');
+import '@/assets/styles/styles.css';
 
 new Vue({
 	render: h => h(Menu),
@@ -37,6 +39,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 0,
 		y: 0,
 		text: 'card 1',
+		id: 1,
 	}),
 	new CardData({
 		fromStamp: '0:00:01',
@@ -44,6 +47,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 0,
 		y: 100,
 		text: 'card 2',
+		id: 2,
 	}),
 	new CardData({
 		fromStamp: '0:00:01',
@@ -51,6 +55,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 100,
 		y: 0,
 		text: 'card 3',
+		id: 3,
 	}),
 	new CardData({
 		fromStamp: '0:00:01',
@@ -58,6 +63,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 100,
 		y: 100,
 		text: 'card 4',
+		id: 4,
 	}),
 	new CardData({
 		fromStamp: '0:00:05',
@@ -65,6 +71,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 50,
 		y: 50,
 		text: 'card 5',
+		id: 5,
 	}),
 	new CardData({
 		fromStamp: '0:00:10',
@@ -72,6 +79,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 0,
 		y: 0,
 		text: 'card 6',
+		id: 6,
 	}),
 	new CardData({
 		fromStamp: '0:00:16',
@@ -79,6 +87,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 50,
 		y: 25,
 		text: 'card 7',
+		id: 7,
 	}),
 	new CardData({
 		fromStamp: '0:00:25',
@@ -86,6 +95,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 100,
 		y: 10,
 		text: 'card 8',
+		id: 8,
 	}),
 	new CardData({
 		fromStamp: '0:00:35',
@@ -93,6 +103,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 0,
 		y: 0,
 		text: 'card 9',
+		id: 9,
 	}),
 	new CardData({
 		fromStamp: '0:00:35',
@@ -100,6 +111,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 0,
 		y: 100,
 		text: 'card 10',
+		id: 10,
 	}),
 	new CardData({
 		fromStamp: '0:00:35',
@@ -107,6 +119,7 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 100,
 		y: 0,
 		text: 'card 11',
+		id: 11,
 	}),
 	new CardData({
 		fromStamp: '0:00:35',
@@ -114,5 +127,6 @@ compiledStore.commit(MutationCard.SET_CARDS, [
 		x: 100,
 		y: 100,
 		text: 'card 12',
+		id: 12,
 	}),
 ]);

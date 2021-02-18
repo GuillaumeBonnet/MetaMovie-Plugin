@@ -1,43 +1,53 @@
 <template>
 	<div
-		:class="[
-			{
-				readonly: readonly,
-			},
-			timeInputs.isOneOrMoreFocused ? 'container--focused' : 'container',
-		]"
+		class="border-1 flex items-center text-sm border-solid rounded-lg overflow-hidden bg-gray-900"
+		:class="
+			timeInputs.isOneOrMoreFocused
+				? 'border-yellow-600'
+				: readonly
+				? 'border-gray-500'
+				: 'border-gray-500 hover:border-yellow-600'
+		"
 	>
-		<md-icon @click.native="handleIconClick()">schedule</md-icon>
-		<div class="non-icon-part">
-			<label>{{ label }}</label>
-			<div class="digit-container">
+		<button
+			@click="handleIconClick()"
+			class="material-icons focus:outline-none text-xl px-1 pt-1"
+			:class="readonly ? 'cursor-default' : ''"
+		>
+			schedule
+		</button>
+		<div class="flex-grow pr-1 border-solid border-gray-500 border-l-1">
+			<label class="text-xs flex items-start ml-1 mt-0 -mb-1.5">{{
+				label
+			}}</label>
+			<div class="flex -mb-2">
 				<input
 					@click="digitClicked($event)"
 					@blur="handleBlur($event, 'hours')"
 					@focus="handleFocus($event, 'hours')"
 					v-model="timeInputs.hours.value"
 					ref="hours"
-					class="digit--hour"
+					class="text-center w-6 h-8 bg-transparent text-lg font-extrabold border-none focus:outline-none"
 					type="text"
 					:disabled="readonly"
 				/>
-				<div class="separator">:</div>
+				<div class="flex items-center text-2xl">:</div>
 				<input
 					@click="digitClicked($event)"
 					@blur="handleBlur($event, 'minutes')"
 					@focus="handleFocus($event, 'minutes')"
 					v-model="timeInputs.minutes.value"
-					class="digit--minute"
+					class="text-center w-8 h-8 bg-transparent text-lg font-extrabold border-none focus:outline-none"
 					type="text"
 					:disabled="readonly"
 				/>
-				<div class="separator">:</div>
+				<div class="flex items-center text-2xl">:</div>
 				<input
 					@click="digitClicked($event)"
 					@blur="handleBlur($event, 'seconds')"
 					@focus="handleFocus($event, 'seconds')"
 					v-model="timeInputs.seconds.value"
-					class="digit--second"
+					class="text-center w-8 h-8 bg-transparent text-lg font-extrabold border-none focus:outline-none"
 					type="text"
 					:disabled="readonly"
 				/>
@@ -194,7 +204,7 @@ export default class TimeSelector extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="postcss">
 /* -------------------------------------------------------------------------- */
 /*                                      -                                     */
 /* -------------------------------------------------------------------------- */
@@ -207,10 +217,10 @@ export default class TimeSelector extends Vue {
 /*                                    SCSS                                    */
 /* -------------------------------------------------------------------------- */
 
-@import '~@/styles/variables-and-mixins.scss';
-@include input('.container');
+/* @import '~@/styles/variables-and-mixins.scss';
+@include input('.container'); */
 
-.digit-container {
+/* .digit-container {
 	display: flex;
 }
 .separator {
@@ -244,5 +254,5 @@ export default class TimeSelector extends Vue {
 	&--second {
 		@extend .digit;
 	}
-}
+} */
 </style>

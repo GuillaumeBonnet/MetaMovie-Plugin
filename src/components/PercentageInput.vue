@@ -1,17 +1,28 @@
 <template>
 	<div
-		:class="[
-			{ readonly: readonly },
-			isFocused ? 'percentage--focused' : 'percentage',
-		]"
+		class="border-1 flex items-center text-sm border-solid rounded-lg overflow-hidden bg-gray-900"
+		:class="
+			readonly ? 'border-gray-500' : 'border-gray-500 hover:border-yellow-600'
+		"
 	>
-		<md-icon @click.native="handleIconClick()">place</md-icon>
-		<div class="non-icon-part">
-			<label>{{ label }}</label>
+		<button
+			@click="handleIconClick()"
+			class="material-icons focus:outline-none text-xl px-1 pt-1"
+			:class="readonly ? 'cursor-default' : ''"
+		>
+			place
+		</button>
+		<div
+			class="flex-grow inline-flex flex-col px-2 border-solid border-gray-500 border-l-1"
+		>
+			<label
+				class="text-xs whitespace-nowrap flex items-start justify-start mt-0 -mb-1.5"
+				>{{ label }}</label
+			>
 			<input
 				ref="input"
 				v-model="inputText.value"
-				class=""
+				class="w-20 h-8 -mb-2 bg-transparent text-lg font-extrabold border-none focus:outline-none"
 				type="text"
 				:disabled="readonly"
 				@blur="handleBlur($event)"
@@ -116,7 +127,7 @@ export default class PercentageInput extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="postcss">
 /* -------------------------------------------------------------------------- */
 /*                                      -                                     */
 /* -------------------------------------------------------------------------- */
@@ -126,9 +137,9 @@ export default class PercentageInput extends Vue {
 /* -------------------------------------------------------------------------- */
 /*                                    SCSS                                    */
 /* -------------------------------------------------------------------------- */
-@import '~@/styles/variables-and-mixins.scss';
+/* @import '~@/styles/variables-and-mixins.scss';
 @include input('.percentage');
 input {
 	width: 4em;
-}
+} */
 </style>

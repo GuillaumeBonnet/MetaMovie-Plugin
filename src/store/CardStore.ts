@@ -43,6 +43,7 @@ const cardModule = {
 			state: ICardState,
 			card: Partial<CardData>
 		) {
+			console.log('gboDebug: MutationCard.UPDATE_DISPLAYED_CARD');
 			updateACard(state.displayedCards, card);
 		},
 		[MutationCard.SET_DISPLAYED_CARDS](state: ICardState, cards: CardData[]) {

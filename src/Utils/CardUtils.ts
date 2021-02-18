@@ -30,9 +30,8 @@ function removeExpiredCards(cards: CardData[], currentTime: number): void {
 }
 
 function updateACard(cards: CardData[], card: Partial<CardData>) {
-	const index = cards.findIndex(cardElem => cardElem == card);
+	const index = cards.findIndex(cardElem => cardElem.id == card.id);
 	if (index != -1) {
-		//TODO
 		Object.assign(cards[index], card);
 	}
 }
