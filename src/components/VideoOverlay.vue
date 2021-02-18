@@ -1,5 +1,5 @@
 <template>
-	<div class="full-screen-overlay">
+	<div class="z-max absolute">
 		<template v-if="videoDimensions.x">
 			<CardCmp
 				v-for="card in displayedCards"
@@ -123,7 +123,7 @@ export default class VideoOverlay extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
 /* -------------------------------------------------------------------------- */
 /*                                      -                                     */
 /* -------------------------------------------------------------------------- */
@@ -135,14 +135,4 @@ export default class VideoOverlay extends Vue {
 /* -------------------------------------------------------------------------- */
 /*                                    SCSS                                    */
 /* -------------------------------------------------------------------------- */
-div.full-screen-overlay {
-	position: absolute;
-	z-index: 1000000;
-}
-div.v-application.v-application {
-	position: relative;
-	z-index: 2;
-	height: 0;
-	width: 0;
-}
 </style>

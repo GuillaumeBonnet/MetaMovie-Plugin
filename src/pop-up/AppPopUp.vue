@@ -1,26 +1,16 @@
 <template>
-  <div>
-    AppPopUp
-  </div>
+	<div class="font-normal antialiased text-center mt-14 text-blue-800">
+		AppPopUp
+	</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-  components: {
-  },
+	components: {},
 })
 export default class AppPopUp extends Vue {}
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style lang="postcss"></style>

@@ -46,10 +46,10 @@ add // a card button
 					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
 					:class="
 						isInEdition
-							? ''
+							? 'hover:text-gray-300'
 							: isEditDraggingPreview
 							? 'text-yellow-700 hover:text-yellow-800'
-							: 'hover:text-gray-300'
+							: ''
 					"
 					@mousedown="handleDragButton($event)"
 				>

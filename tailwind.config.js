@@ -13,6 +13,9 @@ module.exports = {
 			borderWidth: {
 				'1': '1px',
 			},
+			zIndex: {
+				max: '1000000',
+			},
 		},
 	},
 	variants: {
