@@ -1,5 +1,5 @@
 <template>
-	<div class="z-max absolute">
+	<div class="z-1000000 absolute">
 		<template v-if="videoDimensions.x">
 			<CardCmp
 				v-for="card in displayedCards"
@@ -31,7 +31,6 @@
 /* -------------------------------------------------------------------------- */
 import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
 import CardCmp from '@/components/CardCmp.vue';
-import Menu from '@/components/Menu.vue';
 import { getModule } from 'vuex-module-decorators';
 import CardData from '@/models/CardData';
 import { IVideoDimensions } from '@/models/Types';
@@ -42,7 +41,6 @@ import { ActionCard, ICardState } from '@/store/CardStore';
 @Component({
 	components: {
 		CardCmp,
-		Menu,
 	},
 })
 export default class VideoOverlay extends Vue {

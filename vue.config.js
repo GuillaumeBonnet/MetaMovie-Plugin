@@ -6,6 +6,7 @@ module.exports = {
 	css: {
 		extract: process.env.npm_lifecycle_event == 'build',
 	},
+	runtimeCompiler: true,
 	filenameHashing: false,
 	configureWebpack: {
 		plugins: [

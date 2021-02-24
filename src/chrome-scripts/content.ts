@@ -39,6 +39,10 @@ function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 	menuDiv.id = 'plugin-meta-movie-menu';
 	awaitedNodes.videoTitle?.after(menuDiv);
 
+	const menuDivOld = document.createElement('div') as HTMLElement;
+	menuDiv.id = 'plugin-meta-movie-menu-old';
+	awaitedNodes.videoTitle?.after(menuDivOld);
+
 	const videoOverlayDiv = document.createElement('div') as HTMLElement;
 	videoOverlayDiv.id = 'plugin-meta-movie-video-overlay';
 	awaitedNodes.videoWrapper?.prepend(videoOverlayDiv);

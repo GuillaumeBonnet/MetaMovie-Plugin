@@ -16,7 +16,7 @@
 			class="flex-grow inline-flex flex-col px-2 border-solid border-gray-500 border-l-1"
 		>
 			<label
-				class="text-xs whitespace-nowrap flex items-start justify-start mt-0 -mb-1.5"
+				class="text-xs font-medium whitespace-nowrap flex items-start justify-start mt-0 -mb-1.5"
 				>{{ label }}</label
 			>
 			<input

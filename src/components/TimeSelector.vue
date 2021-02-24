@@ -17,7 +17,7 @@
 			schedule
 		</button>
 		<div class="flex-grow pr-1 border-solid border-gray-500 border-l-1">
-			<label class="text-xs flex items-start ml-1 mt-0 -mb-1.5">{{
+			<label class="text-xs font-medium flex items-start ml-1 mt-0 -mb-1.5">{{
 				label
 			}}</label>
 			<div class="flex -mb-2">

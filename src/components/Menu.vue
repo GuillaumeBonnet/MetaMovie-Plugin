@@ -1,72 +1,44 @@
 <template>
 	<div
-		class="touchable PlayerControls--control-element nfp-popup-control"
+		class="group touchable PlayerControls--control-element nfp-popup-control relative block"
 		@mouseenter="menu.enterMenuIcon()"
 		@mouseleave="menu.leaveMenuIcon()"
 	>
-		<!-- todo:menu should be aligned to class="touchable PlayerControls--control-element nfp-popup-control", not  inner button -->
-		<md-menu
-			:md-active="menu.menuHoverState.isMenuOppened"
-			md-direction="top-end"
-			md-align-trigger
-			@mouseenter.native.prevent="menu.enterMenuContent()"
-			@mouseleave.native.prevent="menu.leaveMenuContent()"
-		>
+		<div class="h-auto m-auto relative bottom-5">
 			<button
-				class="touchable PlayerControls--control-element nfp-button-control default-control-button button-nfplayerReportAProblem"
+				class="material-icons rounded-full bg-yellow-800 outline-none w-16 h-16 m-auto"
 			>
-				<md-button md-menu-trigger class="md-icon-button md-raised md-accent">
-					<md-icon>question_answer</md-icon>
-				</md-button>
+				question_answer
 			</button>
-			<card-details-list
-				:isCardListDisplayed="isCardListDisplayed"
-				:cards="displayedCards"
-				@close-card-list="isCardListDisplayed = false"
-			></card-details-list>
-			<md-menu-content
-				class="menu-box"
-				@mouseenter.native.prevent="menu.enterMenuContent()"
-				@mouseleave.native.prevent="menu.leaveMenuContent()"
+			<ul
+				class="z-1000010 group-hover:block hidden text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 -left-40 bg-gray-700 text-transparent h-auto w-max rounded-md"
 			>
-				<md-menu-item @click.native.prevent @click.prevent>
-					<md-field>
-						<label for="movie">Movie</label>
-						<md-select
-							@click.native.prevent
-							@click.prevent
-							v-model="movie"
-							name="movie"
-							id="movie"
-						>
-							<md-option value="fight-club">Fight Club</md-option>
-							<md-option value="godfather">Godfather</md-option>
-							<md-option value="godfather-ii">Godfather II</md-option>
-							<md-option value="godfather-iii">Godfather III</md-option>
-							<md-option value="godfellas">Godfellas</md-option>
-							<md-option value="pulp-fiction">Pulp Fiction</md-option>
-							<md-option value="scarface">Scarface</md-option>
-						</md-select>
-					</md-field>
-				</md-menu-item>
-				<md-menu-item
-					><md-switch v-model="areCardsHidden_VModel"
-						>Hide cards</md-switch
-					></md-menu-item
-				>
-				<md-menu-item>Fact lists library</md-menu-item>
-				<md-menu-item
-					@click.native.prevent
-					@click.prevent="isCardListDisplayed = !isCardListDisplayed"
-					>Detail current list</md-menu-item
-				>
-				<md-menu-item @click.native="gboDebugDisplayedCard()"
-					>displayed Card</md-menu-item
-				>
-				<md-menu-item @click.native="gboDebugCard()">all card</md-menu-item>
-				<md-menu-item>add a new card at this time</md-menu-item>
-			</md-menu-content>
-		</md-menu>
+				<li class="h-14 px-5 flex content-center">
+					<MdcSwitch
+						class="my-auto"
+						v-model="areCardsHidden_VueModel"
+						label="Hide Cards"
+					></MdcSwitch>
+				</li>
+				<MenuItem label="cards"></MenuItem>
+				<MenuItem label="Fact lists library"></MenuItem>
+				{{
+					isDeckDisplayed
+				}}
+				<MenuItem
+					label="Detail current list"
+					@click.native="isDeckDisplayed = !isDeckDisplayed"
+					class="relative group-menuItem"
+					><current-deck class="" @click.native.stop></current-deck
+				></MenuItem>
+				<MenuItem
+					label="displayed Card"
+					@click.native="gboDebugDisplayedCard()"
+				></MenuItem>
+				<MenuItem label="all card" @click.native="gboDebugCard()"></MenuItem>
+				<MenuItem label="add a new card at this time"></MenuItem>
+			</ul>
+		</div>
 	</div>
 </template>
 
@@ -82,25 +54,42 @@
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 import { ActionCard, ICardState, MutationCard } from '@/store/CardStore';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
 import { Action, State } from 'vuex-class';
 import { IState, MutationMain } from '@/store/Store';
 import CardData from '@/models/CardData';
 import { mapState } from 'vuex';
-import CardDetailsList from '@/components/CardDetailsList.vue';
+import CurrentDeck from '@/components/CurrentDeck.vue';
+import MdcSwitch from '@/components/MdcSwitch.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
+@Component({
+	template: `
+		<li
+			class="hover:bg-white hover:bg-opacity-10 h-14 flex cursor-pointer px-5"
+		>
+			<p class="my-auto">{{ label }}</p>
+			<slot></slot>
+		</li>
+	`,
+	components: {},
+})
+class MenuItem extends Vue {
+	@Prop()
+	label!: string;
+}
 
 @Component({
 	components: {
-		CardDetailsList,
+		MenuItem,
+		CurrentDeck,
+		MdcSwitch,
 	},
 })
 export default class Menu extends Vue {
 	constructor() {
 		super();
-		console.log('gboDebug:[process.env]', process.env.VUE_APP_API_URL);
 		const errorCB = (error: any) => {
 			console.error('error', error);
 		};
@@ -141,10 +130,10 @@ export default class Menu extends Vue {
 
 	@State((state: IState) => !state.cardModule.areCardCardDisplayed)
 	areCardsHidden!: ICardState['areCardCardDisplayed'];
-	get areCardsHidden_VModel() {
+	get areCardsHidden_VueModel() {
 		return this.areCardsHidden;
 	}
-	set areCardsHidden_VModel(areCardsHidden: boolean) {
+	set areCardsHidden_VueModel(areCardsHidden: boolean) {
 		this.handleSwitchToggling();
 	}
 
@@ -157,7 +146,7 @@ export default class Menu extends Vue {
 	/*                               internal logic                               */
 	/* -------------------------------------------------------------------------- */
 
-	isCardListDisplayed = false;
+	isDeckDisplayed = false;
 
 	seeCurrentFactList() {
 		console.log('gboDebug:[seeCurrentFactList]');
@@ -214,7 +203,7 @@ export default class Menu extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="postcss">
 /* -------------------------------------------------------------------------- */
 /*                                      -                                     */
 /* -------------------------------------------------------------------------- */
@@ -226,7 +215,7 @@ export default class Menu extends Vue {
 /* -------------------------------------------------------------------------- */
 /*                                    SCSS                                    */
 /* -------------------------------------------------------------------------- */
-@import '@/styles/variables-and-mixins.scss';
+/* @import '@/styles/variables-and-mixins.scss';
 
 .md-menu-item:hover {
 	background-color: rgb(73, 79, 82);
@@ -252,5 +241,5 @@ export default class Menu extends Vue {
 		min-height: unset;
 		background: unset;
 	}
-}
+} */
 </style>

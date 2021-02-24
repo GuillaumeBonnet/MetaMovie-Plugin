@@ -6,9 +6,7 @@ add // a card button
 <template>
 	<div
 		:style="dynamicCardStyle"
-		class="
-			group absolute p-3 text-4xl rounded-md min-w-card text-center
-		"
+		class="z-1000000 group absolute p-3 text-4xl rounded-md min-w-card text-center"
 		:class="
 			isEditDraggingPreview
 				? 'bg-black bg-opacity-70 text-yellow-100 text-5xl'

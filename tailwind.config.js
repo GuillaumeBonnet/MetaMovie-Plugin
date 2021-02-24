@@ -1,3 +1,4 @@
+const plugin = require('tailwindcss/plugin');
 module.exports = {
 	// purge: { //ENABLE TO TEST LOCALLY
 	//   enabled: true,
@@ -6,6 +7,7 @@ module.exports = {
 	purge: ['./src/**/*.html', './src/**/*.vue'],
 	darkMode: false, // or 'media' or 'class'
 	theme: {
+		namedGroups: ['menuItem'],
 		extend: {
 			minWidth: {
 				card: '15rem',
@@ -13,8 +15,8 @@ module.exports = {
 			borderWidth: {
 				'1': '1px',
 			},
-			zIndex: {
-				max: '1000000',
+			inset: {
+				'3.5em': '3.5em',
 			},
 		},
 	},
@@ -29,7 +31,34 @@ module.exports = {
 			fontSize: ['hover', 'group-hover'],
 			borderWidth: ['hover', 'group-hover'],
 			borderColor: ['hover', 'group-hover', 'active'],
+			display: ['hover', 'group-hover', 'active'],
+			translate: ['hover', 'group-hover', 'active'],
+			transitionProperty: ['hover', 'group-hover', 'active'],
+			transitionDelay: ['hover', 'group-hover', 'active'],
 		},
 	},
-	plugins: [],
+	plugins: [
+		plugin(function({ addUtilities }) {
+			for (let i = 0; i <= 100; i++) {
+				addUtilities({
+					[`.w-screen${i}`]: {
+						width: `${i}vw`,
+					},
+				});
+				addUtilities({
+					[`.h-screen${i}`]: {
+						height: `${i}vh`,
+					},
+				});
+			}
+			for (let i = 1000000; i <= 1000000 + 50; i += 10) {
+				addUtilities({
+					[`.z-${i}`]: {
+						['z-index']: `${i}`,
+					},
+				});
+			}
+		}),
+		require('tailwindcss-named-groups'),
+	],
 };
