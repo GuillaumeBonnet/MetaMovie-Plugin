@@ -57,26 +57,26 @@ add // a card button
 					class="mx-2"
 					v-model="card.from"
 					label="From"
-					@mousedown.native.stop
+					@mousedown.stop
 				></time-selector>
 				<time-selector
 					class="mx-2"
 					v-model="card.to"
 					label="To"
-					@mousedown.native.stop
+					@mousedown.stop
 				></time-selector>
 				<percentage-input
 					class="mx-2"
 					:value="card.position.x"
 					label="x: horizontal position(%)"
-					@mousedown.native.stop
+					@mousedown.stop
 					@input="updatePositionChanged('x', $event)"
 				></percentage-input>
 				<percentage-input
 					class="mx-2"
 					:value="card.position.y"
 					label="y: vertical position(%)"
-					@mousedown.native.stop
+					@mousedown.stop
 					@input="updatePositionChanged('y', $event)"
 				></percentage-input>
 			</template>
@@ -126,7 +126,7 @@ add // a card button
 /* -------------------------------------------------------------------------- */
 
 import CardData from '@/models/CardData';
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 import { IVideoDimensions, IPositionXY } from '@/models/Types';
 import {
 	pxToNumber,
@@ -136,11 +136,12 @@ import {
 } from '@/Utils/CardUtils';
 import { Mutation, State } from 'vuex-class';
 import { MutationCard } from '@/store/CardStore';
-import { IState, MutationMain, ActionMain, IStore } from '@/store/Store';
+import { IState, MutationMain, ActionMain } from '@/store/Store';
 import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
+import { Options, Vue } from 'vue-class-component';
 
-@Component({
+@Options({
 	components: {
 		// sub-components
 		TimeSelector,
@@ -197,10 +198,13 @@ export default class CardCmp extends Vue {
 	}
 
 	@State((state: IState) => state.cardEdited)
-	cardEdited!: IState['cardEdited'];
+	get cardEdited() {
+		return this.$store.state.cardEdited;
+	}
 
-	@State((state: IState) => state.video)
-	video!: IState['video'];
+	get video() {
+		return this.$store.state.video;
+	}
 
 	get isInEdition() {
 		console.log('gboDebug:[this.card.id]', this.card.id);
@@ -228,7 +232,7 @@ export default class CardCmp extends Vue {
 	}
 	handleEditButton() {
 		if (!this.isInEdition) {
-			(this.$store as IStore).state.video.pause();
+			this.$store.state.video.pause();
 		}
 		this.$store.dispatch(
 			ActionMain.TOGGLE_CARD_EDITED,

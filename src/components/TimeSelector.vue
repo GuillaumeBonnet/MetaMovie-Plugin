@@ -67,9 +67,10 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-class-component';
+import { Prop, Watch } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		// sub-components
 	},
@@ -214,45 +215,6 @@ export default class TimeSelector extends Vue {
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-/*                                    SCSS                                    */
+/*                                   postcss                                  */
 /* -------------------------------------------------------------------------- */
-
-/* @import '~@/styles/variables-and-mixins.scss';
-@include input('.container'); */
-
-/* .digit-container {
-	display: flex;
-}
-.separator {
-	display: flex;
-	align-items: center;
-	font-size: 1.5em;
-	$side-margin-separator: -4 px;
-	margin-left: $side-margin-separator;
-	margin-right: $side-margin-separator;
-}
-.digit {
-	text-align: center;
-	width: 2em;
-	height: 2em;
-	margin-top: -1px;
-	margin-bottom: -1px;
-	background-color: transparent;
-	font-size: 1.1em;
-	font-weight: 800;
-	border: none;
-	&:focus {
-		outline: none;
-	}
-	&--hour {
-		@extend .digit;
-		width: 1.5em;
-	}
-	&--minute {
-		@extend .digit;
-	}
-	&--second {
-		@extend .digit;
-	}
-} */
 </style>

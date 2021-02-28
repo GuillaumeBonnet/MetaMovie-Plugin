@@ -1,33 +1,27 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
+
 import Menu from '../components/Menu.vue';
 import VideoOverlay from '../components/VideoOverlay.vue';
 
-Vue.config.productionTip = false;
-
-import { compiledStore, MutationMain } from '@/store/Store';
+import { store, MutationMain } from '@/store/Store';
 import CardData from '@/models/CardData';
 import { MutationCard } from '@/store/CardStore';
 console.log('gboDebug: content overlay');
 import '@/assets/styles/styles.css';
 
-new Vue({
-	render: h => h(Menu),
-	store: compiledStore,
-}).$mount('#plugin-meta-movie-menu');
+const appMenu = createApp(Menu);
+appMenu.use(store);
+appMenu.mount('#plugin-meta-movie-menu');
 
-new Vue({
-	render: h => h(VideoOverlay),
-	store: compiledStore,
-}).$mount('#plugin-meta-movie-video-overlay');
+const appOverlay = createApp(VideoOverlay);
+appOverlay.use(store);
+appOverlay.mount('#plugin-meta-movie-video-overlay');
 
 document.addEventListener('fullscreenchange', event => {
-	compiledStore.commit(
-		MutationMain.SET_IS_FULL_SCREEN,
-		!!document.fullscreenElement
-	);
+	store.commit(MutationMain.SET_IS_FULL_SCREEN, !!document.fullscreenElement);
 });
 
-compiledStore.commit(MutationCard.SET_CARDS, [
+store.commit(MutationCard.SET_CARDS, [
 	new CardData({
 		fromStamp: '0:00:01',
 		toStamp: '0:00:04',

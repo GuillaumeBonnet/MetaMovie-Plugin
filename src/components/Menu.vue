@@ -27,15 +27,15 @@
 				}}
 				<MenuItem
 					label="Detail current list"
-					@click.native="isDeckDisplayed = !isDeckDisplayed"
+					@click="isDeckDisplayed = !isDeckDisplayed"
 					class="relative group-menuItem"
-					><current-deck class="" @click.native.stop></current-deck
+					><current-deck class="" @click.stop></current-deck
 				></MenuItem>
 				<MenuItem
 					label="displayed Card"
-					@click.native="gboDebugDisplayedCard()"
+					@click="gboDebugDisplayedCard()"
 				></MenuItem>
-				<MenuItem label="all card" @click.native="gboDebugCard()"></MenuItem>
+				<MenuItem label="all card" @click="gboDebugCard()"></MenuItem>
 				<MenuItem label="add a new card at this time"></MenuItem>
 			</ul>
 		</div>
@@ -53,18 +53,16 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import { ActionCard, ICardState, MutationCard } from '@/store/CardStore';
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { getModule } from 'vuex-module-decorators';
-import { Action, State } from 'vuex-class';
-import { IState, MutationMain } from '@/store/Store';
+import { ActionCard, MutationCard } from '@/store/CardStore';
+import { Options, Vue } from 'vue-class-component';
 import CardData from '@/models/CardData';
-import { mapState } from 'vuex';
 import CurrentDeck from '@/components/CurrentDeck.vue';
 import MdcSwitch from '@/components/MdcSwitch.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
-@Component({
+import { defineComponent } from 'vue';
+
+const MenuItem = defineComponent({
 	template: `
 		<li
 			class="hover:bg-white hover:bg-opacity-10 h-14 flex cursor-pointer px-5"
@@ -73,14 +71,15 @@ import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 			<slot></slot>
 		</li>
 	`,
+	data() {
+		return {
+			label: '',
+		};
+	},
 	components: {},
-})
-class MenuItem extends Vue {
-	@Prop()
-	label!: string;
-}
+});
 
-@Component({
+@Options({
 	components: {
 		MenuItem,
 		CurrentDeck,
@@ -90,51 +89,53 @@ class MenuItem extends Vue {
 export default class Menu extends Vue {
 	constructor() {
 		super();
-		const errorCB = (error: any) => {
-			console.error('error', error);
-		};
-		axios
-			.get(`${process.env.VUE_APP_API_URL}/decks/7093`)
-			.then((deck: AxiosResponse<DeckApi>) => {
-				const cards: CardData[] = deck.data.cards.map(card => {
-					return new CardData({
-						fromStamp: card.from,
-						toStamp: card.to,
-						x: card.position.x,
-						y: card.position.y,
-						text: card.text,
-					});
-				});
-				console.log('gboDebug:[cards]', cards);
-				this.$store.commit(MutationCard.SET_CARDS, cards);
-			});
-		axios
-			.get(`${process.env.VUE_APP_API_URL}/decks`)
-			.then((decks: AxiosResponse<DeckApi_WithoutCards[]>) => {
-				console.log('gboDebug:[decks]', decks);
-			})
-			.catch(errorCB);
+		// const errorCB = (error: any) => {
+		// 	console.error('error', error);
+		// };
+		// axios
+		// 	.get(`${process.env.VUE_APP_API_URL}/decks/7093`)
+		// 	.then((deck: AxiosResponse<DeckApi>) => {
+		// 		const cards: CardData[] = deck.data.cards.map(card => {
+		// 			return new CardData({
+		// 				fromStamp: card.from,
+		// 				toStamp: card.to,
+		// 				x: card.position.x,
+		// 				y: card.position.y,
+		// 				text: card.text,
+		// 			});
+		// 		});
+		// 		console.log('gboDebug:[cards]', cards);
+		// 		this.$store.commit(MutationCard.SET_CARDS, cards);
+		// 	});
+		// axios
+		// 	.get(`${process.env.VUE_APP_API_URL}/decks`)
+		// 	.then((decks: AxiosResponse<DeckApi_WithoutCards[]>) => {
+		// 		console.log('gboDebug:[decks]', decks);
+		// 	})
+		// 	.catch(errorCB);
 	}
 
 	/* -------------------------------------------------------------------------- */
 	/*                         store methods & properties                         */
 	/* -------------------------------------------------------------------------- */
 
-	@Action(ActionCard.TOGGLE_CARD_VISIBILITY) handleSwitchToggling: any;
+	get displayedCards() {
+		return this.$store.state.cardModule.displayedCards;
+	}
 
-	@State((state: IState) => state.cardModule.cards)
-	displayedCards!: ICardState['displayedCards'];
+	get cards() {
+		return this.$store.state.cardModule.cards;
+	}
 
-	@State((state: IState) => state.cardModule.cards)
-	cards!: ICardState['cards'];
+	get areCardsHidden() {
+		return this.$store.state.cardModule.areCardCardDisplayed;
+	}
 
-	@State((state: IState) => !state.cardModule.areCardCardDisplayed)
-	areCardsHidden!: ICardState['areCardCardDisplayed'];
 	get areCardsHidden_VueModel() {
 		return this.areCardsHidden;
 	}
 	set areCardsHidden_VueModel(areCardsHidden: boolean) {
-		this.handleSwitchToggling();
+		this.$store.dispatch(ActionCard.TOGGLE_CARD_VISIBILITY);
 	}
 
 	/* -------------------------------------------------------------------------- */

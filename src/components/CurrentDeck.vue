@@ -33,14 +33,14 @@
 					class="m-2 p-2 w-1/2"
 					:value="card.position.x"
 					label="x: horizontal position(%)"
-					@mousedown.native.stop
+					@mousedown.stop
 					readonly="true"
 				></percentage-input>
 				<percentage-input
 					class="m-2 p-2 w-1/2"
 					:value="card.position.y"
 					label="y: vertical position(%)"
-					@mousedown.native.stop
+					@mousedown.stop
 					readonly="true"
 				></percentage-input>
 			</div>
@@ -60,21 +60,20 @@
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 import CardData from '@/models/CardData';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
-import { State } from 'vuex-class';
-import { IState } from '@/store/Store';
-import { ICardState } from '@/store/CardStore';
-@Component({
+import { Options, Vue } from 'vue-class-component';
+@Options({
 	components: {
 		TimeSelector,
 		PercentageInput,
 	},
 })
 export default class CurrentDeck extends Vue {
-	@State((state: IState) => state.cardModule.cards)
-	displayedCards!: ICardState['displayedCards'];
+	get displayedCards() {
+		return this.$store.state.cardModule.displayedCards;
+	}
 }
 </script>
 

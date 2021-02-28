@@ -1,5 +1,7 @@
 import { removeExpiredCards, updateACard } from '@/Utils/CardUtils';
 import CardData from '../models/CardData';
+import { Module } from 'vuex';
+import { IState } from './Store';
 
 const MutationCard = {
 	TOGGLE_ARE_CARD_DISPLAYED: 'TOGGLE_ARE_CARD_DISPLAYED',
@@ -17,18 +19,7 @@ interface ICardState {
 	displayedCards: CardData[];
 }
 
-interface IcardStore {
-	state: ICardState;
-	commit: Function;
-}
-
-const cardModule = {
-	state: () =>
-		({
-			areCardCardDisplayed: true,
-			cards: [] as CardData[],
-			displayedCards: [] as CardData[],
-		} as ICardState),
+const cardModule: Module<ICardState, IState> = {
 	mutations: {
 		[MutationCard.TOGGLE_ARE_CARD_DISPLAYED](state: ICardState) {
 			state.areCardCardDisplayed = !state.areCardCardDisplayed;
@@ -51,7 +42,7 @@ const cardModule = {
 		},
 	},
 	actions: {
-		[ActionCard.TOGGLE_CARD_VISIBILITY]({ commit, state }: IcardStore) {
+		[ActionCard.TOGGLE_CARD_VISIBILITY]({ commit, state }) {
 			commit(MutationCard.TOGGLE_ARE_CARD_DISPLAYED);
 			commit(
 				MutationCard.SET_DISPLAYED_CARDS,
@@ -63,4 +54,4 @@ const cardModule = {
 		},
 	},
 };
-export { ActionCard, MutationCard, cardModule, IcardStore, ICardState };
+export { ActionCard, MutationCard, cardModule, ICardState };

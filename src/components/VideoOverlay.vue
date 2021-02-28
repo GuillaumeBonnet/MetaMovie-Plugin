@@ -29,16 +29,16 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
+import { Prop, Watch, Ref } from 'vue-property-decorator';
 import CardCmp from '@/components/CardCmp.vue';
-import { getModule } from 'vuex-module-decorators';
 import CardData from '@/models/CardData';
 import { IVideoDimensions } from '@/models/Types';
 import { Action, State } from 'vuex-class';
 import { ActionMain, IState, MutationMain } from '@/store/Store';
 import { ActionCard, ICardState } from '@/store/CardStore';
+import { Options, Vue } from 'vue-class-component';
 
-@Component({
+@Options({
 	components: {
 		CardCmp,
 	},
@@ -48,20 +48,21 @@ export default class VideoOverlay extends Vue {
 	/*                                 properties                                 */
 	/* -------------------------------------------------------------------------- */
 
-	@State((state: IState) => state.video)
-	private video!: IState['video'];
+	get video() {
+		return this.$store.state.video;
+	}
 	private videoDimensions: IVideoDimensions = { x: 0, y: 0 }; //in px
 
-	@State((state: IState) => state.cardModule.cards)
-	cardsInStore!: ICardState['cards'];
+	get cards() {
+		return this.$store.state.cardModule.cards;
+	}
+	get cardEdited() {
+		return this.$store.state.cardEdited;
+	}
 
-	@State((state: IState) => state.cardEdited)
-	cardEdited!: IState['cardEdited'];
-
-	@State((state: IState) => state.cardModule.displayedCards)
-	displayedCards!: ICardState['displayedCards'];
-
-	@Action(ActionMain.HANDLE_VIDEO_PROGRESSION) handleVideoProgression: any;
+	get displayedCards() {
+		return this.$store.state.cardModule.displayedCards;
+	}
 
 	created() {
 		const setVideoDimensions = () => {
@@ -87,7 +88,10 @@ export default class VideoOverlay extends Vue {
 					const video = event.target as HTMLVideoElement;
 					const currentTime = video && video.currentTime;
 					if (!currentTime) return;
-					this.handleVideoProgression(currentTime);
+					this.$store.dispatch(
+						ActionMain.HANDLE_VIDEO_PROGRESSION,
+						currentTime
+					);
 				});
 				setVideoDimensions();
 			} else {

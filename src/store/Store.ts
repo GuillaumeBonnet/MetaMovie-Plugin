@@ -1,24 +1,18 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import { cardModule, ICardState, MutationCard } from '@/store/CardStore';
 import { removeExpiredCards } from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { removeElemIf } from '@/Utils/MainUtils';
 
 interface IState {
-	video: HTMLVideoElement;
-	netflixPlayer: any;
+	video?: HTMLVideoElement;
+	netflixPlayer?: any;
 	isFullScreen: boolean;
 	cardEdited?: CardData;
 	currentTime: number;
 	previousTime: number;
 	progressIndex: number;
 	cardModule: ICardState;
-}
-
-interface IStore {
-	state: IState;
-	commit: Function;
 }
 
 const MutationMain = {
@@ -34,18 +28,22 @@ const ActionMain = {
 	HANDLE_VIDEO_PROGRESSION: 'HANDLE_VIDEO_PROGRESSION',
 	TOGGLE_CARD_EDITED: 'TOGGLE_CARD_EDITED',
 };
-
-const store = {
+const store = createStore<IState>({
+	state() {
+		return {
+			progressIndex: 0,
+			cardEdited: undefined,
+			currentTime: 0,
+			previousTime: 0,
+			isFullScreen: !!document.fullscreenElement,
+			video: undefined,
+			netflixPlayer: undefined,
+			cardModule: { areCardCardDisplayed: true, cards: [], displayedCards: [] },
+		};
+	},
 	modules: {
 		cardModule,
 	},
-	state: {
-		progressIndex: 0,
-		cardEdited: undefined,
-		currentTime: 0,
-		previousTime: 0,
-		isFullScreen: !!document.fullscreenElement,
-	} as IState,
 	mutations: {
 		[MutationMain.SET_VIDEO]: (state: IState, video: IState['video']) => {
 			state.video = video;
@@ -62,7 +60,7 @@ const store = {
 			state: IState,
 			timeInS: number
 		) => {
-			if (process.env.VUE_APP_MODE == 'DEV_SERVE') {
+			if (process.env.VUE_APP_MODE == 'DEV_SERVE' && state.video) {
 				state.video.currentTime = timeInS;
 			} else {
 				state.netflixPlayer.seek(timeInS * 1000);
@@ -103,7 +101,7 @@ const store = {
 	},
 	actions: {
 		[ActionMain.TOGGLE_CARD_EDITED]: (
-			{ commit, state }: IStore,
+			{ commit, state },
 			cardEdited: IState['cardEdited']
 		) => {
 			if (state.cardEdited && !cardEdited /*editCardDone*/) {
@@ -123,7 +121,7 @@ const store = {
 					MutationMain.SET_VIDEO_CURRENT_TIME_S,
 					state.cardEdited?.fromInSeconds() - 2
 				);
-				state.video.play();
+				state.video?.play();
 			} else if (cardEdited) {
 				removeElemIf(state.cardModule.cards, card => card.id == cardEdited.id);
 				removeElemIf(
@@ -134,7 +132,7 @@ const store = {
 			state.cardEdited = cardEdited;
 		},
 		[ActionMain.HANDLE_VIDEO_PROGRESSION]: (
-			{ commit, state }: IStore,
+			{ commit, state },
 			currentTime: IState['currentTime']
 		) => {
 			commit(MutationMain.SET_PREVIOUS_TIME, state.currentTime);
@@ -185,8 +183,5 @@ const store = {
 			commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
 		},
 	},
-};
-Vue.use(Vuex);
-const compiledStore = new Vuex.Store(store);
-
-export { compiledStore, IState, IStore, MutationMain, ActionMain };
+});
+export { IState, store, MutationMain, ActionMain };

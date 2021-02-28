@@ -64,9 +64,9 @@ function isValueGood(value: string) {
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-
-@Component({
+import { Prop, Watch } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-class-component';
+@Options({
 	components: {
 		// sub-components
 	},

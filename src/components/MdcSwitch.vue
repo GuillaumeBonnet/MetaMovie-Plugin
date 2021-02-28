@@ -39,9 +39,10 @@
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 import { MDCSwitch } from '@material/switch';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 
-@Component({ components: {} })
+@Options({ components: {} })
 export default class MdcSwitch extends Vue {
 	constructor() {
 		super();
