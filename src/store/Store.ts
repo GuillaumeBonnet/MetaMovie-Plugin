@@ -160,10 +160,6 @@ const store = createStore<IState>({
 					progressIndex++;
 				}
 			} else if (progressIndex <= cardList.length) {
-				console.log(
-					'gboDebug:[state.cardModule.displayedCards]',
-					state.cardModule.displayedCards
-				);
 				displayedCards = [...state.cardModule.displayedCards];
 				removeExpiredCards(displayedCards, state.currentTime);
 				while (progressIndex < cardList.length) {

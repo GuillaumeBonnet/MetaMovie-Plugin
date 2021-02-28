@@ -42,14 +42,14 @@
 /* -------------------------------------------------------------------------- */
 /*                                    UTILS                                   */
 /* -------------------------------------------------------------------------- */
-function isValueGood(value: string) {
+function isModelValueGood(modelvalue: string) {
 	if (
 		/^\d+((\.|,)\d{0,2})?$/.test(
-			value
+			modelvalue
 		) /* number decimal, 2 decimal digit max, coma or point*/
 	) {
-		const valueAsNumber = Number.parseFloat(value.replace(',', '.'));
-		if (valueAsNumber >= 0 && valueAsNumber <= 200) {
+		const modelvalueAsNumber = Number.parseFloat(modelvalue.replace(',', '.'));
+		if (modelvalueAsNumber >= 0 && modelvalueAsNumber <= 200) {
 			return true;
 		}
 	}
@@ -70,39 +70,43 @@ import { Options, Vue } from 'vue-class-component';
 	components: {
 		// sub-components
 	},
+	props: {
+		modelValue: Number,
+	},
+	emits: ['update:modelValue'],
 })
 export default class PercentageInput extends Vue {
 	@Prop({ default: 0 })
-	value!: number;
+	modelvalue!: number;
 	@Prop()
 	label!: string;
 	@Prop({ default: false })
 	readonly!: boolean;
 
-	@Watch('value')
-	onValueChange(newValue: number, oldValue: number) {
+	@Watch('modelValue')
+	onModelValueChange(newModelValue: number, oldModelValue: number) {
 		const decPrecis = 2;
-		const roundedValue =
-			Math.round(this.value * Math.pow(10, decPrecis)) /
+		const roundedModelValue =
+			Math.round(newModelValue * Math.pow(10, decPrecis)) /
 			Math.pow(10, decPrecis);
-		this.$emit('input', roundedValue);
-		this.inputText.value = roundedValue.toString();
+		this.$emit('update:modelValue', roundedModelValue);
+		this.inputText.value = roundedModelValue.toString();
 	}
 	created() {
-		this.onValueChange(this.value, this.value);
+		this.onModelValueChange(this.modelvalue, this.modelvalue);
 	}
 
 	isFocused = false;
 	inputText = {
 		cmpRef: this,
-		_value: '' + this.value || '0',
+		_value: '' + this.modelvalue || '0',
 		get value() {
 			return this._value;
 		},
 		set value(value) {
 			if (value == '') {
 				this._value = value;
-			} else if (isValueGood(value)) {
+			} else if (isModelValueGood(value)) {
 				this._value = value;
 			}
 		},
@@ -117,8 +121,8 @@ export default class PercentageInput extends Vue {
 		if (this.inputText.value == '') {
 			this.inputText.value = '50';
 		}
-		if (isValueGood(this.inputText._value)) {
-			this.$emit('input', this.inputText._value);
+		if (isModelValueGood(this.inputText.value)) {
+			this.$emit('update:modelValue', this.inputText.value);
 		}
 	}
 	handleFocus(event: Event) {

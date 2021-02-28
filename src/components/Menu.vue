@@ -128,7 +128,7 @@ export default class Menu extends Vue {
 	}
 
 	get areCardsHidden() {
-		return this.$store.state.cardModule.areCardCardDisplayed;
+		return !this.$store.state.cardModule.areCardCardDisplayed;
 	}
 
 	get areCardsHidden_VueModel() {

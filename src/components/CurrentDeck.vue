@@ -31,14 +31,14 @@
 			<div class="flex">
 				<percentage-input
 					class="m-2 p-2 w-1/2"
-					:value="card.position.x"
+					:modelValue="card.position.x"
 					label="x: horizontal position(%)"
 					@mousedown.stop
 					readonly="true"
 				></percentage-input>
 				<percentage-input
 					class="m-2 p-2 w-1/2"
-					:value="card.position.y"
+					:modelValue="card.position.y"
 					label="y: vertical position(%)"
 					@mousedown.stop
 					readonly="true"

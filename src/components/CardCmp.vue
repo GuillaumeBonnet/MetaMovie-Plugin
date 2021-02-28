@@ -67,17 +67,17 @@ add // a card button
 				></time-selector>
 				<percentage-input
 					class="mx-2"
-					:value="card.position.x"
+					:modelValue="card.position.x"
 					label="x: horizontal position(%)"
 					@mousedown.stop
-					@input="updatePositionChanged('x', $event)"
+					@update:modelValue="updatePositionChanged('x', $event)"
 				></percentage-input>
 				<percentage-input
 					class="mx-2"
-					:value="card.position.y"
+					:modelValue="card.position.y"
 					label="y: vertical position(%)"
 					@mousedown.stop
-					@input="updatePositionChanged('y', $event)"
+					@update:modelValue="updatePositionChanged('y', $event)"
 				></percentage-input>
 			</template>
 			<button

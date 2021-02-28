@@ -5,7 +5,7 @@
 			<div
 				class="mdc-switch"
 				:class="{
-					'mdc-switch--checked': value,
+					'mdc-switch--checked': modelValue,
 					'mdc-switch--disabled': disabled,
 				}"
 				@click="switchTogle()"
@@ -18,7 +18,7 @@
 							id="basic-switch"
 							class="mdc-switch__native-control"
 							role="switch"
-							:value="value"
+							:value="modelValue"
 							:disabled="disabled"
 						/>
 					</div>
@@ -42,7 +42,7 @@ import { MDCSwitch } from '@material/switch';
 import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 
-@Options({ components: {} })
+@Options({ components: {}, emits: ['update:modelValue'] })
 export default class MdcSwitch extends Vue {
 	// mounted() {
 	// 	const switchNode = this.$el.querySelector('.mdc-switch');
@@ -51,15 +51,13 @@ export default class MdcSwitch extends Vue {
 	// 	}
 	// }
 	@Prop({ default: false })
-	value!: boolean;
+	modelValue!: boolean;
 	@Prop({ default: false })
 	disabled!: boolean;
 	@Prop({ default: false })
 	label!: string;
 	switchTogle() {
-		console.log('gboDebug: switchTogle');
-		console.log('gboDebug:[!this.value]', !this.value);
-		this.$emit('input', !this.value);
+		this.$emit('update:modelValue', !this.modelValue);
 	}
 }
 </script>

@@ -74,35 +74,41 @@ import { Prop, Watch } from 'vue-property-decorator';
 	components: {
 		// sub-components
 	},
+	emits: ['update:modelValue'],
+	props: {
+		modelValue: String,
+	},
 })
 export default class TimeSelector extends Vue {
 	created() {
-		this.onValueChange(this.value, '');
+		this.onModelValueChange(this.modelValue, '');
 	}
 	@Prop()
 	label!: string;
 	@Prop()
-	value!: string;
+	modelValue!: string;
 	@Prop({ default: false })
 	readonly!: boolean;
-	@Watch('value')
-	onValueChange(newValue: string, oldValue: string) {
-		if (/\d+:\d+:\d+/.test(newValue)) {
+	@Watch('modelValue')
+	onModelValueChange(newModelValue: string, oldModelValue: string) {
+		if (/\d+:\d+:\d+/.test(newModelValue)) {
 			// Destructuring assignment
 			[
 				this.timeInputs.hours.value,
 				this.timeInputs.minutes.value,
 				this.timeInputs.seconds.value,
-			] = newValue.split(':');
+			] = newModelValue.split(':');
 		} else {
-			console.warn('TimeSelector input value is wrong.');
+			console.warn(
+				`TimeSelector input modelvalue is wrong: (${newModelValue})`
+			);
 		}
 	}
 
 	emit() {
-		const emitValue = `${this.timeInputs.hours.value}:${this.timeInputs.minutes.value}:${this.timeInputs.seconds.value}`;
-		if (/\d:\d\d:\d\d/.test(emitValue)) {
-			this.$emit('input', emitValue);
+		const emitModelValue = `${this.timeInputs.hours.value}:${this.timeInputs.minutes.value}:${this.timeInputs.seconds.value}`;
+		if (/\d:\d\d:\d\d/.test(emitModelValue)) {
+			this.$emit('update:modelValue', emitModelValue);
 		}
 	}
 
