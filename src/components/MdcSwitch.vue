@@ -44,9 +44,6 @@ import { Prop } from 'vue-property-decorator';
 
 @Options({ components: {} })
 export default class MdcSwitch extends Vue {
-	constructor() {
-		super();
-	}
 	// mounted() {
 	// 	const switchNode = this.$el.querySelector('.mdc-switch');
 	// 	if (switchNode) {

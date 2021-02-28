@@ -87,8 +87,7 @@ const MenuItem = defineComponent({
 	},
 })
 export default class Menu extends Vue {
-	constructor() {
-		super();
+	created() {
 		// const errorCB = (error: any) => {
 		// 	console.error('error', error);
 		// };
@@ -214,33 +213,6 @@ export default class Menu extends Vue {
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-/*                                    SCSS                                    */
+/*                                   postcss                                  */
 /* -------------------------------------------------------------------------- */
-/* @import '@/styles/variables-and-mixins.scss';
-
-.md-menu-item:hover {
-	background-color: rgb(73, 79, 82);
-	color: rgb(232, 230, 227);
-}
-
-.menu-box::v-deep {
-	border-radius: $border-radius;
-	overflow: hidden;
-	margin-bottom: -1px;
-	& .md-list {
-		padding: 0.8em;
-	}
-}
-.menu-icon-container.menu-icon-container {
-	padding: 0 0 0.6em 0;
-	position: initial;
-	width: 3.4em;
-	height: 3.6em;
-	background: unset;
-	&::v-deep div {
-		min-width: unset;
-		min-height: unset;
-		background: unset;
-	}
-} */
 </style>
