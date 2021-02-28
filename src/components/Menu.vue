@@ -72,7 +72,10 @@ const MenuItem = defineComponent({
 		</li>
 	`,
 	props: {
-		label: String,
+		label: {
+			type: String,
+			required: true,
+		},
 	},
 	components: {},
 });
