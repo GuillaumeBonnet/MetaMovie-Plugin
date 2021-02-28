@@ -1,5 +1,10 @@
 import { createStore } from 'vuex';
-import { cardModule, ICardState, MutationCard } from '@/store/CardStore';
+import {
+	cardModule,
+	ICardState,
+	initialState as initialStateCardModule,
+	MutationCard,
+} from '@/store/CardStore';
 import { removeExpiredCards } from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { removeElemIf } from '@/Utils/MainUtils';
@@ -38,7 +43,7 @@ const store = createStore<IState>({
 			isFullScreen: !!document.fullscreenElement,
 			video: undefined,
 			netflixPlayer: undefined,
-			cardModule: { areCardCardDisplayed: true, cards: [], displayedCards: [] },
+			cardModule: initialStateCardModule,
 		};
 	},
 	modules: {
@@ -155,6 +160,10 @@ const store = createStore<IState>({
 					progressIndex++;
 				}
 			} else if (progressIndex <= cardList.length) {
+				console.log(
+					'gboDebug:[state.cardModule.displayedCards]',
+					state.cardModule.displayedCards
+				);
 				displayedCards = [...state.cardModule.displayedCards];
 				removeExpiredCards(displayedCards, state.currentTime);
 				while (progressIndex < cardList.length) {

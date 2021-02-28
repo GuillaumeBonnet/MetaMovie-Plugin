@@ -4,7 +4,7 @@
 	>
 		<li
 			class="p-5 rounded-md bg-gray-500 m-3"
-			v-for="(card, index) in displayedCards"
+			v-for="(card, index) in cards"
 			:key="index"
 		>
 			<div class="rounded-2xl border-solid border-2 border-gray-800 p-2">
@@ -71,8 +71,8 @@ import { Options, Vue } from 'vue-class-component';
 	},
 })
 export default class CurrentDeck extends Vue {
-	get displayedCards() {
-		return this.$store.state.cardModule.displayedCards;
+	get cards() {
+		return this.$store.state.cardModule.cards;
 	}
 }
 </script>

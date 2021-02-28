@@ -71,10 +71,8 @@ const MenuItem = defineComponent({
 			<slot></slot>
 		</li>
 	`,
-	data() {
-		return {
-			label: '',
-		};
+	props: {
+		label: String,
 	},
 	components: {},
 });

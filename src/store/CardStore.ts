@@ -19,7 +19,16 @@ interface ICardState {
 	displayedCards: CardData[];
 }
 
+const initialState: ICardState = {
+	areCardCardDisplayed: true,
+	cards: [],
+	displayedCards: [],
+};
+
 const cardModule: Module<ICardState, IState> = {
+	state() {
+		return initialState;
+	},
 	mutations: {
 		[MutationCard.TOGGLE_ARE_CARD_DISPLAYED](state: ICardState) {
 			state.areCardCardDisplayed = !state.areCardCardDisplayed;
@@ -54,4 +63,4 @@ const cardModule: Module<ICardState, IState> = {
 		},
 	},
 };
-export { ActionCard, MutationCard, cardModule, ICardState };
+export { ActionCard, MutationCard, cardModule, ICardState, initialState };
