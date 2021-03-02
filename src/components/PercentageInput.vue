@@ -42,14 +42,14 @@
 /* -------------------------------------------------------------------------- */
 /*                                    UTILS                                   */
 /* -------------------------------------------------------------------------- */
-function isModelValueGood(modelvalue: string) {
+function isModelValueGood(modelValue: string) {
 	if (
 		/^\d+((\.|,)\d{0,2})?$/.test(
-			modelvalue
+			modelValue
 		) /* number decimal, 2 decimal digit max, coma or point*/
 	) {
-		const modelvalueAsNumber = Number.parseFloat(modelvalue.replace(',', '.'));
-		if (modelvalueAsNumber >= 0 && modelvalueAsNumber <= 200) {
+		const modelValueAsNumber = Number.parseFloat(modelValue.replace(',', '.'));
+		if (modelValueAsNumber >= 0 && modelValueAsNumber <= 200) {
 			return true;
 		}
 	}
@@ -70,14 +70,11 @@ import { Options, Vue } from 'vue-class-component';
 	components: {
 		// sub-components
 	},
-	props: {
-		modelValue: Number,
-	},
 	emits: ['update:modelValue'],
 })
 export default class PercentageInput extends Vue {
 	@Prop({ default: 0 })
-	modelvalue!: number;
+	modelValue!: number;
 	@Prop()
 	label!: string;
 	@Prop({ default: false })
@@ -92,14 +89,10 @@ export default class PercentageInput extends Vue {
 		this.$emit('update:modelValue', roundedModelValue);
 		this.inputText.value = roundedModelValue.toString();
 	}
-	created() {
-		this.onModelValueChange(this.modelvalue, this.modelvalue);
-	}
-
 	isFocused = false;
 	inputText = {
 		cmpRef: this,
-		_value: '' + this.modelvalue || '0',
+		_value: '' + this.modelValue,
 		get value() {
 			return this._value;
 		},

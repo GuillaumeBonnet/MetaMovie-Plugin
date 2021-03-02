@@ -121,7 +121,6 @@ const store = createStore<IState>({
 					iInsert++;
 				}
 				state.cardModule.cards.splice(iInsert, 0, state.cardEdited);
-
 				commit(
 					MutationMain.SET_VIDEO_CURRENT_TIME_S,
 					state.cardEdited?.fromInSeconds() - 2

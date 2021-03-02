@@ -207,8 +207,6 @@ export default class CardCmp extends Vue {
 	}
 
 	get isInEdition() {
-		console.log('gboDebug:[this.card.id]', this.card.id);
-		console.log('gboDebug:[this.cardEdited?.id]', this.cardEdited?.id);
 		return this.cardEdited?.id == this.card.id;
 	}
 
