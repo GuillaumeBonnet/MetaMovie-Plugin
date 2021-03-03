@@ -75,9 +75,6 @@ import { Prop, Watch } from 'vue-property-decorator';
 		// sub-components
 	},
 	emits: ['update:modelValue'],
-	props: {
-		modelValue: String,
-	},
 })
 export default class TimeSelector extends Vue {
 	created() {
@@ -93,11 +90,10 @@ export default class TimeSelector extends Vue {
 	onModelValueChange(newModelValue: string, oldModelValue: string) {
 		if (/\d+:\d+:\d+/.test(newModelValue)) {
 			// Destructuring assignment
-			[
-				this.timeInputs.hours.value,
-				this.timeInputs.minutes.value,
-				this.timeInputs.seconds.value,
-			] = newModelValue.split(':');
+			const [hours, minutes, seconds] = newModelValue.split(':');
+			this.timeInputs.hours.setNoEmit(hours);
+			this.timeInputs.minutes.setNoEmit(minutes);
+			this.timeInputs.seconds.setNoEmit(seconds);
 		} else {
 			console.warn(
 				`TimeSelector input modelvalue is wrong: (${newModelValue})`
@@ -121,19 +117,27 @@ export default class TimeSelector extends Vue {
 			isFocused: false,
 			cmpRef: this,
 			_value: '0',
-			get value() {
-				return this._value;
-			},
-			set value(value) {
-				if (
+			isValid(value: string) {
+				return (
 					value == '' ||
 					(value.length <= 1 &&
 						!Number.isNaN(Number.parseInt(value)) &&
 						Number.parseInt(value) >= 0 &&
 						Number.parseInt(value) <= 9)
-				) {
+				);
+			},
+			get value() {
+				return this._value;
+			},
+			set value(value) {
+				if (this.isValid(value)) {
 					this._value = value;
 					this.cmpRef.emit();
+				}
+			},
+			setNoEmit(value: string) {
+				if (this.isValid(value)) {
+					this._value = value;
 				}
 			},
 		},
@@ -141,19 +145,27 @@ export default class TimeSelector extends Vue {
 			isFocused: false,
 			cmpRef: this,
 			_value: '00',
-			get value() {
-				return this._value;
-			},
-			set value(value) {
-				if (
+			isValid(value: string) {
+				return (
 					value == '' ||
 					(value.length <= 2 &&
 						!Number.isNaN(Number.parseInt(value)) &&
 						Number.parseInt(value) >= 0 &&
 						Number.parseInt(value) <= 59)
-				) {
+				);
+			},
+			get value() {
+				return this._value;
+			},
+			set value(value) {
+				if (this.isValid(value)) {
 					this._value = value;
 					this.cmpRef.emit();
+				}
+			},
+			setNoEmit(value: string) {
+				if (this.isValid(value)) {
+					this._value = value;
 				}
 			},
 		},
@@ -161,19 +173,27 @@ export default class TimeSelector extends Vue {
 			isFocused: false,
 			cmpRef: this,
 			_value: '00',
-			get value() {
-				return this._value;
-			},
-			set value(value) {
-				if (
+			isValid(value: string) {
+				return (
 					value == '' ||
 					(value.length <= 2 &&
 						!Number.isNaN(Number.parseInt(value)) &&
 						Number.parseInt(value) >= 0 &&
 						Number.parseInt(value) <= 59)
-				) {
+				);
+			},
+			get value() {
+				return this._value;
+			},
+			set value(value) {
+				if (this.isValid(value)) {
 					this._value = value;
 					this.cmpRef.emit();
+				}
+			},
+			setNoEmit(value: string) {
+				if (this.isValid(value)) {
+					this._value = value;
 				}
 			},
 		},
