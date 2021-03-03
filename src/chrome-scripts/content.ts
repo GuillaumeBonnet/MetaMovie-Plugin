@@ -34,14 +34,20 @@ function getAwaitedNode() {
 	return awaitedNodes;
 }
 
+function htmlToElem(html: string) {
+	let temp = document.createElement('template');
+	html = html.trim(); // Never return a space text node as a result
+	temp.innerHTML = html;
+	if (!temp.content.firstChild) {
+		throw Error('Error no content');
+	}
+	return temp.content.firstChild;
+}
+
 function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 	const menuDiv = document.createElement('div') as HTMLElement;
 	menuDiv.id = 'plugin-meta-movie-menu';
 	awaitedNodes.videoTitle?.after(menuDiv);
-
-	const menuDivOld = document.createElement('div') as HTMLElement;
-	menuDiv.id = 'plugin-meta-movie-menu-old';
-	awaitedNodes.videoTitle?.after(menuDivOld);
 
 	const videoOverlayDiv = document.createElement('div') as HTMLElement;
 	videoOverlayDiv.id = 'plugin-meta-movie-video-overlay';
@@ -53,7 +59,15 @@ function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 		'href',
 		'//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons'
 	);
+	const materialCss = htmlToElem(`<link
+	rel="stylesheet"
+	href="https://unpkg.com/material-components-web/dist/material-components-web.min.css"
+/>`);
+	const materialJs = htmlToElem(`
+	<script src="https://unpkg.com/material-components-web/dist/material-components-web.min.js"></script>`);
 	document.querySelector('head')?.appendChild(fontsNode);
+	document.querySelector('head')?.appendChild(materialCss);
+	document.querySelector('head')?.appendChild(materialJs);
 }
 
 function loadScripts() {
