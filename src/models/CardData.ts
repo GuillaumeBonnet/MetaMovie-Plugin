@@ -22,10 +22,14 @@ export default class CardData {
 	}) {
 		const timeStampRegex = /\d:\d\d:\d\d/;
 		if (!timeStampRegex.test(input.fromStamp)) {
-			throw Error('fromStamp should have a 0:00:00 format.');
+			throw Error(
+				`fromStamp should have a 0:00:00 format. value: ${input.fromStamp}`
+			);
 		}
 		if (!timeStampRegex.test(input.toStamp)) {
-			throw Error('toStamp should have a 0:00:00 format.');
+			throw Error(
+				`toStamp should have a 0:00:00 format. value: ${input.toStamp}`
+			);
 		}
 		this.text = `text from ${input.fromStamp} sec
 to ${input.toStamp}, x:${input.x}, y:${input.y}`;

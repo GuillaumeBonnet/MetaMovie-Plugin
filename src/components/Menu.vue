@@ -93,7 +93,7 @@ export default class Menu extends Vue {
 		// 	console.error('error', error);
 		// };
 		// axios
-		// 	.get(`${process.env.VUE_APP_API_URL}/decks/7093`)
+		// 	.get(`${process.env.VUE_APP_API_URL}/decks/7380`)
 		// 	.then((deck: AxiosResponse<DeckApi>) => {
 		// 		const cards: CardData[] = deck.data.cards.map(card => {
 		// 			return new CardData({
@@ -102,6 +102,7 @@ export default class Menu extends Vue {
 		// 				x: card.position.x,
 		// 				y: card.position.y,
 		// 				text: card.text,
+		// 				id: card.id,
 		// 			});
 		// 		});
 		// 		console.log('gboDebug:[cards]', cards);
