@@ -13,6 +13,7 @@
 			<ul
 				class="z-1000010 group-hover:block hidden text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 -left-40 bg-gray-700 text-transparent h-auto w-max rounded-md"
 			>
+				<DeckSelector class="px-5"></DeckSelector>
 				<li class="h-14 px-5 flex content-center">
 					<MdcSwitch
 						class="my-auto"
@@ -58,6 +59,7 @@ import { Options, Vue } from 'vue-class-component';
 import CardData from '@/models/CardData';
 import CurrentDeck from '@/components/CurrentDeck.vue';
 import MdcSwitch from '@/components/MdcSwitch.vue';
+import DeckSelector from '@/components/DeckSelector.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
@@ -85,10 +87,19 @@ const MenuItem = defineComponent({
 		MenuItem,
 		CurrentDeck,
 		MdcSwitch,
+		DeckSelector,
 	},
 })
 export default class Menu extends Vue {
 	created() {
+		console.log(
+			'gboDebug:menu[this.$store.state.cardModule]',
+			this.$store.state.cardModule
+		);
+		console.log(
+			'gboDebug:menu[this.$store.state.deckModule]',
+			this.$store.state.deckModule
+		);
 		// const errorCB = (error: any) => {
 		// 	console.error('error', error);
 		// };
@@ -205,16 +216,4 @@ export default class Menu extends Vue {
 }
 </script>
 
-<style scoped lang="postcss">
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                   postcss                                  */
-/* -------------------------------------------------------------------------- */
-</style>
+<style scoped lang="postcss"></style>

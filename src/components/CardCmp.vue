@@ -1,8 +1,7 @@
-//TODO global edit mode when a card is in edit mode it is always displayed //
-regardless of the time clicking on times goes there in the video X Y displays //
-Icon 'is it displayed right now' when a card is in edit mode it is removed from
-// displayedCards and put back at the right place when the edit is done //TODO
-add // a card button
+//regardless of the time clicking on times goes there in the video X Y displays
+// Icon 'is it displayed right now' when a card is in edit mode it is removed
+from // displayedCards and put back at the right place when the edit is done
+//TODO add // a card button
 <template>
 	<div
 		:style="dynamicCardStyle"
@@ -230,7 +229,7 @@ export default class CardCmp extends Vue {
 	}
 	handleEditButton() {
 		if (!this.isInEdition) {
-			this.$store.state.video.pause();
+			this.$store.state.video?.pause();
 		}
 		this.$store.dispatch(
 			ActionMain.TOGGLE_CARD_EDITED,
@@ -348,16 +347,4 @@ export default class CardCmp extends Vue {
 }
 </script>
 
-<style scoped lang="postcss">
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                   postcss                                  */
-/* -------------------------------------------------------------------------- */
-</style>
+<style scoped lang="postcss"></style>

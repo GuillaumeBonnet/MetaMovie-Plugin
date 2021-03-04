@@ -5,6 +5,12 @@ import {
 	initialState as initialStateCardModule,
 	MutationCard,
 } from '@/store/CardStore';
+import {
+	deckModule,
+	IDeckState,
+	initialState as initialStateDeckModule,
+	MutationDeck,
+} from '@/store/DeckStore';
 import { removeExpiredCards } from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { removeElemIf } from '@/Utils/MainUtils';
@@ -18,6 +24,7 @@ interface IState {
 	previousTime: number;
 	progressIndex: number;
 	cardModule: ICardState;
+	deckModule: IDeckState;
 }
 
 const MutationMain = {
@@ -44,9 +51,11 @@ const store = createStore<IState>({
 			video: undefined,
 			netflixPlayer: undefined,
 			cardModule: initialStateCardModule,
+			deckModule: initialStateDeckModule,
 		};
 	},
 	modules: {
+		deckModule,
 		cardModule,
 	},
 	mutations: {

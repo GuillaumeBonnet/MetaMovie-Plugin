@@ -8,7 +8,8 @@ import CardData from '@/models/CardData';
 import { MutationCard } from '@/store/CardStore';
 console.log('gboDebug: content overlay');
 import '@/assets/styles/styles.css';
-
+import { MutationDeck } from '@/store/DeckStore';
+import { DeckData } from '@/models/DeckData';
 const appMenu = createApp(Menu);
 appMenu.use(store);
 appMenu.mount('#plugin-meta-movie-menu');
@@ -20,7 +21,31 @@ appOverlay.mount('#plugin-meta-movie-video-overlay');
 document.addEventListener('fullscreenchange', event => {
 	store.commit(MutationMain.SET_IS_FULL_SCREEN, !!document.fullscreenElement);
 });
-
+const mockedDecks: DeckData[] = [
+	{
+		id: 1,
+		name: 'deck1',
+		languageTag: null,
+		createdAt: new Date(Date.now()),
+		updatedAt: new Date(Date.now()),
+	},
+	{
+		id: 2,
+		name: 'deck2',
+		languageTag: 'FR',
+		createdAt: new Date(Date.now()),
+		updatedAt: new Date(Date.now()),
+	},
+	{
+		id: 3,
+		name: 'deck3',
+		languageTag: null,
+		createdAt: new Date(Date.now()),
+		updatedAt: new Date(Date.now()),
+	},
+];
+store.commit(MutationDeck.SET_DECKS, mockedDecks);
+console.log('gboDebug: deecks', store.state.deckModule.decks);
 store.commit(MutationCard.SET_CARDS, [
 	new CardData({
 		fromStamp: '0:00:01',
