@@ -23,16 +23,16 @@ document.addEventListener('fullscreenchange', event => {
 });
 const mockedDecks: DeckData[] = [
 	{
-		id: 1,
-		name: 'deck1',
-		languageTag: null,
+		id: 2,
+		name: 'deck2',
+		languageTag: 'FR',
 		createdAt: new Date(Date.now()),
 		updatedAt: new Date(Date.now()),
 	},
 	{
-		id: 2,
-		name: 'deck2',
-		languageTag: 'FR',
+		id: 1,
+		name: 'deck1',
+		languageTag: null,
 		createdAt: new Date(Date.now()),
 		updatedAt: new Date(Date.now()),
 	},

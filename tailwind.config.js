@@ -38,6 +38,7 @@ module.exports = {
 		},
 	},
 	plugins: [
+		require('tailwindcss-named-groups'),
 		plugin(function({ addUtilities }) {
 			for (let i = 0; i <= 100; i++) {
 				addUtilities({
@@ -59,6 +60,5 @@ module.exports = {
 				});
 			}
 		}),
-		require('tailwindcss-named-groups'),
 	],
 };

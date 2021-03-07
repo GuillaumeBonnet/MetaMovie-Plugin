@@ -1,5 +1,52 @@
 <template>
-	<li>DeckSelector {{ decks }}</li>
+	<div class="border-4 border-solid border-gray-900 rounded-md m-4 p-3">
+		<div class="underline">
+			Current deck:
+		</div>
+		<div class="px-2">
+			<button
+				class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-800"
+				@click="handleButtonClick()"
+			>
+				<template v-if="!currentDeck">Select a deck</template>
+				<template v-else>{{ currentDeck?.name }}</template>
+			</button>
+		</div>
+		<div
+			v-if="isDeckSelectionShown"
+			class="p-6 absolute transform custom-translate-list rounded-md bg-gray-700"
+		>
+			<div class="underline mb-4">Available decks:</div>
+			<table class="text-3xl table-auto border-1 border-black">
+				<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
+					<tr>
+						<th class="px-4 py-2 font-extrabold">Title</th>
+						<th class="px-4 py-2 font-extrabold">Language</th>
+					</tr>
+				</thead>
+				<tbody class="text-center text-gray-200">
+					<tr
+						class="border-b-1 border-black font-medium"
+						v-for="(deck, index) in decks"
+						:class="
+							currentDeck?.id == deck.id
+								? 'bg-gray-700 hover:bg-gray-800'
+								: 'bg-gray-500 hover:bg-gray-600'
+						"
+						:key="deck.id"
+						@click="rowClicked(index)"
+					>
+						<td class="px-4 py-2 border-r-0">
+							{{ deck.name }}
+						</td>
+						<td class="px-4 py-2 border-l-0">
+							{{ deck.languageTag }}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -14,14 +61,33 @@
 /* -------------------------------------------------------------------------- */
 import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
+import { MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: {},
+	emits: ['deck-selector-button-clicked'],
 })
 export default class DeckSelector extends Vue {
 	get decks() {
-		return this.$store.state.deckModule.decks[0]?.name;
+		return this.$store.state.deckModule.decks;
+	}
+	get currentDeck() {
+		return this.$store.state.deckModule.currentDeck;
+	}
+	@Prop()
+	isDeckSelectionShown!: boolean;
+
+	handleButtonClick() {
+		this.$emit('deck-selector-button-clicked');
+	}
+	rowClicked(index: number) {
+		console.log('gboDebug:[index]', index);
+		this.$store.commit(MutationDeck.SET_CURRENT_DECK, this.decks[index]);
 	}
 }
 </script>
 
-<style scoped lang="postcss"></style>
+<style scoped lang="postcss">
+.custom-translate-list {
+	transform: translateX(-120%);
+}
+</style>

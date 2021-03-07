@@ -1,7 +1,7 @@
 import { removeExpiredCards, updateACard } from '@/Utils/CardUtils';
-import CardData from '../models/CardData';
+import CardData from '@/models/CardData';
 import { Module } from 'vuex';
-import { IState } from './Store';
+import { IState } from '@/store/Store';
 
 const MutationCard = {
 	TOGGLE_ARE_CARD_DISPLAYED: 'TOGGLE_ARE_CARD_DISPLAYED',

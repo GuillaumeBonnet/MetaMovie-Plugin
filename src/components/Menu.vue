@@ -1,44 +1,52 @@
 <template>
 	<div
 		class="group touchable PlayerControls--control-element nfp-popup-control relative block"
-		@mouseenter="menu.enterMenuIcon()"
-		@mouseleave="menu.leaveMenuIcon()"
 	>
 		<div class="h-auto m-auto relative bottom-5">
 			<button
 				class="material-icons rounded-full bg-yellow-800 outline-none w-16 h-16 m-auto"
+				:class="isMenuOppened ? 'ring ring-yellow-700' : ''"
+				@click="menuButtonClicked()"
 			>
 				question_answer
 			</button>
-			<ul
-				class="z-1000010 group-hover:block hidden text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 -left-40 bg-gray-700 text-transparent h-auto w-max rounded-md"
+
+			<div
+				class="z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 -left-40 bg-gray-700 text-transparent h-auto w-max rounded-md"
+				:class="isMenuOppened ? 'block' : 'hidden group-hover:block'"
 			>
-				<DeckSelector class="px-5"></DeckSelector>
-				<li class="h-14 px-5 flex content-center">
-					<MdcSwitch
-						class="my-auto"
-						v-model="areCardsHidden_VueModel"
-						label="Hide Cards"
-					></MdcSwitch>
-				</li>
-				<MenuItem label="cards"></MenuItem>
-				<MenuItem label="Fact lists library"></MenuItem>
-				{{
-					isDeckDisplayed
-				}}
-				<MenuItem
-					label="Detail current list"
-					@click="isDeckDisplayed = !isDeckDisplayed"
-					class="relative group-menuItem"
-					><current-deck class="" @click.stop></current-deck
-				></MenuItem>
-				<MenuItem
-					label="displayed Card"
-					@click="gboDebugDisplayedCard()"
-				></MenuItem>
-				<MenuItem label="all card" @click="gboDebugCard()"></MenuItem>
-				<MenuItem label="add a new card at this time"></MenuItem>
-			</ul>
+				<DeckSelector
+					class="px-5 pt-5"
+					:isDeckSelectionShown="isDeckSelectionShown"
+					@deck-selector-button-clicked="deckSelectorButtonClicked()"
+				></DeckSelector>
+				<ul class="">
+					<li class="h-14 px-5 flex content-center">
+						<MdcSwitch
+							class="my-auto"
+							v-model="areCardsHidden_VueModel"
+							label="Hide Cards"
+						></MdcSwitch>
+					</li>
+					<MenuItem label="cards"></MenuItem>
+					<MenuItem label="Fact lists library"></MenuItem>
+					{{
+						isDeckDisplayed
+					}}
+					<MenuItem
+						label="Detail current list"
+						@click="isDeckDisplayed = !isDeckDisplayed"
+						class="relative group-menuItem"
+						><CurrentDeck class="" @click.stop></CurrentDeck
+					></MenuItem>
+					<MenuItem
+						label="displayed Card"
+						@click="gboDebugDisplayedCard()"
+					></MenuItem>
+					<MenuItem label="all card" @click="gboDebugCard()"></MenuItem>
+					<MenuItem label="add a new card at this time"></MenuItem>
+				</ul>
+			</div>
 		</div>
 	</div>
 </template>
@@ -153,7 +161,22 @@ export default class Menu extends Vue {
 	/* -------------------------------------------------------------------------- */
 	/*                                 menu state                                 */
 	/* -------------------------------------------------------------------------- */
-	movie?: string = '';
+	isMenuForcedOpen = false;
+	isDeckSelectionShown = false;
+	get isMenuOppened() {
+		return this.isMenuForcedOpen || this.isDeckSelectionShown;
+	}
+	deckSelectorButtonClicked() {
+		this.isDeckSelectionShown = !this.isDeckSelectionShown;
+	}
+	menuButtonClicked() {
+		if (this.isMenuOppened) {
+			this.isMenuForcedOpen = false;
+			this.isDeckSelectionShown = false;
+		} else {
+			this.isMenuForcedOpen = true;
+		}
+	}
 
 	/* -------------------------------------------------------------------------- */
 	/*                               internal logic                               */
@@ -171,48 +194,6 @@ export default class Menu extends Vue {
 	gboDebugCard() {
 		console.log('gboDebug:[this.cards]', this.cards);
 	}
-
-	/* -------------------------------------------------------------------------- */
-	/*                           display menu behaviour                           */
-	/* -------------------------------------------------------------------------- */
-
-	menu = {
-		enterMenuIcon: () => {
-			this.menu.menuHoverState.isMenuOppened = true;
-		},
-		leaveMenuIcon: () => {
-			this.menu.menuHoverState.timeOutIds.push(
-				setTimeout(() => {
-					if (!this.menu.menuHoverState.isMenuContentHovered) {
-						this.menu.menuHoverState.isMenuOppened = false;
-					}
-				}, 200)
-			);
-		},
-		enterMenuContent: () => {
-			this.menu.menuHoverState.clearTimeOutIds();
-			this.menu.menuHoverState.isMenuContentHovered = true;
-		},
-		leaveMenuContent: () => {
-			this.menu.menuHoverState.timeOutIds.push(
-				setTimeout(() => {
-					this.menu.menuHoverState.isMenuContentHovered = false;
-					this.menu.menuHoverState.isMenuOppened = false;
-				}, 200)
-			);
-		},
-		menuHoverState: {
-			isMenuOppened: false,
-			isMenuContentHovered: false,
-			timeOutIds: [] as number[],
-			clearTimeOutIds: function() {
-				this.timeOutIds.forEach(timeoutId => {
-					clearTimeout(timeoutId);
-				});
-				this.timeOutIds = [];
-			},
-		},
-	};
 }
 </script>
 
