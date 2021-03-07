@@ -1,6 +1,9 @@
 <template>
 	<ul
-		class="scrollbar cursor-default max-h-96 overflow-y-auto p-0 origin-bottom-right scale-0 group-menuItem-hover:scale-100 absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full bottom-0 left-0 bg-gray-800 rounded-md"
+		class="scrollbar cursor-default max-h-96 overflow-y-auto p-0 origin-bottom-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full bottom-0 left-0 bg-gray-800 rounded-md"
+		:class="
+			forceDisplayDeckCards ? '' : 'scale-0 group-menuItem-hover:scale-100'
+		"
 	>
 		<li
 			class="p-5 rounded-md bg-gray-500 m-3"
@@ -71,6 +74,12 @@ import { Options, Vue } from 'vue-class-component';
 	},
 })
 export default class CurrentDeck extends Vue {
+	@Prop({ required: true, default: false })
+	forceDisplayDeckCards!: boolean;
+	public test = 'bb';
+	get toto() {
+		return 'toto';
+	}
 	get cards() {
 		return this.$store.state.cardModule.cards;
 	}

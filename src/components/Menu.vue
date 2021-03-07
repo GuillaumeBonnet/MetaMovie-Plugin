@@ -30,15 +30,18 @@
 					</li>
 					<MenuItem label="cards"></MenuItem>
 					<MenuItem label="Fact lists library"></MenuItem>
-					{{
-						isDeckDisplayed
-					}}
 					<MenuItem
 						label="Detail current list"
-						@click="isDeckDisplayed = !isDeckDisplayed"
+						@click="forceDisplayDeckCards = !forceDisplayDeckCards"
 						class="relative group-menuItem"
-						><CurrentDeck class="" @click.stop></CurrentDeck
-					></MenuItem>
+						:isActive="forceDisplayDeckCards"
+					>
+						<CurrentDeck
+							class=""
+							:forceDisplayDeckCards="forceDisplayDeckCards"
+							@click.stop
+						></CurrentDeck>
+					</MenuItem>
 					<MenuItem
 						label="displayed Card"
 						@click="gboDebugDisplayedCard()"
@@ -75,7 +78,8 @@ import { defineComponent } from 'vue';
 const MenuItem = defineComponent({
 	template: `
 		<li
-			class="hover:bg-white hover:bg-opacity-10 h-14 flex cursor-pointer px-5"
+			class=" h-14 flex cursor-pointer px-5"
+			:class="isActive ? 'bg-white bg-opacity-20' : 'hover:bg-white hover:bg-opacity-10'"
 		>
 			<p class="my-auto">{{ label }}</p>
 			<slot></slot>
@@ -85,6 +89,11 @@ const MenuItem = defineComponent({
 		label: {
 			type: String,
 			required: true,
+		},
+		isActive: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
 	},
 	components: {},
@@ -164,7 +173,11 @@ export default class Menu extends Vue {
 	isMenuForcedOpen = false;
 	isDeckSelectionShown = false;
 	get isMenuOppened() {
-		return this.isMenuForcedOpen || this.isDeckSelectionShown;
+		return (
+			this.isMenuForcedOpen ||
+			this.isDeckSelectionShown ||
+			this.forceDisplayDeckCards
+		);
 	}
 	deckSelectorButtonClicked() {
 		this.isDeckSelectionShown = !this.isDeckSelectionShown;
@@ -173,6 +186,7 @@ export default class Menu extends Vue {
 		if (this.isMenuOppened) {
 			this.isMenuForcedOpen = false;
 			this.isDeckSelectionShown = false;
+			this.forceDisplayDeckCards = false;
 		} else {
 			this.isMenuForcedOpen = true;
 		}
@@ -182,7 +196,7 @@ export default class Menu extends Vue {
 	/*                               internal logic                               */
 	/* -------------------------------------------------------------------------- */
 
-	isDeckDisplayed = false;
+	forceDisplayDeckCards = false;
 
 	seeCurrentFactList() {
 		console.log('gboDebug:[seeCurrentFactList]');
