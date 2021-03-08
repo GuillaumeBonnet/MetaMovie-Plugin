@@ -37,11 +37,11 @@
 						class="relative group-menuItem"
 						:isActive="forceDisplayDeckCards"
 					>
-						<CurrentDeck
+						<CardsCurrentDeck
 							class=""
 							:forceDisplayDeckCards="forceDisplayDeckCards"
 							@click.stop
-						></CurrentDeck>
+						></CardsCurrentDeck>
 					</MenuItem>
 					<MenuItem
 						label="displayed Card"
@@ -69,7 +69,7 @@
 import { ActionCard, MutationCard } from '@/store/CardStore';
 import { Options, Vue } from 'vue-class-component';
 import CardData from '@/models/CardData';
-import CurrentDeck from '@/components/CurrentDeck.vue';
+import CardsCurrentDeck from '@/components/CardsCurrentDeck.vue';
 import MdcSwitch from '@/components/MdcSwitch.vue';
 import DeckSelector from '@/components/DeckSelector.vue';
 import axios, { AxiosResponse } from 'axios';
@@ -104,7 +104,7 @@ const MenuItem = defineComponent({
 @Options({
 	components: {
 		MenuItem,
-		CurrentDeck,
+		CardsCurrentDeck,
 		MdcSwitch,
 		DeckSelector,
 	},

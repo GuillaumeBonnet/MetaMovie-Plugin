@@ -73,7 +73,7 @@ import { Options, Vue } from 'vue-class-component';
 		PercentageInput,
 	},
 })
-export default class CurrentDeck extends Vue {
+export default class CardsCurrentDeck extends Vue {
 	@Prop({ required: true, default: false })
 	forceDisplayDeckCards!: boolean;
 	get cards() {

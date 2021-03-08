@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import CurrentDeck from '@/components/CurrentDeck.vue';
+import CardsCurrentDeck from '@/components/CardsCurrentDeck.vue';
 
-describe('CurrentDeck.vue', () => {
+describe('CardsCurrentDeck.vue', () => {
 	it('test the ', () => {
 		// cannot launch tests with current configuration
-		const wrapper = shallowMount(CurrentDeck, {
+		const wrapper = shallowMount(CardsCurrentDeck, {
 			propsData: {},
 		});
 		const cmpDetailsList = wrapper.vm as any;
