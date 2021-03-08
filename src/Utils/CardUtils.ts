@@ -29,6 +29,17 @@ function removeExpiredCards(cards: CardData[], currentTime: number): void {
 	}
 }
 
+function addCardToList(cards: CardData[], card: CardData) {
+	let iInsert = 0;
+	while (iInsert < cards.length) {
+		if (card.fromInSeconds() < cards[iInsert].fromInSeconds()) {
+			break;
+		}
+		iInsert++;
+	}
+	cards.splice(iInsert, 0, card);
+}
+
 function updateACard(cards: CardData[], card: Partial<CardData>) {
 	const index = cards.findIndex(cardElem => cardElem.id == card.id);
 	if (index != -1) {
@@ -76,4 +87,5 @@ export {
 	pxToNumber,
 	timestampToSeconds,
 	readableTime,
+	addCardToList,
 };

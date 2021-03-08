@@ -11,7 +11,7 @@ import {
 	initialState as initialStateDeckModule,
 	MutationDeck,
 } from '@/store/DeckStore';
-import { removeExpiredCards } from '@/Utils/CardUtils';
+import { addCardToList, removeExpiredCards } from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { removeElemIf } from '@/Utils/MainUtils';
 
@@ -118,29 +118,23 @@ const store = createStore<IState>({
 			{ commit, state },
 			cardEdited: IState['cardEdited']
 		) => {
+			const cards = state.cardModule.cards;
 			if (state.cardEdited && !cardEdited /*editCardDone*/) {
-				let iInsert = 0;
-				const cards = state.cardModule.cards;
-				while (iInsert < cards.length) {
-					if (
-						state.cardEdited.fromInSeconds() < cards[iInsert].fromInSeconds()
-					) {
-						break;
-					}
-					iInsert++;
-				}
-				state.cardModule.cards.splice(iInsert, 0, state.cardEdited);
+				addCardToList(cards, state.cardEdited);
 				commit(
 					MutationMain.SET_VIDEO_CURRENT_TIME_S,
 					state.cardEdited?.fromInSeconds() - 2
 				);
 				state.video?.play();
 			} else if (cardEdited) {
-				removeElemIf(state.cardModule.cards, card => card.id == cardEdited.id);
+				removeElemIf(cards, card => card.id == cardEdited.id);
 				removeElemIf(
 					state.cardModule.displayedCards,
 					card => card.id == cardEdited.id
 				);
+				if (state.cardEdited) {
+					addCardToList(cards, state.cardEdited);
+				}
 			}
 			state.cardEdited = cardEdited;
 		},

@@ -17,6 +17,12 @@
 				>
 					remove_red_eye
 				</div>
+				<div
+					class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
+					@click="editCard(card)"
+				>
+					edit
+				</div>
 			</div>
 			<div class="rounded-2xl border-solid border-2 border-gray-800 p-2">
 				<p
@@ -75,7 +81,7 @@ import { Prop, Watch } from 'vue-property-decorator';
 import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
-import { MutationMain } from '@/store/Store';
+import { ActionMain, MutationMain } from '@/store/Store';
 @Options({
 	components: {
 		TimeSelector,
@@ -95,6 +101,15 @@ export default class CardsCurrentDeck extends Vue {
 			MutationMain.SET_VIDEO_CURRENT_TIME_S,
 			(card.fromInSeconds() + card.toInSeconds()) / 2
 		);
+	}
+
+	editCard(card: CardData) {
+		this.$store.state.video?.pause();
+		this.$store.commit(
+			MutationMain.SET_VIDEO_CURRENT_TIME_S,
+			(card.fromInSeconds() + card.toInSeconds()) / 2
+		);
+		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, card);
 	}
 }
 </script>
