@@ -6,6 +6,16 @@
 		"
 	>
 		<li
+			class="group-deckListNewCard cursor-pointer p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center"
+			@click="addNewCard()"
+		>
+			<div
+				class="material-icons text-gray-300 group-deckListNewCard-hover:text-white "
+			>
+				note_add
+			</div>
+		</li>
+		<li
 			class="p-5 rounded-md bg-gray-500 m-3"
 			v-for="(card, index) in cards"
 			:key="index"
@@ -82,6 +92,7 @@ import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
 import { ActionMain, MutationMain } from '@/store/Store';
+import { MutationCard } from '@/store/CardStore';
 @Options({
 	components: {
 		TimeSelector,
@@ -110,6 +121,18 @@ export default class CardsCurrentDeck extends Vue {
 			(card.fromInSeconds() + card.toInSeconds()) / 2
 		);
 		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, card);
+	}
+	addNewCard() {
+		this.$store.commit(
+			MutationCard.ADD_CARD,
+			new CardData({
+				fromStamp: '0:00:00',
+				toStamp: '0:00:30',
+				x: 50,
+				y: 50,
+				text: 'New Card',
+			})
+		);
 	}
 }
 </script>

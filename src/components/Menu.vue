@@ -41,6 +41,7 @@
 						:disabled="!currentDeck"
 					>
 						<CardsCurrentDeck
+							v-if="currentDeck"
 							class=""
 							:forceDisplayDeckCards="forceDisplayDeckCards"
 							@click.stop

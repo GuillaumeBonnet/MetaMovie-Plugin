@@ -109,6 +109,7 @@ export default class DeckSelector extends Vue {
 					});
 				});
 				this.$store.commit(MutationCard.SET_CARDS, cards);
+				this.$store.commit(MutationCard.SET_DISPLAYED_CARDS, []);
 			});
 	}
 }

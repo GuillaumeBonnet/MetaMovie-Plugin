@@ -1,4 +1,8 @@
-import { removeExpiredCards, updateACard } from '@/Utils/CardUtils';
+import {
+	addCardToList,
+	removeExpiredCards,
+	updateACard,
+} from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { Module } from 'vuex';
 import { IState } from '@/store/Store';
@@ -9,6 +13,7 @@ const MutationCard = {
 	SET_CARDS: 'SET_CARDS',
 	UPDATE_CARD: 'UPDATE_CARD',
 	UPDATE_DISPLAYED_CARD: 'UPDATE_DISPLAYED_CARD',
+	ADD_CARD: 'ADD_CARD',
 };
 const ActionCard = {
 	TOGGLE_CARD_VISIBILITY: 'TOGGLE_CARD_VISIBILITY',
@@ -44,6 +49,9 @@ const cardModule: Module<ICardState, IState> = {
 			card: Partial<CardData>
 		) {
 			updateACard(state.displayedCards, card);
+		},
+		[MutationCard.ADD_CARD](state: ICardState, card: CardData) {
+			addCardToList(state.cards, card);
 		},
 		[MutationCard.SET_DISPLAYED_CARDS](state: ICardState, cards: CardData[]) {
 			state.displayedCards = cards;
