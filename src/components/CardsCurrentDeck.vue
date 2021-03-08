@@ -10,6 +10,14 @@
 			v-for="(card, index) in cards"
 			:key="index"
 		>
+			<div class="">
+				<div
+					class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer"
+					@click="goToCard(card)"
+				>
+					remove_red_eye
+				</div>
+			</div>
 			<div class="rounded-2xl border-solid border-2 border-gray-800 p-2">
 				<p
 					class="flex text-2xl text-gray-50 font-medium bg-transparent border-gray-900 p-2 outline-none resize-none w-full"
@@ -67,6 +75,7 @@ import { Prop, Watch } from 'vue-property-decorator';
 import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
+import { MutationMain } from '@/store/Store';
 @Options({
 	components: {
 		TimeSelector,
@@ -78,6 +87,14 @@ export default class CardsCurrentDeck extends Vue {
 	forceDisplayDeckCards!: boolean;
 	get cards() {
 		return this.$store.state.cardModule.cards;
+	}
+
+	goToCard(card: CardData) {
+		this.$store.state.video?.pause();
+		this.$store.commit(
+			MutationMain.SET_VIDEO_CURRENT_TIME_S,
+			(card.fromInSeconds() + card.toInSeconds()) / 2
+		);
 	}
 }
 </script>
