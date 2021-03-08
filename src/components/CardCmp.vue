@@ -40,14 +40,7 @@ from // displayedCards and put back at the right place when the edit is done
 			</button>
 			<template v-if="isInEdition">
 				<button
-					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
-					:class="
-						isInEdition
-							? 'hover:text-gray-300'
-							: isEditDraggingPreview
-							? 'text-yellow-700 hover:text-yellow-800'
-							: ''
-					"
+					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out text-gray-300 hover:text-white"
 					@mousedown="handleDragButton($event)"
 				>
 					dynamic_feed
@@ -96,15 +89,17 @@ from // displayedCards and put back at the right place when the edit is done
 			</button>
 		</div>
 		<div v-if="isInEdition && !isEditDraggingPreview" class="px-10 my-5">
-			<div
-				class="rounded-2xl border-solid border-2 border-gray-800 hover:border-gray-900 p-2 focus-within:border-gray-900"
+			<label
+				class="block rounded-2xl border-solid border-2 border-gray-800 hover:border-gray-900 p-2 focus-within:border-gray-900"
+				for="text-edit-card"
 			>
 				<textarea
-					class="mb-4 bg-transparent border-gray-900 hover:border-black focus:border-yellow-600 border-solid border-b-1 p-2 block outline-none resize-none w-full"
+					class="mb-4 bg-transparent border-gray-800 hover:border-black focus:border-yellow-600 border-solid border-b-1 p-2 block outline-none resize-none w-full"
 					v-model="card.text"
 					@mousedown.stop
+					id="text-edit-card"
 				></textarea>
-			</div>
+			</label>
 		</div>
 		<p v-else class="p-2 whitespace-pre-wrap">
 			{{ card.text }}
