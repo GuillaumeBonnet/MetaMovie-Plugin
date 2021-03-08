@@ -29,13 +29,16 @@
 							label="Hide Cards"
 						></MdcSwitch>
 					</li>
-					<MenuItem label="cards"></MenuItem>
-					<MenuItem label="Fact lists library"></MenuItem>
 					<MenuItem
 						label="Detail current list"
-						@click="forceDisplayDeckCards = !forceDisplayDeckCards"
+						@click="
+							if (currentDeck) {
+								forceDisplayDeckCards = !forceDisplayDeckCards;
+							}
+						"
 						class="relative group-menuItem"
 						:isActive="forceDisplayDeckCards"
+						:disabled="!currentDeck"
 					>
 						<CardsCurrentDeck
 							class=""
@@ -80,8 +83,8 @@ import { MutationDeck } from '@/store/DeckStore';
 const MenuItem = defineComponent({
 	template: `
 		<li
-			class=" h-14 flex cursor-pointer px-5"
-			:class="isActive ? 'bg-white bg-opacity-20' : 'hover:bg-white hover:bg-opacity-10'"
+			class=" h-14 flex px-5"
+			:class="disabled ? 'text-gray-400' : isActive ? 'bg-white bg-opacity-20 cursor-pointer' : 'hover:bg-white hover:bg-opacity-10 cursor-pointer'"
 		>
 			<p class="my-auto">{{ label }}</p>
 			<slot></slot>
@@ -93,6 +96,11 @@ const MenuItem = defineComponent({
 			required: true,
 		},
 		isActive: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		disabled: {
 			type: Boolean,
 			required: false,
 			default: false,
@@ -131,11 +139,15 @@ export default class Menu extends Vue {
 	}
 
 	/* -------------------------------------------------------------------------- */
-	/*                         store methods & properties                         */
+	/*                                store methods                               */
 	/* -------------------------------------------------------------------------- */
 
 	get displayedCards() {
 		return this.$store.state.cardModule.displayedCards;
+	}
+
+	get currentDeck() {
+		return this.$store.state.deckModule.currentDeck;
 	}
 
 	get cards() {
