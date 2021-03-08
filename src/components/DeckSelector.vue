@@ -16,6 +16,13 @@
 			v-if="isDeckSelectionShown"
 			class="p-6 absolute transform custom-translate-list rounded-md bg-gray-700"
 		>
+			<button
+				class="block ml-auto material-icons rounded-md w-12 h-12 text-3xl  hover:shadow-sm outline-none focus:outline-none bg-gray-600 hover:bg-gray-800 border-1 border-solid border-gray-900 hover:shadow transform transition-transform duration-300 ease-in-out"
+				@click="closeButton()"
+				@mousedown.stop
+			>
+				close
+			</button>
 			<div class="underline mb-4">Available decks:</div>
 			<table class="text-3xl table-auto border-1 border-black">
 				<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
@@ -68,7 +75,7 @@ import CardData from '@/models/CardData';
 import { MutationCard } from '@/store/CardStore';
 @Options({
 	components: {},
-	emits: ['deck-selector-button-clicked'],
+	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
 })
 export default class DeckSelector extends Vue {
 	get decks() {
@@ -82,6 +89,9 @@ export default class DeckSelector extends Vue {
 
 	handleButtonClick() {
 		this.$emit('deck-selector-button-clicked');
+	}
+	closeButton() {
+		this.$emit('deck-selector-close');
 	}
 	rowClicked(index: number) {
 		this.$store.commit(MutationDeck.SET_CURRENT_DECK, this.decks[index]);

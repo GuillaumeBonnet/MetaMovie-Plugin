@@ -76,10 +76,6 @@ import { Options, Vue } from 'vue-class-component';
 export default class CurrentDeck extends Vue {
 	@Prop({ required: true, default: false })
 	forceDisplayDeckCards!: boolean;
-	public test = 'bb';
-	get toto() {
-		return 'toto';
-	}
 	get cards() {
 		return this.$store.state.cardModule.cards;
 	}

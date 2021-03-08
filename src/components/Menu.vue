@@ -19,6 +19,7 @@
 					class="px-5 pt-5"
 					:isDeckSelectionShown="isDeckSelectionShown"
 					@deck-selector-button-clicked="deckSelectorButtonClicked()"
+					@deck-selector-close="isDeckSelectionShown = false"
 				></DeckSelector>
 				<ul class="">
 					<li class="h-14 px-5 flex content-center">
