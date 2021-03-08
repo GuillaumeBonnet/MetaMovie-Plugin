@@ -74,6 +74,7 @@ import DeckSelector from '@/components/DeckSelector.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
+import { MutationDeck } from '@/store/DeckStore';
 
 const MenuItem = defineComponent({
 	template: `
@@ -117,31 +118,15 @@ export default class Menu extends Vue {
 			'gboDebug:menu[this.$store.state.deckModule]',
 			this.$store.state.deckModule
 		);
-		// const errorCB = (error: any) => {
-		// 	console.error('error', error);
-		// };
-		// axios
-		// 	.get(`${process.env.VUE_APP_API_URL}/decks/7380`)
-		// 	.then((deck: AxiosResponse<DeckApi>) => {
-		// 		const cards: CardData[] = deck.data.cards.map(card => {
-		// 			return new CardData({
-		// 				fromStamp: card.from,
-		// 				toStamp: card.to,
-		// 				x: card.position.x,
-		// 				y: card.position.y,
-		// 				text: card.text,
-		// 				id: card.id,
-		// 			});
-		// 		});
-		// 		console.log('gboDebug:[cards]', cards);
-		// 		this.$store.commit(MutationCard.SET_CARDS, cards);
-		// 	});
-		// axios
-		// 	.get(`${process.env.VUE_APP_API_URL}/decks`)
-		// 	.then((decks: AxiosResponse<DeckApi_WithoutCards[]>) => {
-		// 		console.log('gboDebug:[decks]', decks);
-		// 	})
-		// 	.catch(errorCB);
+		const errorCB = (error: any) => {
+			console.error('error', error);
+		};
+		axios
+			.get(`${process.env.VUE_APP_API_URL}/decks`)
+			.then((decks: AxiosResponse<DeckApi_WithoutCards[]>) => {
+				this.$store.commit(MutationDeck.SET_DECKS, decks.data);
+			})
+			.catch(errorCB);
 	}
 
 	/* -------------------------------------------------------------------------- */
