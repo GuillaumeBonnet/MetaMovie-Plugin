@@ -1,11 +1,8 @@
-import {
-	addCardToList,
-	removeExpiredCards,
-	updateACard,
-} from '@/Utils/CardUtils';
+import { addCardToList, updateACard } from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { Module } from 'vuex';
 import { IState } from '@/store/Store';
+import { removeElemIf } from '@/Utils/MainUtils';
 
 const MutationCard = {
 	TOGGLE_ARE_CARD_DISPLAYED: 'TOGGLE_ARE_CARD_DISPLAYED',
@@ -14,6 +11,7 @@ const MutationCard = {
 	UPDATE_CARD: 'UPDATE_CARD',
 	UPDATE_DISPLAYED_CARD: 'UPDATE_DISPLAYED_CARD',
 	ADD_CARD: 'ADD_CARD',
+	DELETE_CARD: 'DELETE_CARD',
 };
 const ActionCard = {
 	TOGGLE_CARD_VISIBILITY: 'TOGGLE_CARD_VISIBILITY',
@@ -55,6 +53,10 @@ const cardModule: Module<ICardState, IState> = {
 		},
 		[MutationCard.SET_DISPLAYED_CARDS](state: ICardState, cards: CardData[]) {
 			state.displayedCards = cards;
+		},
+		[MutationCard.DELETE_CARD](state: ICardState, card: CardData) {
+			removeElemIf(state.displayedCards, cardElem => (cardElem.id = card.id));
+			removeElemIf(state.cards, cardElem => (cardElem.id = card.id));
 		},
 	},
 	actions: {

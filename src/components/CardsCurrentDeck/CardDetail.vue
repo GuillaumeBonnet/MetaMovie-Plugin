@@ -15,6 +15,13 @@
 			>
 				edit
 			</div>
+			<div
+				class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
+				:class="animate ? 'animate-bounce' : ''"
+				@click="deleteCard()"
+			>
+				delete
+			</div>
 		</div>
 		<div class="rounded-2xl border-solid border-2 border-gray-800 p-2">
 			<p
@@ -77,6 +84,7 @@ import CardData from '@/models/CardData';
 import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { ActionMain, MutationMain } from '@/store/Store';
+import { MutationCard } from '@/store/CardStore';
 @Options({
 	components: { TimeSelector, PercentageInput },
 	props: {},
@@ -101,6 +109,9 @@ export default class CardDetail extends Vue {
 			(this.card.fromInSeconds() + this.card.toInSeconds()) / 2
 		);
 		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, this.card);
+	}
+	deleteCard() {
+		this.$store.commit(MutationCard.DELETE_CARD, this.card);
 	}
 	makeIconsBounce() {
 		this.animate = true;

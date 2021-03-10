@@ -6,7 +6,7 @@
 		"
 	>
 		<li
-			class="group-deckListNewCard cursor-pointer p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center"
+			class="group-deckListNewCard custo-min-with-li cursor-pointer p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center"
 			@click="addNewCard()"
 		>
 			<div
@@ -68,17 +68,9 @@ export default class CardsCurrentDeck extends Vue {
 </script>
 
 <style scoped lang="postcss">
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                    postcss                                    */
-/* -------------------------------------------------------------------------- */
+.custo-min-with-li {
+	min-width: 200px;
+}
 .scrollbar {
 }
 .scrollbar::-webkit-scrollbar {
