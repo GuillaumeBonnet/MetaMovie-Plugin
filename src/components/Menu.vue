@@ -73,7 +73,7 @@
 import { ActionCard, MutationCard } from '@/store/CardStore';
 import { Options, Vue } from 'vue-class-component';
 import CardData from '@/models/CardData';
-import CardsCurrentDeck from '@/components/CardsCurrentDeck.vue';
+import CardsCurrentDeck from '@/components/CardsCurrentDeck/CardsCurrentDeck.vue';
 import MdcSwitch from '@/components/MdcSwitch.vue';
 import DeckSelector from '@/components/DeckSelector.vue';
 import axios, { AxiosResponse } from 'axios';

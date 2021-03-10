@@ -15,63 +15,11 @@
 				note_add
 			</div>
 		</li>
-		<li
-			class="p-5 rounded-md bg-gray-500 m-3"
+		<CardDetail
 			v-for="(card, index) in cards"
 			:key="index"
-		>
-			<div class="">
-				<div
-					class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer"
-					@click="goToCard(card)"
-				>
-					remove_red_eye
-				</div>
-				<div
-					class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
-					@click="editCard(card)"
-				>
-					edit
-				</div>
-			</div>
-			<div class="rounded-2xl border-solid border-2 border-gray-800 p-2">
-				<p
-					class="flex text-2xl text-gray-50 font-medium bg-transparent border-gray-900 p-2 outline-none resize-none w-full"
-				>
-					{{ card.text }}
-				</p>
-			</div>
-			<div class="flex">
-				<time-selector
-					class="m-2 p-2 w-1/2"
-					v-model="card.from"
-					label="From"
-					readonly="true"
-				></time-selector>
-				<time-selector
-					class="m-2 p-2 w-1/2"
-					v-model="card.to"
-					label="To"
-					readonly="true"
-				></time-selector>
-			</div>
-			<div class="flex">
-				<percentage-input
-					class="m-2 p-2 w-1/2"
-					:modelValue="card.position.x"
-					label="x: horizontal position(%)"
-					@mousedown.stop
-					readonly="true"
-				></percentage-input>
-				<percentage-input
-					class="m-2 p-2 w-1/2"
-					:modelValue="card.position.y"
-					label="y: vertical position(%)"
-					@mousedown.stop
-					readonly="true"
-				></percentage-input>
-			</div>
-		</li>
+			:card="card"
+		></CardDetail>
 	</ul>
 </template>
 
@@ -88,15 +36,13 @@
 /* -------------------------------------------------------------------------- */
 import CardData from '@/models/CardData';
 import { Prop, Watch } from 'vue-property-decorator';
-import TimeSelector from '@/components/TimeSelector.vue';
-import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
+import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
 @Options({
 	components: {
-		TimeSelector,
-		PercentageInput,
+		CardDetail,
 	},
 })
 export default class CardsCurrentDeck extends Vue {
@@ -106,22 +52,6 @@ export default class CardsCurrentDeck extends Vue {
 		return this.$store.state.cardModule.cards;
 	}
 
-	goToCard(card: CardData) {
-		this.$store.state.video?.pause();
-		this.$store.commit(
-			MutationMain.SET_VIDEO_CURRENT_TIME_S,
-			(card.fromInSeconds() + card.toInSeconds()) / 2
-		);
-	}
-
-	editCard(card: CardData) {
-		this.$store.state.video?.pause();
-		this.$store.commit(
-			MutationMain.SET_VIDEO_CURRENT_TIME_S,
-			(card.fromInSeconds() + card.toInSeconds()) / 2
-		);
-		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, card);
-	}
 	addNewCard() {
 		this.$store.commit(
 			MutationCard.ADD_CARD,

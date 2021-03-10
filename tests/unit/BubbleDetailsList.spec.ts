@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import CardsCurrentDeck from '@/components/CardsCurrentDeck.vue';
+import CardsCurrentDeck from '@/components/CardsCurrentDeck/CardsCurrentDeck.vue';
 
 describe('CardsCurrentDeck.vue', () => {
 	it('test the ', () => {
