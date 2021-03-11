@@ -7,7 +7,7 @@ module.exports = {
 	purge: ['./src/**/*.html', './src/**/*.vue'],
 	darkMode: false, // or 'media' or 'class'
 	theme: {
-		namedGroups: ['menuItem', 'deckListNewCard'],
+		namedGroups: ['menuItem', 'currentDeckAction'],
 		extend: {
 			minWidth: {
 				card: '15rem',

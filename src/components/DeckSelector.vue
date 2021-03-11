@@ -94,23 +94,27 @@ export default class DeckSelector extends Vue {
 		this.$emit('deck-selector-close');
 	}
 	rowClicked(index: number) {
-		this.$store.commit(MutationDeck.SET_CURRENT_DECK, this.decks[index]);
-		axios
-			.get(`${process.env.VUE_APP_API_URL}/decks/${this.decks[index].id}`)
-			.then((deck: AxiosResponse<DeckApi>) => {
-				const cards: CardData[] = deck.data.cards.map(card => {
-					return new CardData({
-						fromStamp: card.from,
-						toStamp: card.to,
-						x: card.position.x,
-						y: card.position.y,
-						text: card.text,
-						id: card.id,
+		if (this.currentDeck && this.currentDeck.hasLocalModifs) {
+			alert('Discard modifications ?');
+		} else {
+			this.$store.commit(MutationDeck.SET_CURRENT_DECK, this.decks[index]);
+			axios
+				.get(`${process.env.VUE_APP_API_URL}/decks/${this.decks[index].id}`)
+				.then((deck: AxiosResponse<DeckApi>) => {
+					const cards: CardData[] = deck.data.cards.map(card => {
+						return new CardData({
+							fromStamp: card.from,
+							toStamp: card.to,
+							x: card.position.x,
+							y: card.position.y,
+							text: card.text,
+							id: card.id,
+						});
 					});
+					this.$store.commit(MutationCard.SET_CARDS, cards);
+					this.$store.commit(MutationCard.SET_DISPLAYED_CARDS, []);
 				});
-				this.$store.commit(MutationCard.SET_CARDS, cards);
-				this.$store.commit(MutationCard.SET_DISPLAYED_CARDS, []);
-			});
+		}
 	}
 }
 </script>

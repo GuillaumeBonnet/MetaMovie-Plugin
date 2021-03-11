@@ -85,6 +85,7 @@ import TimeSelector from '@/components/TimeSelector.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
+import { MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: { TimeSelector, PercentageInput },
 	props: {},
@@ -104,6 +105,7 @@ export default class CardDetail extends Vue {
 
 	editCard() {
 		this.$store.state.video?.pause();
+		this.$store.commit(MutationDeck.CURRENT_DECK_MODIFIED);
 		this.$store.commit(
 			MutationMain.SET_VIDEO_CURRENT_TIME_S,
 			(this.card.fromInSeconds() + this.card.toInSeconds()) / 2
@@ -111,6 +113,7 @@ export default class CardDetail extends Vue {
 		this.$store.dispatch(ActionMain.TOGGLE_CARD_EDITED, this.card);
 	}
 	deleteCard() {
+		this.$store.commit(MutationDeck.CURRENT_DECK_MODIFIED);
 		this.$store.commit(MutationCard.DELETE_CARD, this.card);
 	}
 	makeIconsBounce() {

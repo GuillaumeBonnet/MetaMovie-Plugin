@@ -5,14 +5,52 @@
 			forceDisplayDeckCards ? '' : 'scale-0 group-menuItem-hover:scale-100'
 		"
 	>
-		<li
-			class="group-deckListNewCard custo-min-with-li cursor-pointer p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center"
-			@click="addNewCard()"
-		>
+		<li class="custo-min-with-li flex" v-if="currentDeck">
 			<div
-				class="material-icons text-gray-300 group-deckListNewCard-hover:text-white "
+				class="flex-grow p-5 group-currentDeckAction cursor-pointer rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
+				@click="addNewCard()"
 			>
-				note_add
+				<div
+					class="material-icons text-gray-300 group-currentDeckAction-hover:text-white "
+				>
+					note_add
+				</div>
+			</div>
+			<div
+				class="flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
+				:class="
+					currentDeck.hasLocalModifs
+						? 'cursor-pointer group-currentDeckAction'
+						: ''
+				"
+				@click="uploadDeck()"
+			>
+				<div
+					class="material-icons  group-currentDeckAction-hover:text-white "
+					:class="
+						currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+					"
+				>
+					backup
+				</div>
+			</div>
+			<div
+				class="flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
+				:class="
+					currentDeck.hasLocalModifs
+						? 'cursor-pointer group-currentDeckAction'
+						: ''
+				"
+				@click="restoreDeck()"
+			>
+				<div
+					class="material-icons group-currentDeckAction-hover:text-white "
+					:class="
+						currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+					"
+				>
+					restore
+				</div>
 			</div>
 		</li>
 		<CardDetail
@@ -40,6 +78,7 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
 import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
+import { MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: {
 		CardDetail,
@@ -51,8 +90,12 @@ export default class CardsCurrentDeck extends Vue {
 	get cards() {
 		return this.$store.state.cardModule.cards;
 	}
+	get currentDeck() {
+		return this.$store.state.deckModule.currentDeck;
+	}
 
 	addNewCard() {
+		this.$store.commit(MutationDeck.CURRENT_DECK_MODIFIED);
 		this.$store.commit(
 			MutationCard.ADD_CARD,
 			new CardData({
@@ -63,6 +106,18 @@ export default class CardsCurrentDeck extends Vue {
 				text: 'New Card',
 			})
 		);
+	}
+	uploadDeck() {
+		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
+			return;
+		}
+		console.log('gboDebug: uploadDeck');
+	}
+	restoreDeck() {
+		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
+			return;
+		}
+		console.log('gboDebug: restoreDeck');
 	}
 }
 </script>

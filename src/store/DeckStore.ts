@@ -5,10 +5,11 @@ import { IState } from './Store';
 const MutationDeck = {
 	SET_DECKS: 'SET_DECKS',
 	SET_CURRENT_DECK: 'SET_CURRENT_DECK',
+	CURRENT_DECK_MODIFIED: 'CURRENT_DECK_MODIFIED',
 };
 const ActionDeck = {};
 interface IDeckState {
-	currentDeck: DeckData | undefined;
+	currentDeck: undefined | (DeckData & { hasLocalModifs: boolean });
 	decks: DeckData[];
 }
 
@@ -26,7 +27,15 @@ const deckModule: Module<IDeckState, IState> = {
 			state.decks = decks;
 		},
 		[MutationDeck.SET_CURRENT_DECK](state, currentDeck: DeckData) {
-			state.currentDeck = currentDeck;
+			state.currentDeck = {
+				...currentDeck,
+				hasLocalModifs: false,
+			};
+		},
+		[MutationDeck.CURRENT_DECK_MODIFIED](state) {
+			if (state.currentDeck) {
+				state.currentDeck.hasLocalModifs = true;
+			}
 		},
 	},
 	actions: {},
