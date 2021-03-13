@@ -35,14 +35,25 @@ from // displayedCards and put back at the right place when the edit is done
 				"
 				@click="handleEditButton()"
 				@mousedown.stop
+				aria-describedby="tooltip-edit-card-in-layout"
 			>
+				<MatTooltip
+					id="tooltip-edit-card-in-layout"
+					:label="isInEdition ? 'Validate edition' : 'Edit card'"
+				></MatTooltip>
 				edit
 			</button>
 			<template v-if="isInEdition">
 				<button
 					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out text-gray-300 hover:text-white"
 					@mousedown="handleDragButton($event)"
+					aria-describedby="tooltip-drag-card-in-layout"
 				>
+					<MatTooltip
+						v-if="!isEditDraggingPreview"
+						id="tooltip-drag-card-in-layout"
+						label="Place card"
+					></MatTooltip>
 					dynamic_feed
 				</button>
 				<time-selector
@@ -84,7 +95,12 @@ from // displayedCards and put back at the right place when the edit is done
 				id="close-button"
 				@click="handleCloseButton()"
 				@mousedown.stop
+				aria-describedby="tooltip-close-card-in-layout"
 			>
+				<MatTooltip
+					id="tooltip-close-card-in-layout"
+					label="Hide card"
+				></MatTooltip>
 				close
 			</button>
 		</div>
@@ -132,14 +148,15 @@ import { Mutation, State } from 'vuex-class';
 import { MutationCard } from '@/store/CardStore';
 import { IState, MutationMain, ActionMain } from '@/store/Store';
 import TimeSelector from '@/components/TimeSelector.vue';
+import MatTooltip from '@/components/MatTooltip.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
 
 @Options({
 	components: {
-		// sub-components
 		TimeSelector,
 		PercentageInput,
+		MatTooltip,
 	},
 })
 export default class CardCmp extends Vue {

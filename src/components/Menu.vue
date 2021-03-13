@@ -23,11 +23,11 @@
 				></DeckSelector>
 				<ul class="">
 					<li class="h-14 px-5 flex content-center">
-						<MdcSwitch
+						<MatSwitch
 							class="my-auto"
 							v-model="areCardsHidden_VueModel"
 							label="Hide Cards"
-						></MdcSwitch>
+						></MatSwitch>
 					</li>
 					<MenuItem
 						label="Detail current list"
@@ -74,7 +74,7 @@ import { ActionCard, MutationCard } from '@/store/CardStore';
 import { Options, Vue } from 'vue-class-component';
 import CardData from '@/models/CardData';
 import CardsCurrentDeck from '@/components/CardsCurrentDeck/CardsCurrentDeck.vue';
-import MdcSwitch from '@/components/MdcSwitch.vue';
+import MatSwitch from '@/components/MatSwitch.vue';
 import DeckSelector from '@/components/DeckSelector.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
@@ -114,20 +114,12 @@ const MenuItem = defineComponent({
 	components: {
 		MenuItem,
 		CardsCurrentDeck,
-		MdcSwitch,
+		MatSwitch,
 		DeckSelector,
 	},
 })
 export default class Menu extends Vue {
 	created() {
-		console.log(
-			'gboDebug:menu[this.$store.state.cardModule]',
-			this.$store.state.cardModule
-		);
-		console.log(
-			'gboDebug:menu[this.$store.state.deckModule]',
-			this.$store.state.deckModule
-		);
 		const errorCB = (error: any) => {
 			console.error('error', error);
 		};

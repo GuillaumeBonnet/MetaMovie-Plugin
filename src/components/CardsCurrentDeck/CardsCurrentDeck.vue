@@ -9,7 +9,9 @@
 			<div
 				class="flex-grow p-5 group-currentDeckAction cursor-pointer rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
 				@click="addNewCard()"
+				aria-describedby="tooltip-new-card"
 			>
+				<MatTooltip id="tooltip-new-card" label="New Card"></MatTooltip>
 				<div
 					class="material-icons text-gray-300 group-currentDeckAction-hover:text-white "
 				>
@@ -24,7 +26,9 @@
 						: ''
 				"
 				@click="uploadDeck()"
+				aria-describedby="tooltip-backup"
 			>
+				<MatTooltip id="tooltip-backup" label="Save modifications"></MatTooltip>
 				<div
 					class="material-icons  group-currentDeckAction-hover:text-white "
 					:class="
@@ -42,7 +46,12 @@
 						: ''
 				"
 				@click="restoreDeck()"
+				aria-describedby="tooltip-restore"
 			>
+				<MatTooltip
+					id="tooltip-restore"
+					label="Discard modifications"
+				></MatTooltip>
 				<div
 					class="material-icons group-currentDeckAction-hover:text-white "
 					:class="
@@ -78,10 +87,12 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
 import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
+import MatTooltip from '@/components/MatTooltip.vue';
 import { MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: {
 		CardDetail,
+		MatTooltip,
 	},
 })
 export default class CardsCurrentDeck extends Vue {
