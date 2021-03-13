@@ -1,6 +1,11 @@
 <template>
-	<teleport to="body">
-		<div :id="id" class="mdc-tooltip" role="tooltip" aria-hidden="true">
+	<teleport to=".sizing-wrapper">
+		<div
+			:id="id"
+			class="mdc-tooltip z-1000010"
+			role="tooltip"
+			aria-hidden="true"
+		>
 			<div class="mdc-tooltip__surface">
 				{{ label }}
 			</div>

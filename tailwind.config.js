@@ -1,9 +1,5 @@
 const plugin = require('tailwindcss/plugin');
 module.exports = {
-	// purge: { //ENABLE TO TEST LOCALLY
-	//   enabled: true,
-	//   content: ['./src/**/*.html', './src/**/*.vue',],
-	// },
 	purge: ['./src/**/*.html', './src/**/*.vue'],
 	darkMode: false, // or 'media' or 'class'
 	theme: {
@@ -55,7 +51,7 @@ module.exports = {
 			for (let i = 1000000; i <= 1000000 + 50; i += 10) {
 				addUtilities({
 					[`.z-${i}`]: {
-						['z-index']: `${i}`,
+						['z-index']: `${i} !important`,
 					},
 				});
 			}
