@@ -27,15 +27,19 @@ import { MDCTooltip } from '@material/tooltip';
 import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 
-@Options({ components: {}, emits: ['update:modelValue'] })
+@Options({ components: {}, emits: [] })
 export default class MatTooltip extends Vue {
 	mounted() {
 		const tooltipNode = document.querySelector(`#${this.id}`);
 		if (tooltipNode) {
-			const tooltip = new MDCTooltip(tooltipNode);
+			this.tooltip = new MDCTooltip(tooltipNode);
 		} else {
 			console.warn(`Tooltip node #${this.id} not found.`);
 		}
+	}
+	tooltip?: MDCTooltip;
+	beforeUnmount() {
+		this.tooltip?.destroy();
 	}
 	@Prop({ required: true })
 	id!: string;

@@ -7,7 +7,9 @@ const MutationDeck = {
 	SET_CURRENT_DECK: 'SET_CURRENT_DECK',
 	CURRENT_DECK_MODIFIED: 'CURRENT_DECK_MODIFIED',
 };
-const ActionDeck = {};
+const ActionDeck = {
+	REFRESH_CURRENT_DECK: 'REFRESH_CURRENT_DECK',
+};
 interface IDeckState {
 	currentDeck: undefined | (DeckData & { hasLocalModifs: boolean });
 	decks: DeckData[];
@@ -38,6 +40,8 @@ const deckModule: Module<IDeckState, IState> = {
 			}
 		},
 	},
-	actions: {},
+	actions: {
+		[ActionDeck.REFRESH_CURRENT_DECK]({ commit, state }) {},
+	},
 };
 export { ActionDeck, MutationDeck, deckModule, IDeckState, initialState };

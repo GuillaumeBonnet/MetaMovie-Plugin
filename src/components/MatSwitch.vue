@@ -47,8 +47,12 @@ export default class MatSwitch extends Vue {
 	mounted() {
 		const switchNode = this.$el.querySelector('.mdc-switch');
 		if (switchNode) {
-			const switchControl = new MDCSwitch(switchNode);
+			this.switchControl = new MDCSwitch(switchNode);
 		}
+	}
+	switchControl?: MDCSwitch;
+	beforeUnmount() {
+		this.switchControl?.destroy();
 	}
 	@Prop({ default: false })
 	modelValue!: boolean;

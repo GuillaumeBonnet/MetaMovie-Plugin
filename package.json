@@ -10,6 +10,7 @@
 		"lint": "vue-cli-service lint"
 	},
 	"dependencies": {
+		"@material/dialog": "^10.0.0",
 		"@material/switch": "^10.0.0",
 		"@material/tooltip": "^10.0.0",
 		"@mdi/font": "^3.6.95",

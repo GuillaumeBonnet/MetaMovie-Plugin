@@ -52,6 +52,14 @@
 					id="tooltip-restore"
 					label="Discard modifications"
 				></MatTooltip>
+				<MatPopup
+					id="popup-discard"
+					ref="discard-pop-up"
+					title="Discard deck modifications"
+					@confirm="confirmedDiscard()"
+				>
+					Discard deck modifications ?
+				</MatPopup>
 				<div
 					class="material-icons group-currentDeckAction-hover:text-white "
 					:class="
@@ -88,16 +96,20 @@ import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
 import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
 import MatTooltip from '@/components/MatTooltip.vue';
-import { MutationDeck } from '@/store/DeckStore';
+import MatPopup from '@/components/MatPopup.vue';
+import { ActionDeck, MutationDeck } from '@/store/DeckStore';
+import { MDCDialog } from '@material/dialog';
 @Options({
 	components: {
 		CardDetail,
 		MatTooltip,
+		MatPopup,
 	},
 })
 export default class CardsCurrentDeck extends Vue {
 	@Prop({ required: true, default: false })
 	forceDisplayDeckCards!: boolean;
+
 	get cards() {
 		return this.$store.state.cardModule.cards;
 	}
@@ -128,7 +140,10 @@ export default class CardsCurrentDeck extends Vue {
 		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
 			return;
 		}
-		console.log('gboDebug: restoreDeck');
+		(this.$refs['discard-pop-up'] as MatPopup).open(() => {
+			alert('todo WS call');
+			// this.$store.dispatch(ActionDeck.)
+		});
 	}
 }
 </script>
