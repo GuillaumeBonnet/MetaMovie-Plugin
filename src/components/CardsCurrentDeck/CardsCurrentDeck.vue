@@ -25,10 +25,17 @@
 						? 'cursor-pointer group-currentDeckAction'
 						: ''
 				"
-				@click="uploadDeck()"
+				@click="updateDeck()"
 				aria-describedby="tooltip-backup"
 			>
 				<MatTooltip id="tooltip-backup" label="Save modifications"></MatTooltip>
+				<MatPopup
+					id="popup-update-current-deck"
+					ref="popup-update-current-deck"
+					title="Save deck confirmation"
+				>
+					Save deck modifications ?
+				</MatPopup>
 				<div
 					class="material-icons  group-currentDeckAction-hover:text-white "
 					:class="
@@ -54,8 +61,8 @@
 				></MatTooltip>
 				<MatPopup
 					id="popup-discard"
-					ref="discard-pop-up"
-					title="Discard deck modifications"
+					ref="popup-discard"
+					title="Confirm deck discarded"
 				>
 					Discard deck modifications ?
 				</MatPopup>
@@ -129,17 +136,19 @@ export default class CardsCurrentDeck extends Vue {
 			})
 		);
 	}
-	uploadDeck() {
+	updateDeck() {
 		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
 			return;
 		}
-		console.log('gboDebug: uploadDeck');
+		(this.$refs['popup-update-current-deck'] as MatPopup).open(() => {
+			this.$store.dispatch(ActionDeck.SAVE_CURRENT_DECK);
+		});
 	}
 	restoreDeck() {
 		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
 			return;
 		}
-		(this.$refs['discard-pop-up'] as MatPopup).open(() => {
+		(this.$refs['popup-discard'] as MatPopup).open(() => {
 			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 		});
 	}

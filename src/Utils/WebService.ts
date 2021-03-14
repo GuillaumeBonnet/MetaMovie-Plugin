@@ -11,4 +11,10 @@ const fetchAllDecks = () => {
 	return axios.get<DeckApi_WithoutCards[]>(`${rootUrl}/decks`);
 };
 
-export { fetchCompleteDeck, fetchAllDecks };
+const saveDeck = async (deck: DeckData) => {
+	return axios.post<DeckApi>(`${rootUrl}/decks`, deck);
+};
+const updateDeck = (deck: DeckData) => {
+	return axios.put<DeckApi>(`${rootUrl}/decks/${deck.id}`, deck);
+};
+export { fetchCompleteDeck, fetchAllDecks, saveDeck, updateDeck };
