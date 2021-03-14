@@ -59,7 +59,6 @@ export default class MatPopup extends Vue {
 		if (dialogNode) {
 			this.dialog = new MDCDialog(dialogNode);
 			this.dialog?.listen<MDCDialogCloseEvent>('MDCDialog:closing', event => {
-				console.log('gboDebug:[event.detail.action]', event.detail.action);
 				if (event.detail.action == 'confirm') {
 					this.confirmCallback && this.confirmCallback();
 				}
