@@ -56,7 +56,6 @@
 					id="popup-discard"
 					ref="discard-pop-up"
 					title="Discard deck modifications"
-					@confirm="confirmedDiscard()"
 				>
 					Discard deck modifications ?
 				</MatPopup>
@@ -141,8 +140,7 @@ export default class CardsCurrentDeck extends Vue {
 			return;
 		}
 		(this.$refs['discard-pop-up'] as MatPopup).open(() => {
-			alert('todo WS call');
-			// this.$store.dispatch(ActionDeck.)
+			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 		});
 	}
 }

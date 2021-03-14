@@ -80,6 +80,7 @@ import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
 import { MutationDeck } from '@/store/DeckStore';
+import { fetchAllDecks } from '@/Utils/WebService';
 
 const MenuItem = defineComponent({
 	template: `
@@ -119,16 +120,9 @@ const MenuItem = defineComponent({
 	},
 })
 export default class Menu extends Vue {
-	created() {
-		const errorCB = (error: any) => {
-			console.error('error', error);
-		};
-		axios
-			.get(`${process.env.VUE_APP_API_URL}/decks`)
-			.then((decks: AxiosResponse<DeckApi_WithoutCards[]>) => {
-				this.$store.commit(MutationDeck.SET_DECKS, decks.data);
-			})
-			.catch(errorCB);
+	async created() {
+		const decks = (await fetchAllDecks()).data;
+		this.$store.commit(MutationDeck.SET_DECKS, decks);
 	}
 
 	/* -------------------------------------------------------------------------- */

@@ -68,11 +68,7 @@
 /* -------------------------------------------------------------------------- */
 import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
-import { MutationDeck } from '@/store/DeckStore';
-import axios, { AxiosResponse } from 'axios';
-import { DeckApi } from '@/models/ApiTypes';
-import CardData from '@/models/CardData';
-import { MutationCard } from '@/store/CardStore';
+import { ActionDeck } from '@/store/DeckStore';
 @Options({
 	components: {},
 	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
@@ -93,27 +89,14 @@ export default class DeckSelector extends Vue {
 	closeButton() {
 		this.$emit('deck-selector-close');
 	}
-	rowClicked(index: number) {
+	async rowClicked(index: number) {
 		if (this.currentDeck && this.currentDeck.hasLocalModifs) {
 			alert('Discard modifications ?');
 		} else {
-			this.$store.commit(MutationDeck.SET_CURRENT_DECK, this.decks[index]);
-			axios
-				.get(`${process.env.VUE_APP_API_URL}/decks/${this.decks[index].id}`)
-				.then((deck: AxiosResponse<DeckApi>) => {
-					const cards: CardData[] = deck.data.cards.map(card => {
-						return new CardData({
-							fromStamp: card.from,
-							toStamp: card.to,
-							x: card.position.x,
-							y: card.position.y,
-							text: card.text,
-							id: card.id,
-						});
-					});
-					this.$store.commit(MutationCard.SET_CARDS, cards);
-					this.$store.commit(MutationCard.SET_DISPLAYED_CARDS, []);
-				});
+			this.$store.dispatch(
+				ActionDeck.SET_CURRENT_DECK_ACTION,
+				this.decks[index]
+			);
 		}
 	}
 }
