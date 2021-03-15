@@ -1,6 +1,6 @@
 <template>
 	<ul
-		class="scrollbar cursor-default max-h-96 overflow-y-auto p-0 origin-bottom-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full bottom-0 left-0 bg-gray-800 rounded-md"
+		class="shadow-xl scrollbar cursor-default max-h-96 overflow-y-auto p-0 origin-bottom-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full bottom-0 left-0 bg-gray-800 rounded-md"
 		:class="
 			forceDisplayDeckCards ? '' : 'scale-0 group-menuItem-hover:scale-100'
 		"
