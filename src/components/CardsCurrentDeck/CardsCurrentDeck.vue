@@ -140,17 +140,25 @@ export default class CardsCurrentDeck extends Vue {
 		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
 			return;
 		}
-		(this.$refs['popup-update-current-deck'] as MatPopup).open(() => {
-			this.$store.dispatch(ActionDeck.SAVE_CURRENT_DECK);
-		});
+		(this.$refs['popup-update-current-deck'] as MatPopup).open(
+			(actionName: 'confirm' | 'close') => {
+				if (actionName == 'confirm') {
+					this.$store.dispatch(ActionDeck.SAVE_CURRENT_DECK);
+				}
+			}
+		);
 	}
 	restoreDeck() {
 		if (this.currentDeck && !this.currentDeck.hasLocalModifs) {
 			return;
 		}
-		(this.$refs['popup-discard'] as MatPopup).open(() => {
-			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
-		});
+		(this.$refs['popup-discard'] as MatPopup).open(
+			(actionName: 'confirm' | 'close') => {
+				if (actionName == 'confirm') {
+					this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
+				}
+			}
+		);
 	}
 }
 </script>

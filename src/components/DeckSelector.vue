@@ -1,5 +1,38 @@
 <template>
 	<div class="border-4 border-solid border-gray-900 rounded-md m-4 p-3">
+		<MatPopup
+			id="popup-deck-selector-modifications"
+			ref="popup-deck-selector-modifications"
+			title="Deck has unsaved modifications."
+		>
+			Deck has unsaved modifications
+			<template v-slot:actions>
+				<button
+					type="button"
+					class="mdc-button mdc-button--outlined mdc-dialog__button"
+					data-mdc-dialog-action="cancel"
+				>
+					<div class="mdc-button__ripple"></div>
+					<span class="mdc-button__label">Cancel</span>
+				</button>
+				<button
+					type="button"
+					class="mdc-button mdc-button--outlined mdc-dialog__button"
+					data-mdc-dialog-action="discard"
+				>
+					<div class="mdc-button__ripple"></div>
+					<span class="mdc-button__label">Discard ?</span>
+				</button>
+				<button
+					type="button"
+					class="mdc-button mdc-button--outlined mdc-dialog__button"
+					data-mdc-dialog-action="save"
+				>
+					<div class="mdc-button__ripple"></div>
+					<span class="mdc-button__label">Save ?</span>
+				</button>
+			</template>
+		</MatPopup>
 		<div class="underline">
 			Current deck:
 		</div>
@@ -69,8 +102,9 @@
 import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
+import MatPopup from '@/components/MatPopup.vue';
 @Options({
-	components: {},
+	components: { MatPopup },
 	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
 })
 export default class DeckSelector extends Vue {
@@ -90,8 +124,28 @@ export default class DeckSelector extends Vue {
 		this.$emit('deck-selector-close');
 	}
 	async rowClicked(index: number) {
+		if (this.decks && this.currentDeck?.id == this.decks[index].id) {
+			return;
+		}
 		if (this.currentDeck && this.currentDeck.hasLocalModifs) {
-			alert('Discard modifications ?');
+			(this.$refs['popup-deck-selector-modifications'] as MatPopup).open(
+				async (eventName: 'close' | 'discard' | 'save') => {
+					console.log('gboDebug:[eventName]', eventName);
+					if (eventName == 'discard') {
+						await this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
+						await this.$store.dispatch(
+							ActionDeck.SET_CURRENT_DECK_ACTION,
+							this.decks[index]
+						);
+					} else if (eventName == 'save') {
+						await this.$store.dispatch(ActionDeck.SAVE_CURRENT_DECK);
+						await this.$store.dispatch(
+							ActionDeck.SET_CURRENT_DECK_ACTION,
+							this.decks[index]
+						);
+					}
+				}
+			);
 		} else {
 			this.$store.dispatch(
 				ActionDeck.SET_CURRENT_DECK_ACTION,

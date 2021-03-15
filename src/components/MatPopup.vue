@@ -13,22 +13,24 @@
 						<slot></slot>
 					</div>
 					<div class="mdc-dialog__actions">
-						<button
-							type="button"
-							class="mdc-button mdc-button--outlined mdc-dialog__button"
-							data-mdc-dialog-action="close"
-						>
-							<div class="mdc-button__ripple"></div>
-							<span class="mdc-button__label">Cancel</span>
-						</button>
-						<button
-							type="button"
-							class="mdc-button mdc-button--outlined mdc-dialog__button "
-							data-mdc-dialog-action="confirm"
-						>
-							<div class="mdc-button__ripple"></div>
-							<span class="mdc-button__label">Confirm</span>
-						</button>
+						<slot name="actions">
+							<button
+								type="button"
+								class="mdc-button mdc-button--outlined mdc-dialog__button"
+								data-mdc-dialog-action="close"
+							>
+								<div class="mdc-button__ripple"></div>
+								<span class="mdc-button__label">Cancel</span>
+							</button>
+							<button
+								type="button"
+								class="mdc-button mdc-button--outlined mdc-dialog__button "
+								data-mdc-dialog-action="confirm"
+							>
+								<div class="mdc-button__ripple"></div>
+								<span class="mdc-button__label">Confirm</span>
+							</button>
+						</slot>
 					</div>
 				</div>
 			</div>
@@ -59,15 +61,14 @@ export default class MatPopup extends Vue {
 		if (dialogNode) {
 			this.dialog = new MDCDialog(dialogNode);
 			this.dialog?.listen<MDCDialogCloseEvent>('MDCDialog:closing', event => {
-				if (event.detail.action == 'confirm') {
-					this.confirmCallback && this.confirmCallback();
-				}
+				this.confirmCallback && this.confirmCallback(event.detail.action);
 			});
 		} else {
 			console.warn(`Popup node #${this.id} not found.`);
 		}
 	}
 	open(confirmCallback: CallableFunction) {
+		console.log('gboDebug: a');
 		if (!confirmCallback) {
 			throw Error('MatPopup expects a confirm callback when oppened.');
 		}
