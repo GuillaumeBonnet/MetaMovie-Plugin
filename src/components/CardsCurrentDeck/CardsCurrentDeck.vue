@@ -101,8 +101,8 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
 import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
-import MatTooltip from '@/components/MatTooltip.vue';
-import MatPopup from '@/components/MatPopup.vue';
+import MatTooltip from '@/components/material/MatTooltip.vue';
+import MatPopup from '@/components/material/MatPopup.vue';
 import { ActionDeck, MutationDeck } from '@/store/DeckStore';
 import { MDCDialog } from '@material/dialog';
 @Options({

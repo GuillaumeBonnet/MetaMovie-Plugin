@@ -88,7 +88,7 @@ import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import CardData from '@/models/CardData';
 import TimeSelector from '@/components/TimeSelector.vue';
-import MatTooltip from '@/components/MatTooltip.vue';
+import MatTooltip from '@/components/material/MatTooltip.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';

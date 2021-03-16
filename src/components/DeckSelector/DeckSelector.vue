@@ -33,9 +33,6 @@
 				</button>
 			</template>
 		</MatPopup>
-		<button class="">
-			New deck
-		</button>
 		<div class="underline">
 			Current deck:
 		</div>
@@ -50,7 +47,7 @@
 		</div>
 		<div
 			v-if="isDeckSelectionShown"
-			class="p-6 absolute transform custom-translate-list rounded-md bg-gray-700"
+			class="p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
 		>
 			<button
 				class="block ml-auto material-icons rounded-md w-12 h-12 text-3xl  hover:shadow-sm outline-none focus:outline-none bg-gray-600 hover:bg-gray-800 border-1 border-solid border-gray-900 hover:shadow transform transition-transform duration-300 ease-in-out"
@@ -59,7 +56,8 @@
 			>
 				close
 			</button>
-			<div class="underline mb-4">Available decks:</div>
+			<NewDeck class="my-8"></NewDeck>
+			<div class="underline mb-4 mt-8">Available decks:</div>
 			<MatPopup
 				id="popup-deck-selector-modifications"
 				ref="popup-deck-selector-modifications"
@@ -138,9 +136,10 @@
 import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
-import MatPopup from '@/components/MatPopup.vue';
+import MatPopup from '@/components/material/MatPopup.vue';
+import NewDeck from '@/components/DeckSelector/NewDeck.vue';
 @Options({
-	components: { MatPopup },
+	components: { MatPopup, NewDeck },
 	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
 })
 export default class DeckSelector extends Vue {

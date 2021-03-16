@@ -148,7 +148,7 @@ import { Mutation, State } from 'vuex-class';
 import { MutationCard } from '@/store/CardStore';
 import { IState, MutationMain, ActionMain } from '@/store/Store';
 import TimeSelector from '@/components/TimeSelector.vue';
-import MatTooltip from '@/components/MatTooltip.vue';
+import MatTooltip from '@/components/material/MatTooltip.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
 

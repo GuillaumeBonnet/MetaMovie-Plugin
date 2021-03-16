@@ -1,43 +1,14 @@
 <template>
-	<teleport to=".sizing-wrapper">
-		<div class="mdc-dialog" :id="id">
-			<div class="mdc-dialog__container">
-				<div
-					class="mdc-dialog__surface"
-					role="alertdialog"
-					aria-modal="true"
-					:aria-labelledby="title"
-					:aria-describedby="id + '-content'"
-				>
-					<div class="p-10 text-2xl" :id="id + '-content'">
-						<slot></slot>
-					</div>
-					<div class="mdc-dialog__actions">
-						<slot name="actions">
-							<button
-								type="button"
-								class="mdc-button mdc-button--outlined mdc-dialog__button"
-								data-mdc-dialog-action="close"
-							>
-								<div class="mdc-button__ripple"></div>
-								<span class="mdc-button__label">Cancel</span>
-							</button>
-							<button
-								type="button"
-								class="mdc-button mdc-button--outlined mdc-dialog__button "
-								data-mdc-dialog-action="confirm"
-							>
-								<div class="mdc-button__ripple"></div>
-								<span class="mdc-button__label">Confirm</span>
-							</button>
-						</slot>
-					</div>
-				</div>
-			</div>
-			<div class="mdc-dialog__scrim"></div>
-		</div>
-	</teleport>
-</template>
+	<label class="mdc-text-field mdc-text-field--filled">
+		<span class="mdc-text-field__ripple"></span>
+		<span class="mdc-floating-label" id="my-label-id">Hint text</span>
+		<input
+			class="mdc-text-field__input"
+			type="text"
+			aria-labelledby="my-label-id"
+		/>
+		<span class="mdc-line-ripple"></span> </label
+></template>
 
 <script lang="ts">
 /* -------------------------------------------------------------------------- */
@@ -49,40 +20,26 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import { MDCDialog, MDCDialogCloseEvent } from '@material/dialog';
+import { MDCTextField } from '@material/textfield';
 import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 
 @Options({ components: {}, emits: ['confirm'] })
-export default class MatPopup extends Vue {
-	confirmCallback?: CallableFunction;
+export default class MatTextField extends Vue {
 	mounted() {
-		const dialogNode = document.querySelector(`#${this.id}`);
-		if (dialogNode) {
-			this.dialog = new MDCDialog(dialogNode);
-			this.dialog?.listen<MDCDialogCloseEvent>('MDCDialog:closing', event => {
-				this.confirmCallback && this.confirmCallback(event.detail.action);
-			});
+		const textNode = document.querySelector(`#${this.id}`);
+		if (textNode) {
+			this.textField = new MDCTextField(textNode);
 		} else {
-			console.warn(`Popup node #${this.id} not found.`);
+			console.warn(`MatTextField node #${this.id} not found.`);
 		}
-	}
-	open(confirmCallback: CallableFunction) {
-		console.log('gboDebug: a');
-		if (!confirmCallback) {
-			throw Error('MatPopup expects a confirm callback when oppened.');
-		}
-		this.confirmCallback = confirmCallback;
-		this.dialog?.open();
 	}
 	beforeUnmount() {
-		this.dialog?.destroy();
+		this.textField?.destroy();
 	}
-	dialog?: MDCDialog;
+	textField?: MDCTextField;
 	@Prop({ required: true })
 	id!: string;
-	@Prop({ required: true })
-	title!: string;
 }
 </script>
 
