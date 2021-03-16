@@ -33,6 +33,9 @@
 				</button>
 			</template>
 		</MatPopup>
+		<button class="">
+			New deck
+		</button>
 		<div class="underline">
 			Current deck:
 		</div>
@@ -57,6 +60,39 @@
 				close
 			</button>
 			<div class="underline mb-4">Available decks:</div>
+			<MatPopup
+				id="popup-deck-selector-modifications"
+				ref="popup-deck-selector-modifications"
+				title="Deck has unsaved modifications."
+			>
+				Deck has unsaved modifications
+				<template v-slot:actions>
+					<button
+						type="button"
+						class="mdc-button mdc-button--outlined mdc-dialog__button"
+						data-mdc-dialog-action="cancel"
+					>
+						<div class="mdc-button__ripple"></div>
+						<span class="mdc-button__label">Cancel</span>
+					</button>
+					<button
+						type="button"
+						class="mdc-button mdc-button--outlined mdc-dialog__button"
+						data-mdc-dialog-action="discard"
+					>
+						<div class="mdc-button__ripple"></div>
+						<span class="mdc-button__label">Discard ?</span>
+					</button>
+					<button
+						type="button"
+						class="mdc-button mdc-button--outlined mdc-dialog__button"
+						data-mdc-dialog-action="save"
+					>
+						<div class="mdc-button__ripple"></div>
+						<span class="mdc-button__label">Save ?</span>
+					</button>
+				</template>
+			</MatPopup>
 			<table class="text-3xl table-auto border-1 border-black">
 				<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
 					<tr>
