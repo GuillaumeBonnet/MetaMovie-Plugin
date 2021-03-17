@@ -8,7 +8,7 @@
 		</button>
 		<MatPopup id="popup-new-deck" ref="popup-new-deck" title="New Deck pop-up">
 			Deck has unsaved modifications
-			<MatTextField></MatTextField>
+			<MatTextField id="text-field-deck-name"></MatTextField> todo
 			<input v-model="newDeck.name" placeholder="Name" />
 			<p>Message is: {{ newDeck.name }}</p>
 			<input v-model="newDeck.languageTag" placeholder="Language" />

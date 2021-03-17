@@ -1,14 +1,19 @@
 <template>
-	<label class="mdc-text-field mdc-text-field--filled">
-		<span class="mdc-text-field__ripple"></span>
-		<span class="mdc-floating-label" id="my-label-id">Hint text</span>
+	<label :id="id" class="mdc-text-field mdc-text-field--outlined">
+		<span class="mdc-notched-outline">
+			<span class="mdc-notched-outline__leading"></span>
+			<span class="mdc-notched-outline__notch">
+				<span class="mdc-floating-label" id="my-label-id">Your Name</span>
+			</span>
+			<span class="mdc-notched-outline__trailing"></span>
+		</span>
 		<input
-			class="mdc-text-field__input"
 			type="text"
+			class="mdc-text-field__input"
 			aria-labelledby="my-label-id"
 		/>
-		<span class="mdc-line-ripple"></span> </label
-></template>
+	</label>
+</template>
 
 <script lang="ts">
 /* -------------------------------------------------------------------------- */
@@ -53,9 +58,8 @@ export default class MatTextField extends Vue {
 /* -------------------------------------------------------------------------- */
 /*                                    postcss                                 */
 /* -------------------------------------------------------------------------- */
-.mdc-dialog {
-	--mdc-theme-surface: rgb(107, 114, 128);
-	--mdc-theme-primary: rgb(229, 231, 235);
-	--mdc-theme-text-primary-on-background: white;
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+	color: white !important;
 }
+//TODO
 </style>

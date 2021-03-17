@@ -93,8 +93,8 @@ export default class MatPopup extends Vue {
 /*                                    postcss                                 */
 /* -------------------------------------------------------------------------- */
 .mdc-dialog {
-	--mdc-theme-surface: rgb(107, 114, 128);
+	--mdc-theme-surface: rgb(24, 26, 27);
 	--mdc-theme-primary: rgb(229, 231, 235);
 	--mdc-theme-text-primary-on-background: white;
-}
+} //TODO
 </style>
