@@ -48,18 +48,11 @@ export default class MatTextField extends Vue {
 }
 </script>
 
-<style scoped lang="postcss">
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/*                                      -                                     */
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/*                                    postcss                                 */
-/* -------------------------------------------------------------------------- */
-.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
-	color: white !important;
-}
-//TODO
+<style scoped lang="scss">
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/textfield";
+
+@include textfield.core-styles;
 </style>

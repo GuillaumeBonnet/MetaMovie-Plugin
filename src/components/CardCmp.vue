@@ -359,4 +359,4 @@ export default class CardCmp extends Vue {
 }
 </script>
 
-<style scoped lang="postcss"></style>
+<style scoped lang="scss"></style>

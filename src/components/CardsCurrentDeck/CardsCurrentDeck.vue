@@ -163,7 +163,7 @@ export default class CardsCurrentDeck extends Vue {
 }
 </script>
 
-<style scoped lang="postcss">
+<style scoped lang="scss">
 .custo-min-with-li {
 	min-width: 200px;
 }

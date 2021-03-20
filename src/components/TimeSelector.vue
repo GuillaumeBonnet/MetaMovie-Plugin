@@ -231,4 +231,4 @@ export default class TimeSelector extends Vue {
 }
 </script>
 
-<style scoped lang="postcss"></style>
+<style scoped lang="scss"></style>

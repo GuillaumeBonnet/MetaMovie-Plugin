@@ -56,4 +56,4 @@ export default class NewDeck extends Vue {
 }
 </script>
 
-<style scoped lang="postcss"></style>
+<style scoped lang="scss"></style>

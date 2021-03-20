@@ -196,4 +196,4 @@ export default class Menu extends Vue {
 }
 </script>
 
-<style scoped lang="postcss"></style>
+<style scoped lang="scss"></style>

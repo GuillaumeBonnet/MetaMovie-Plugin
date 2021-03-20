@@ -191,7 +191,7 @@ export default class DeckSelector extends Vue {
 }
 </script>
 
-<style scoped lang="postcss">
+<style scoped lang="scss">
 .custom-translate-list {
 	transform: translateX(-120%);
 }

@@ -5,6 +5,17 @@ const path = require('path');
 module.exports = {
 	css: {
 		extract: process.env.npm_lifecycle_event == 'build',
+		loaderOptions: {
+			scss: {
+				// Prefer Dart Sass
+				implementation: require('sass'),
+				// See https://github.com/webpack-contrib/sass-loader/issues/804
+				webpackImporter: false,
+				sassOptions: {
+					includePaths: ['./node_modules'],
+				},
+			},
+		},
 	},
 	runtimeCompiler: true,
 	filenameHashing: false,

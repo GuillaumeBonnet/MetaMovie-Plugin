@@ -13,4 +13,4 @@ import { Options, Vue } from 'vue-class-component';
 export default class AppPopUp extends Vue {}
 </script>
 
-<style lang="postcss"></style>
+<style lang="scss"></style>
