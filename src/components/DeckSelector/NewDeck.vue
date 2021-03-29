@@ -7,20 +7,38 @@
 			Create Deck
 		</button>
 		<MatPopup id="popup-new-deck" ref="popup-new-deck" title="New Deck pop-up">
-			Deck has unsaved modifications
-			<MatTextField id="text-field-deck-name"></MatTextField> todo
-			<input v-model="newDeck.name" placeholder="Name" />
-			<p>Message is: {{ newDeck.name }}</p>
-			<input v-model="newDeck.languageTag" placeholder="Language" />
+			Start a new deck for this movie:
+			<div class="p-4">
+				<MatTextField
+					v-model="newDeck.name"
+					id="text-field-deck-name"
+					label="Name"
+					required="true"
+				></MatTextField>
+			</div>
+			<div class="p-4">
+				<MatTextField
+					v-model="newDeck.languageTag"
+					id="text-field-deck-language"
+					label="Language"
+				></MatTextField>
+			</div>
 			<template v-slot:actions>
-				<button
-					type="button"
-					class="mdc-button mdc-button--outlined mdc-dialog__button"
+				<MatButton
+					id="button-validate-new-deck"
+					label="Create Deck"
+					type="outlined"
+					@click="createDeck()"
+					class="mdc-dialog__button"
+					:disabled="!newDeck.name"
+				></MatButton>
+				<MatButton
+					id="button-cancel-new-deck"
+					label="Cancel"
+					type="outlined"
 					data-mdc-dialog-action="cancel"
-				>
-					<div class="mdc-button__ripple"></div>
-					<span class="mdc-button__label">Cancel</span>
-				</button>
+					class="mdc-dialog__button"
+				></MatButton>
 			</template>
 		</MatPopup>
 	</div>
@@ -41,9 +59,10 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
+import MatButton from '@/components/material/MatButton.vue';
 import { DeckData } from '@/models/DeckData';
 @Options({
-	components: { MatPopup, MatTextField },
+	components: { MatPopup, MatTextField, MatButton },
 })
 export default class NewDeck extends Vue {
 	newDeck: Pick<DeckData, 'languageTag' | 'name'> = {
@@ -53,7 +72,16 @@ export default class NewDeck extends Vue {
 	newDeckPopup() {
 		(this.$refs['popup-new-deck'] as MatPopup).open();
 	}
+	createDeck() {
+		if (!this.newDeck.name) {
+			console.log('Name is required');
+		}
+		console.log('gboDebug:[this.newDeck]', this.newDeck);
+	}
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@use "@material/dialog";
+@include dialog.core-styles;
+</style>

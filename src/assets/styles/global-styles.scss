@@ -1,0 +1,12 @@
+$mdc-theme-primary: hotpink;
+$mdc-theme-on-primary: hotpink;
+$mdc-theme-secondary: hotpink;
+$mdc-theme-on-secondary: hotpink;
+$mdc-theme-surface: hotpink;
+$mdc-theme-on-surface: hotpink;
+$mdc-theme-background: hotpink;
+$mdc-theme-on-background: hotpink;
+$mdc-theme-text-primary-on-background: white;
+
+@use "@material/button/mixins";
+@include mixins.core-styles;
