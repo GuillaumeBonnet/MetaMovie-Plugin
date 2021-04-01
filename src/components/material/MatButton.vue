@@ -61,5 +61,9 @@ button.mdc-button.mdc-button {
 	&:hover {
 		@apply border-gray-300;
 	}
+	&[disabled] {
+		@apply text-gray-500;
+		@apply border-gray-600;
+	}
 }
 </style>
