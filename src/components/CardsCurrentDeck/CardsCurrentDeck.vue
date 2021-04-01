@@ -75,6 +75,32 @@
 					restore
 				</div>
 			</div>
+			<div
+				class="cursor-pointer group-currentDeckAction flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
+				@click="deleteDeck()"
+				aria-describedby="tooltip-delete-deck"
+			>
+				<MatTooltip
+					id="tooltip-delete-deck"
+					label="Delete current deck"
+				></MatTooltip>
+				<MatPopup
+					id="popup-delete-deck"
+					ref="popup-delete-deck"
+					title="Confirm deck supression"
+				>
+					Type "delete" to confirm deletion of the deck
+					{{ currentDeck.name }} ?
+				</MatPopup>
+				<div
+					class="material-icons group-currentDeckAction-hover:text-white "
+					:class="
+						currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+					"
+				>
+					delete
+				</div>
+			</div>
 		</li>
 		<CardDetail
 			v-for="(card, index) in cards"
@@ -156,6 +182,19 @@ export default class CardsCurrentDeck extends Vue {
 			(actionName: 'confirm' | 'close') => {
 				if (actionName == 'confirm') {
 					this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
+				}
+			}
+		);
+	}
+	deleteDeck() {
+		console.log('gboDebug:[this.currentDeck]', this.currentDeck);
+		if (!this.currentDeck) {
+			return;
+		}
+		(this.$refs['popup-delete-deck'] as MatPopup).open(
+			(actionName: 'confirm' | 'close') => {
+				if (actionName == 'confirm') {
+					// this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 				}
 			}
 		);

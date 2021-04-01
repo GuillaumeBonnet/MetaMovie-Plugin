@@ -7,30 +7,27 @@
 		>
 			Deck has unsaved modifications
 			<template v-slot:actions>
-				<button
-					type="button"
-					class="mdc-button mdc-button--outlined mdc-dialog__button"
+				<MatButton
+					id="popup-deck-selector-modifications-button-cancel-new-deck"
+					label="Cancel"
+					type="outlined"
 					data-mdc-dialog-action="cancel"
-				>
-					<div class="mdc-button__ripple"></div>
-					<span class="mdc-button__label">Cancel</span>
-				</button>
-				<button
-					type="button"
-					class="mdc-button mdc-button--outlined mdc-dialog__button"
+					class="mdc-dialog__button m-2"
+				></MatButton>
+				<MatButton
+					id="popup-deck-selector-modifications-button-discard-new-deck"
+					label="Discard ?"
+					type="outlined"
 					data-mdc-dialog-action="discard"
-				>
-					<div class="mdc-button__ripple"></div>
-					<span class="mdc-button__label">Discard ?</span>
-				</button>
-				<button
-					type="button"
-					class="mdc-button mdc-button--outlined mdc-dialog__button"
+					class="mdc-dialog__button m-2"
+				></MatButton>
+				<MatButton
+					id="popup-deck-selector-modifications-button-save-new-deck"
+					label="Save ?"
+					type="outlined"
 					data-mdc-dialog-action="save"
-				>
-					<div class="mdc-button__ripple"></div>
-					<span class="mdc-button__label">Save ?</span>
-				</button>
+					class="mdc-dialog__button m-2"
+				></MatButton>
 			</template>
 		</MatPopup>
 		<div class="underline">
@@ -47,7 +44,7 @@
 		</div>
 		<div
 			v-if="isDeckSelectionShown"
-			class="p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
+			class="width-deck-selector p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
 		>
 			<button
 				class="block ml-auto material-icons rounded-md w-12 h-12 text-3xl  hover:shadow-sm outline-none focus:outline-none bg-gray-600 hover:bg-gray-800 border-1 border-solid border-gray-900 hover:shadow transform transition-transform duration-300 ease-in-out"
@@ -91,7 +88,7 @@
 					</button>
 				</template>
 			</MatPopup>
-			<table class="text-3xl table-auto border-1 border-black">
+			<table class=" w-full text-3xl table-auto border-1 border-black">
 				<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
 					<tr>
 						<th class="px-4 py-2 font-extrabold">Title</th>
@@ -137,9 +134,10 @@ import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
+import MatButton from '@/components/material/MatButton.vue';
 import NewDeck from '@/components/DeckSelector/NewDeck.vue';
 @Options({
-	components: { MatPopup, NewDeck },
+	components: { MatPopup, NewDeck, MatButton },
 	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
 })
 export default class DeckSelector extends Vue {
@@ -193,6 +191,9 @@ export default class DeckSelector extends Vue {
 
 <style scoped lang="scss">
 .custom-translate-list {
-	transform: translateX(-120%);
+	transform: translateX(-110%);
+}
+.width-deck-selector {
+	width: 150%;
 }
 </style>

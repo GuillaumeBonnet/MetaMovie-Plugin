@@ -1,4 +1,4 @@
-import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
+import { CreateFields, DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { DeckData } from '@/models/DeckData';
 import axios from 'axios';
 
@@ -11,7 +11,7 @@ const fetchAllDecks = () => {
 	return axios.get<DeckApi_WithoutCards[]>(`${rootUrl}/decks`);
 };
 
-const saveDeck = async (deck: DeckData) => {
+const saveDeck = async (deck: CreateFields<DeckApi>) => {
 	return axios.post<DeckApi>(`${rootUrl}/decks`, deck);
 };
 const updateDeck = (deck: DeckData) => {

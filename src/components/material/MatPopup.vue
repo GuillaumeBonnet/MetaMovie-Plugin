@@ -72,6 +72,9 @@ export default class MatPopup extends Vue {
 		this.confirmCallback = confirmCallback;
 		this.dialog?.open();
 	}
+	close() {
+		this.dialog?.close();
+	}
 	beforeUnmount() {
 		this.dialog?.destroy();
 	}

@@ -25,19 +25,19 @@
 			</div>
 			<template v-slot:actions>
 				<MatButton
+					id="button-cancel-new-deck"
+					label="Cancel"
+					type="outlined"
+					data-mdc-dialog-action="cancel"
+					class="mdc-dialog__button"
+				></MatButton>
+				<MatButton
 					id="button-validate-new-deck"
 					label="Create Deck"
 					type="outlined"
 					@click="createDeck()"
 					class="mdc-dialog__button"
 					:disabled="!newDeck.name"
-				></MatButton>
-				<MatButton
-					id="button-cancel-new-deck"
-					label="Cancel"
-					type="outlined"
-					data-mdc-dialog-action="cancel"
-					class="mdc-dialog__button"
 				></MatButton>
 			</template>
 		</MatPopup>
@@ -72,11 +72,18 @@ export default class NewDeck extends Vue {
 	newDeckPopup() {
 		(this.$refs['popup-new-deck'] as MatPopup).open();
 	}
-	createDeck() {
-		if (!this.newDeck.name) {
-			console.log('Name is required');
+	async createDeck() {
+		const newDeck = await this.$store.dispatch(
+			ActionDeck.CREATE_DECK,
+			this.newDeck
+		);
+		if (
+			!this.$store.state.deckModule.currentDeck ||
+			!this.$store.state.deckModule.currentDeck.hasLocalModifs
+		) {
+			this.$store.dispatch(ActionDeck.SET_CURRENT_DECK_ACTION, newDeck);
 		}
-		console.log('gboDebug:[this.newDeck]', this.newDeck);
+		(this.$refs['popup-new-deck'] as MatPopup).close();
 	}
 }
 </script>

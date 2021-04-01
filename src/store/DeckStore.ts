@@ -1,7 +1,12 @@
-import { CardApi, DeckApi } from '@/models/ApiTypes';
+import {
+	CardApi,
+	DeckApi,
+	CreateFields,
+	DeckApi_WithoutCards,
+} from '@/models/ApiTypes';
 import CardData from '@/models/CardData';
 import { DeckData } from '@/models/DeckData';
-import { fetchCompleteDeck, updateDeck } from '@/Utils/WebService';
+import { fetchCompleteDeck, updateDeck, saveDeck } from '@/Utils/WebService';
 import { Module } from 'vuex';
 import { MutationCard } from './CardStore';
 import { IState } from './Store';
@@ -15,6 +20,7 @@ const ActionDeck = {
 	REFRESH_CURRENT_DECK: 'REFRESH_CURRENT_DECK',
 	SET_CURRENT_DECK_ACTION: 'SET_CURRENT_DECK_ACTION',
 	SAVE_CURRENT_DECK: 'SAVE_CURRENT_DECK',
+	CREATE_DECK: 'CREATE_DECK',
 };
 interface IDeckState {
 	currentDeck: undefined | (DeckData & { hasLocalModifs: boolean });
@@ -101,6 +107,18 @@ const deckModule: Module<IDeckState, IState> = {
 			const nextCurrentDeck: DeckData = deckResponse.data;
 			commit(MutationDeck.SET_CURRENT_DECK, nextCurrentDeck);
 			//TODO use update response cards
+		},
+		async [ActionDeck.CREATE_DECK](
+			{ commit, state, rootState },
+			deck: CreateFields<DeckApi_WithoutCards>
+		) {
+			const deckFromApi = await saveDeck({
+				...deck,
+				cards: [],
+			});
+			const newDeckList = [deckFromApi.data, ...state.decks];
+			commit(MutationDeck.SET_DECKS, newDeckList);
+			return deckFromApi.data;
 		},
 	},
 };
