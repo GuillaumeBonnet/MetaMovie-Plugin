@@ -1,6 +1,6 @@
 <template>
 	<teleport to=".sizing-wrapper">
-		<div class="mdc-dialog" :id="id">
+		<div class="mdc-dialog" ref="popup">
 			<div class="mdc-dialog__container">
 				<div
 					class="mdc-dialog__surface"
@@ -57,15 +57,17 @@ import MatButton from '@/components/material/MatButton.vue';
 @Options({ components: { MatButton }, emits: [] })
 export default class MatPopup extends Vue {
 	confirmCallback?: CallableFunction;
+	id!: string;
+	created() {
+		this.id = 'MatPopup-' + Date.now();
+	}
 	mounted() {
-		const dialogNode = document.querySelector(`#${this.id}`);
+		const dialogNode = this.$refs.popup as Element;
 		if (dialogNode) {
 			this.dialog = new MDCDialog(dialogNode);
 			this.dialog?.listen<MDCDialogCloseEvent>('MDCDialog:closing', event => {
 				this.confirmCallback && this.confirmCallback(event.detail.action);
 			});
-		} else {
-			console.warn(`Popup node #${this.id} not found.`);
 		}
 	}
 	open(confirmCallback?: CallableFunction) {
@@ -79,8 +81,6 @@ export default class MatPopup extends Vue {
 		this.dialog?.destroy();
 	}
 	dialog?: MDCDialog;
-	@Prop({ required: true })
-	id!: string;
 	@Prop({ required: true })
 	title!: string;
 }

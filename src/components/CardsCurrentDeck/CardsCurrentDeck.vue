@@ -30,7 +30,6 @@
 			>
 				<MatTooltip id="tooltip-backup" label="Save modifications"></MatTooltip>
 				<MatPopup
-					id="popup-update-current-deck"
 					ref="popup-update-current-deck"
 					title="Save deck confirmation"
 				>
@@ -59,11 +58,7 @@
 					id="tooltip-restore"
 					label="Discard modifications"
 				></MatTooltip>
-				<MatPopup
-					id="popup-discard"
-					ref="popup-discard"
-					title="Confirm deck discarded"
-				>
+				<MatPopup ref="popup-discard" title="Confirm deck discarded">
 					Discard deck modifications ?
 				</MatPopup>
 				<div
@@ -84,11 +79,7 @@
 					id="tooltip-delete-deck"
 					label="Delete current deck"
 				></MatTooltip>
-				<MatPopup
-					id="popup-delete-deck"
-					ref="popup-delete-deck"
-					title="Confirm deck supression"
-				>
+				<MatPopup ref="popup-delete-deck" title="Confirm deck supression">
 					Type "delete" to confirm deletion of the deck
 					{{ currentDeck.name }} ?
 				</MatPopup>

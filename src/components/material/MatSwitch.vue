@@ -45,6 +45,10 @@ import { Prop } from 'vue-property-decorator';
 @Options({ components: {}, emits: ['update:modelValue'] })
 export default class MatSwitch extends Vue {
 	mounted() {
+		console.log(
+			"gboDebug:[this.$el.querySelector('.mdc-switch')]",
+			this.$el.querySelector('.mdc-switch')
+		);
 		const switchNode = this.$el.querySelector('.mdc-switch');
 		if (switchNode) {
 			this.switchControl = new MDCSwitch(switchNode);

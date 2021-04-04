@@ -1,28 +1,24 @@
 <template>
 	<div class="border-4 border-solid border-gray-900 rounded-md m-4 p-3">
 		<MatPopup
-			id="popup-deck-selector-modifications"
 			ref="popup-deck-selector-modifications"
 			title="Deck has unsaved modifications."
 		>
 			Deck has unsaved modifications
 			<template v-slot:actions>
 				<MatButton
-					id="popup-deck-selector-modifications-button-cancel-new-deck"
 					label="Cancel"
 					type="outlined"
 					data-mdc-dialog-action="cancel"
 					class="mdc-dialog__button m-2"
 				></MatButton>
 				<MatButton
-					id="popup-deck-selector-modifications-button-discard-new-deck"
 					label="Discard ?"
 					type="outlined"
 					data-mdc-dialog-action="discard"
 					class="mdc-dialog__button m-2"
 				></MatButton>
 				<MatButton
-					id="popup-deck-selector-modifications-button-save-new-deck"
 					label="Save ?"
 					type="outlined"
 					data-mdc-dialog-action="save"
@@ -56,7 +52,6 @@
 			<NewDeck class="my-8"></NewDeck>
 			<div class="underline mb-4 mt-8">Available decks:</div>
 			<MatPopup
-				id="popup-deck-selector-modifications"
 				ref="popup-deck-selector-modifications"
 				title="Deck has unsaved modifications."
 			>

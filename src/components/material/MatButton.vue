@@ -1,6 +1,6 @@
 <template>
 	<button
-		:id="id"
+		ref="button"
 		class="mdc-button mdc-button--touch"
 		:class="{
 			'mdc-button--outlined': type == 'outlined',
@@ -31,19 +31,15 @@ import { Prop } from 'vue-property-decorator';
 @Options({ components: {}, emits: [] })
 export default class MatButton extends Vue {
 	mounted() {
-		const buttonRippleNode = document.querySelector(`#${this.id}`);
+		const buttonRippleNode = this.$refs.button as Element;
 		if (buttonRippleNode) {
 			this.buttonRipple = new MDCRipple(buttonRippleNode);
-		} else {
-			console.warn(`Button node #${this.id} not found.`);
 		}
 	}
 	beforeUnmount() {
 		this.buttonRipple?.destroy();
 	}
 	buttonRipple?: MDCRipple;
-	@Prop({ required: true })
-	id!: string;
 	@Prop({ required: true })
 	label!: string;
 	@Prop()

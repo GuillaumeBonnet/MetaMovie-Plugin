@@ -2,6 +2,7 @@
 	<teleport to=".sizing-wrapper">
 		<div
 			:id="id"
+			ref="tooltip"
 			class="mdc-tooltip z-1000010"
 			role="tooltip"
 			aria-hidden="true"
@@ -30,11 +31,9 @@ import { Prop } from 'vue-property-decorator';
 @Options({ components: {}, emits: [] })
 export default class MatTooltip extends Vue {
 	mounted() {
-		const tooltipNode = document.querySelector(`#${this.id}`);
+		const tooltipNode = this.$refs.tooltip as Element;
 		if (tooltipNode) {
 			this.tooltip = new MDCTooltip(tooltipNode);
-		} else {
-			console.warn(`Tooltip node #${this.id} not found.`);
 		}
 	}
 	tooltip?: MDCTooltip;
