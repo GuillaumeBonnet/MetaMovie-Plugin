@@ -5,27 +5,36 @@
 				class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer"
 				:class="animate ? 'animate-bounce' : ''"
 				@click="goToCard()"
-				aria-describedby="tooltip-go-card"
+				:aria-describedby="'tooltip-go-card' + index"
 			>
-				<MatTooltip id="tooltip-go-card" label="Show card"></MatTooltip>
+				<MatTooltip
+					:id="'tooltip-go-card' + index"
+					label="Show card"
+				></MatTooltip>
 				remove_red_eye
 			</div>
 			<div
 				class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
 				:class="animate ? 'animate-bounce' : ''"
 				@click="editCard()"
-				aria-describedby="tooltip-edit-card"
+				:aria-describedby="'tooltip-edit-card' + index"
 			>
-				<MatTooltip id="tooltip-edit-card" label="Edit card"></MatTooltip>
+				<MatTooltip
+					:id="'tooltip-edit-card' + index"
+					label="Edit card"
+				></MatTooltip>
 				edit
 			</div>
 			<div
 				class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
 				:class="animate ? 'animate-bounce' : ''"
 				@click="deleteCard()"
-				aria-describedby="tooltip-delete-card"
+				:aria-describedby="'tooltip-delete-card' + index"
 			>
-				<MatTooltip id="tooltip-delete-card" label="Delete card"></MatTooltip>
+				<MatTooltip
+					:id="'tooltip-delete-card' + index"
+					label="Delete card"
+				></MatTooltip>
 				delete
 			</div>
 		</div>
@@ -100,6 +109,8 @@ import { MutationDeck } from '@/store/DeckStore';
 export default class CardDetail extends Vue {
 	@Prop({ required: true })
 	card!: CardData;
+	@Prop({ required: true })
+	index!: number;
 	animate = false;
 
 	goToCard() {
