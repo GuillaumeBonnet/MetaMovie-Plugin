@@ -121,16 +121,16 @@ export default class MatTextField extends Vue {
 					@apply text-yellow-600;
 				}
 			}
+			&:not(.mdc-text-field--invalid).mdc-text-field--focused
+				.mdc-floating-label {
+				@apply text-yellow-700;
+			}
 			& + .mdc-text-field-helper-line .mdc-text-field-helper-text {
 				@apply text-white;
 			}
 		}
 		&.mdc-text-field--disabled .mdc-floating-label {
 			@apply text-gray-400;
-		}
-		&:not(.mdc-text-field--disabled).mdc-text-field--focused
-			.mdc-floating-label {
-			@apply text-yellow-700;
 		}
 		& .mdc-notched-outline .mdc-notched-outline {
 			&__leading,
