@@ -35,7 +35,7 @@
 				@click="handleButtonClick()"
 			>
 				<template v-if="!currentDeck">Select a deck</template>
-				<template v-else>{{ currentDeck?.name }}</template>
+				<template v-else>{{ currentDeck.name }}</template>
 			</button>
 		</div>
 		<div

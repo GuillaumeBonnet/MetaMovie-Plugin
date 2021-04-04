@@ -13,7 +13,7 @@
 			>
 				<MatTooltip id="tooltip-new-card" label="New Card"></MatTooltip>
 				<div
-					class="material-icons text-gray-300 group-currentDeckAction-hover:text-white "
+					class="material-icons text-gray-300 group-currentDeckAction-hover:text-white"
 				>
 					note_add
 				</div>
@@ -70,28 +70,7 @@
 					restore
 				</div>
 			</div>
-			<div
-				class="cursor-pointer group-currentDeckAction flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
-				@click="deleteDeck()"
-				aria-describedby="tooltip-delete-deck"
-			>
-				<MatTooltip
-					id="tooltip-delete-deck"
-					label="Delete current deck"
-				></MatTooltip>
-				<MatPopup ref="popup-delete-deck" title="Confirm deck supression">
-					Type "delete" to confirm deletion of the deck
-					{{ currentDeck.name }} ?
-				</MatPopup>
-				<div
-					class="material-icons group-currentDeckAction-hover:text-white "
-					:class="
-						currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
-					"
-				>
-					delete
-				</div>
-			</div>
+			<DeleteDeckConfirmation></DeleteDeckConfirmation>
 		</li>
 		<CardDetail
 			v-for="(card, index) in cards"
@@ -118,6 +97,7 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
 import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
+import DeleteDeckConfirmation from '@/components/CardsCurrentDeck/DeleteDeckConfirmation.vue';
 import MatTooltip from '@/components/material/MatTooltip.vue';
 import MatPopup from '@/components/material/MatPopup.vue';
 import { ActionDeck, MutationDeck } from '@/store/DeckStore';
@@ -127,6 +107,7 @@ import { MDCDialog } from '@material/dialog';
 		CardDetail,
 		MatTooltip,
 		MatPopup,
+		DeleteDeckConfirmation,
 	},
 })
 export default class CardsCurrentDeck extends Vue {
@@ -173,19 +154,6 @@ export default class CardsCurrentDeck extends Vue {
 			(actionName: 'confirm' | 'close') => {
 				if (actionName == 'confirm') {
 					this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
-				}
-			}
-		);
-	}
-	deleteDeck() {
-		console.log('gboDebug:[this.currentDeck]', this.currentDeck);
-		if (!this.currentDeck) {
-			return;
-		}
-		(this.$refs['popup-delete-deck'] as MatPopup).open(
-			(actionName: 'confirm' | 'close') => {
-				if (actionName == 'confirm') {
-					// this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 				}
 			}
 		);

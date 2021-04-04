@@ -17,4 +17,7 @@ const saveDeck = async (deck: CreateFields<DeckApi>) => {
 const updateDeck = (deck: DeckData) => {
 	return axios.put<DeckApi>(`${rootUrl}/decks/${deck.id}`, deck);
 };
-export { fetchCompleteDeck, fetchAllDecks, saveDeck, updateDeck };
+const deleteDeck = (deckId: number) => {
+	return axios.delete<any>(`${rootUrl}/decks/${deckId}`);
+};
+export { fetchCompleteDeck, fetchAllDecks, saveDeck, updateDeck, deleteDeck };
