@@ -101,8 +101,7 @@ export default class MatTextField extends Vue {
 	--mdc-theme-error: rgba(127, 29, 29);
 	// --mdc-theme-error @apply text-red-900;
 	@include textfield.ink-color(white);
-	font-size: 20px;
-	--mdc-typography-subtitle1-font-size: 1.75rem;
+	// --mdc-typography-subtitle1-font-size: 1.75rem;
 	&--outlined {
 		& .mdc-floating-label {
 			overflow: revert;
@@ -110,6 +109,11 @@ export default class MatTextField extends Vue {
 		&.mdc-text-field--focused .mdc-notched-outline__notch {
 			border-left: none;
 			border-right: none;
+		}
+		&:not(.mdc-text-field--label-floating):not(.mdc-text-field--focused)
+			.mdc-floating-label,
+		.mdc-text-field__input {
+			font-size: 20px;
 		}
 		&:not(.mdc-text-field--disabled) {
 			&:not(.mdc-text-field--focused):not(.mdc-text-field--invalid) {
