@@ -5,30 +5,31 @@ import {
 	UserInfo,
 } from '@/models/ApiTypes';
 import { DeckData } from '@/models/DeckData';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 const rootUrl = process.env.VUE_APP_API_URL;
+const axiosConfig: AxiosRequestConfig = {
+	withCredentials: true,
+};
 const fetchCompleteDeck = (deck: DeckData) => {
-	return axios.get<DeckApi>(`${rootUrl}/decks/${deck.id}`);
+	return axios.get<DeckApi>(`${rootUrl}/decks/${deck.id}`, axiosConfig);
 };
 
 const fetchAllDecks = () => {
-	return axios.get<DeckApi_WithoutCards[]>(`${rootUrl}/decks`, {
-		withCredentials: true,
-	});
+	return axios.get<DeckApi_WithoutCards[]>(`${rootUrl}/decks`, axiosConfig);
 };
 
 const saveDeck = async (deck: CreateFields<DeckApi>) => {
-	return axios.post<DeckApi>(`${rootUrl}/decks`, deck);
+	return axios.post<DeckApi>(`${rootUrl}/decks`, deck, axiosConfig);
 };
 const updateDeck = (deck: DeckData) => {
-	return axios.put<DeckApi>(`${rootUrl}/decks/${deck.id}`, deck);
+	return axios.put<DeckApi>(`${rootUrl}/decks/${deck.id}`, deck, axiosConfig);
 };
 const deleteDeck = (deckId: number) => {
-	return axios.delete<any>(`${rootUrl}/decks/${deckId}`);
+	return axios.delete<any>(`${rootUrl}/decks/${deckId}`, axiosConfig);
 };
 const logout = () => {
-	return axios.get(`${rootUrl}/users/logout`, { withCredentials: true });
+	return axios.get(`${rootUrl}/users/logout`, axiosConfig);
 };
 const login = (credentials: { email: string; password: string }) => {
 	return axios.post<UserInfo>(
@@ -36,7 +37,7 @@ const login = (credentials: { email: string; password: string }) => {
 		{
 			...credentials,
 		},
-		{ withCredentials: true }
+		axiosConfig
 	);
 };
 const signUp = (credentials: {
@@ -49,13 +50,11 @@ const signUp = (credentials: {
 		{
 			...credentials,
 		},
-		{ withCredentials: true }
+		axiosConfig
 	);
 };
 const userInfo = () => {
-	return axios.get<UserInfo>(`${rootUrl}/users/info`, {
-		withCredentials: true,
-	});
+	return axios.get<UserInfo>(`${rootUrl}/users/info`, axiosConfig);
 };
 export {
 	fetchCompleteDeck,
