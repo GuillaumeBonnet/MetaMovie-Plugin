@@ -54,6 +54,9 @@ export default class MatButton extends Vue {
 @include mixins.core-styles;
 button.mdc-button.mdc-button {
 	@apply border-gray-400;
+	--mdc-theme-surface: rgb(24, 26, 27);
+	--mdc-theme-primary: rgb(229, 231, 235);
+	--mdc-theme-text-primary-on-background: white;
 	&:hover {
 		@apply border-gray-300;
 	}

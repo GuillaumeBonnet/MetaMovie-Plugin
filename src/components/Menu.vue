@@ -15,6 +15,7 @@
 				class="z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 -left-40 bg-gray-700 text-transparent h-auto w-max rounded-md"
 				:class="isMenuOppened ? 'block' : 'hidden group-hover:block'"
 			>
+				<Login></Login>
 				<DeckSelector
 					class="px-5 pt-5"
 					:isDeckSelectionShown="isDeckSelectionShown"
@@ -76,11 +77,13 @@ import CardData from '@/models/CardData';
 import CardsCurrentDeck from '@/components/CardsCurrentDeck/CardsCurrentDeck.vue';
 import MatSwitch from '@/components/material/MatSwitch.vue';
 import DeckSelector from '@/components/DeckSelector/DeckSelector.vue';
+import Login from '@/components/User/Login.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
 import { MutationDeck } from '@/store/DeckStore';
-import { fetchAllDecks } from '@/Utils/WebService';
+import { fetchAllDecks, userInfo } from '@/Utils/WebService';
+import { ActionMain, MutationMain } from '@/store/Store';
 
 const MenuItem = defineComponent({
 	template: `
@@ -117,10 +120,12 @@ const MenuItem = defineComponent({
 		CardsCurrentDeck,
 		MatSwitch,
 		DeckSelector,
+		Login,
 	},
 })
 export default class Menu extends Vue {
 	async created() {
+		await this.$store.dispatch(ActionMain.FETCH_USER);
 		const decks = (await fetchAllDecks()).data;
 		this.$store.commit(MutationDeck.SET_DECKS, decks);
 	}

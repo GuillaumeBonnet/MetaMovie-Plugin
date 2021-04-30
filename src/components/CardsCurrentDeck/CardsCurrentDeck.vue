@@ -102,7 +102,6 @@ import DeleteDeckConfirmation from '@/components/CardsCurrentDeck/DeleteDeckConf
 import MatTooltip from '@/components/material/MatTooltip.vue';
 import MatPopup from '@/components/material/MatPopup.vue';
 import { ActionDeck, MutationDeck } from '@/store/DeckStore';
-import { MDCDialog } from '@material/dialog';
 @Options({
 	components: {
 		CardDetail,

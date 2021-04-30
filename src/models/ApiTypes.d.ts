@@ -19,4 +19,8 @@ type CardApi = {
 	id: number;
 };
 
-export { CreateFields, DeckApi, CardApi, DeckApi_WithoutCards };
+type UserInfo = {
+	username: string;
+};
+
+export { CreateFields, DeckApi, CardApi, DeckApi_WithoutCards, UserInfo };

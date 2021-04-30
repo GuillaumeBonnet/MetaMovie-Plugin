@@ -50,5 +50,10 @@ module.exports = {
 	},
 	devServer: {
 		contentBase: path.join(__dirname, 'dev-page'),
+		https: true,
+		public: 'https://localhost:8080',
+		// hot: {
+		// 	https: true,
+		// },
 	},
 };

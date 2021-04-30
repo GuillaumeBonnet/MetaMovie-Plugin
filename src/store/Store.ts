@@ -14,7 +14,10 @@ import {
 import { addCardToList, removeExpiredCards } from '@/Utils/CardUtils';
 import CardData from '@/models/CardData';
 import { removeElemIf } from '@/Utils/MainUtils';
+import { login, userInfo } from '@/Utils/WebService';
+import { UserInfo } from '@/models/ApiTypes';
 
+type UserState = { isLogged: boolean; info?: { username: string } };
 interface IState {
 	video?: HTMLVideoElement;
 	netflixPlayer?: any;
@@ -25,6 +28,7 @@ interface IState {
 	progressIndex: number;
 	cardModule: ICardState;
 	deckModule: IDeckState;
+	user: UserState;
 }
 
 const MutationMain = {
@@ -35,10 +39,13 @@ const MutationMain = {
 	SET_PREVIOUS_TIME: 'SET_PREVIOUS_TIME',
 	SET_PROGRESS_INDEX: 'SET_PROGRESS_INDEX',
 	UPDATE_CARD_EDITED: 'UPDATE_CARD_EDITED',
+	SET_USER: 'SET_USER',
 };
 const ActionMain = {
 	HANDLE_VIDEO_PROGRESSION: 'HANDLE_VIDEO_PROGRESSION',
 	TOGGLE_CARD_EDITED: 'TOGGLE_CARD_EDITED',
+	FETCH_USER: 'FETCH_USER',
+	LOG_IN: 'LOG_IN',
 };
 const store = createStore<IState>({
 	state() {
@@ -52,6 +59,9 @@ const store = createStore<IState>({
 			netflixPlayer: undefined,
 			cardModule: initialStateCardModule,
 			deckModule: initialStateDeckModule,
+			user: {
+				isLogged: false,
+			},
 		};
 	},
 	modules: {
@@ -112,8 +122,42 @@ const store = createStore<IState>({
 				Object.assign(state.cardEdited, card);
 			}
 		},
+		[MutationMain.SET_USER]: (state: IState, user: UserState) => {
+			state.user = user;
+		},
 	},
 	actions: {
+		[ActionMain.FETCH_USER]: async ({ commit, state }) => {
+			const userState: UserState = {
+				isLogged: false,
+			};
+			try {
+				const user = (await userInfo()).data;
+				userState.isLogged = true;
+				userState.info = user;
+				commit(MutationMain.SET_USER, userState);
+			} catch (err) {
+				console.error('Error when fetching userInfo', err);
+				commit(MutationMain.SET_USER, userState);
+			}
+		},
+		[ActionMain.LOG_IN]: async (
+			{ commit, state },
+			credentials: Parameters<typeof login>[0]
+		) => {
+			const userState: UserState = {
+				isLogged: false,
+			};
+			try {
+				const user = (await login(credentials)).data;
+				userState.isLogged = true;
+				userState.info = user;
+				commit(MutationMain.SET_USER, userState);
+			} catch (err) {
+				console.error('Error when fetching userInfo', err);
+				commit(MutationMain.SET_USER, userState);
+			}
+		},
 		[ActionMain.TOGGLE_CARD_EDITED]: (
 			{ commit, state },
 			cardEdited: IState['cardEdited']
@@ -191,4 +235,4 @@ const store = createStore<IState>({
 		},
 	},
 });
-export { IState, store, MutationMain, ActionMain };
+export { IState, store, MutationMain, ActionMain, UserState };
