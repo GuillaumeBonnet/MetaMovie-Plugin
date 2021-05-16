@@ -1,6 +1,7 @@
 // vue.config.js
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const fs = require('fs');
 
 module.exports = {
 	css: {
@@ -50,7 +51,11 @@ module.exports = {
 	},
 	devServer: {
 		contentBase: path.join(__dirname, 'dev-page'),
-		https: true,
+		https: {
+			key: fs.readFileSync('dev-page/certs/localhost.key'),
+			cert: fs.readFileSync('dev-page/certs/localhost.crt'),
+			// ca: fs.readFileSync('/path/to/ca.pem'),
+		},
 		public: 'https://localhost:8080',
 		// hot: {
 		// 	https: true,
