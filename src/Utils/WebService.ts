@@ -4,14 +4,13 @@ import {
 	DeckApi_WithoutCards,
 	UserInfo,
 } from '@/models/ApiTypes';
-import { DeckData } from '@/models/DeckData';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 axios.interceptors.request.use(config => {
 	config.withCredentials = true;
 	return config;
 });
 const rootUrl = process.env.VUE_APP_API_URL;
-const fetchCompleteDeck = (deck: DeckData) => {
+const fetchCompleteDeck = (deck: Pick<DeckApi_WithoutCards, 'id'>) => {
 	return axios.get<DeckApi>(`${rootUrl}/decks/${deck.id}`);
 };
 
@@ -22,7 +21,7 @@ const fetchAllDecks = () => {
 const saveDeck = async (deck: CreateFields<DeckApi>) => {
 	return axios.post<DeckApi>(`${rootUrl}/decks`, deck);
 };
-const updateDeck = (deck: DeckData) => {
+const updateDeck = (deck: DeckApi) => {
 	return axios.put<DeckApi>(`${rootUrl}/decks/${deck.id}`, deck);
 };
 const deleteDeck = (deckId: number) => {

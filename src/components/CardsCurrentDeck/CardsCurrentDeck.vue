@@ -5,7 +5,7 @@
 			forceDisplayDeckCards ? '' : 'scale-0 group-menuItem-hover:scale-100'
 		"
 	>
-		<li class="custo-min-with-li flex" v-if="currentDeck">
+		<li class="custo-min-with-li flex" v-if="currentDeck && canEditCurrentDeck">
 			<div
 				class="flex-grow p-5 group-currentDeckAction cursor-pointer rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
 				@click="addNewCard()"
@@ -101,7 +101,7 @@ import CardDetail from '@/components/CardsCurrentDeck/CardDetail.vue';
 import DeleteDeckConfirmation from '@/components/CardsCurrentDeck/DeleteDeckConfirmation.vue';
 import MatTooltip from '@/components/material/MatTooltip.vue';
 import MatPopup from '@/components/material/MatPopup.vue';
-import { ActionDeck, MutationDeck } from '@/store/DeckStore';
+import { ActionDeck, GetterDeck, MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: {
 		CardDetail,
@@ -119,6 +119,9 @@ export default class CardsCurrentDeck extends Vue {
 	}
 	get currentDeck() {
 		return this.$store.state.deckModule.currentDeck;
+	}
+	get canEditCurrentDeck() {
+		return this.$store.getters[GetterDeck.CAN_EDIT_CURRENT_DECK];
 	}
 
 	addNewCard() {
@@ -166,18 +169,18 @@ export default class CardsCurrentDeck extends Vue {
 	min-width: 200px;
 }
 .scrollbar {
-}
-.scrollbar::-webkit-scrollbar {
-	width: 8px;
-}
-.scrollbar::-webkit-scrollbar-track {
-	border-radius: 8px;
-}
-.scrollbar::-webkit-scrollbar-thumb {
-	border-radius: 8px;
-	background: #757575;
-}
-.scrollbar::-webkit-scrollbar-button {
-	display: none;
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+	&::-webkit-scrollbar-track {
+		border-radius: 8px;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 8px;
+		background: #757575;
+	}
+	&::-webkit-scrollbar-button {
+		display: none;
+	}
 }
 </style>

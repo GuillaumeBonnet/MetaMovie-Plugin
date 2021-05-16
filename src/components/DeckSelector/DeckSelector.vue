@@ -52,7 +52,7 @@
 			>
 				close
 			</button>
-			<NewDeck class="my-8"></NewDeck>
+			<NewDeck v-if="canCreateDecks" class="my-8"></NewDeck>
 			<div class="underline mb-4 mt-8">Available decks:</div>
 			<table class=" w-full text-3xl table-auto border-1 border-black">
 				<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
@@ -102,6 +102,7 @@ import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatButton from '@/components/material/MatButton.vue';
 import NewDeck from '@/components/DeckSelector/NewDeck.vue';
+import { GetterMain } from '@/store/Store';
 @Options({
 	components: { MatPopup, NewDeck, MatButton },
 	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
@@ -112,6 +113,9 @@ export default class DeckSelector extends Vue {
 	}
 	get currentDeck() {
 		return this.$store.state.deckModule.currentDeck;
+	}
+	get canCreateDecks() {
+		return this.$store.getters[GetterMain.IS_LOGGED];
 	}
 	@Prop()
 	isDeckSelectionShown!: boolean;

@@ -56,12 +56,12 @@ import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
 import MatButton from '@/components/material/MatButton.vue';
-import { DeckData } from '@/models/DeckData';
+import { DeckApi_WithoutCards } from '@/models/ApiTypes';
 @Options({
 	components: { MatPopup, MatTextField, MatButton },
 })
 export default class NewDeck extends Vue {
-	newDeck: Pick<DeckData, 'languageTag' | 'name'> = {
+	newDeck: Pick<DeckApi_WithoutCards, 'languageTag' | 'name'> = {
 		languageTag: '',
 		name: '',
 	};

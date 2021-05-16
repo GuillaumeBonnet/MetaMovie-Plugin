@@ -27,6 +27,7 @@ from // displayedCards and put back at the right place when the edit is done
 			"
 		>
 			<button
+				v-if="canEditCurrentDeck"
 				class="material-icons rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
 				:class="
 					isInEdition
@@ -43,6 +44,7 @@ from // displayedCards and put back at the right place when the edit is done
 				></MatTooltip>
 				edit
 			</button>
+			<div v-else></div>
 			<template v-if="isInEdition">
 				<button
 					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out text-gray-300 hover:text-white"
@@ -151,6 +153,7 @@ import TimeSelector from '@/components/TimeSelector.vue';
 import MatTooltip from '@/components/material/MatTooltip.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
+import { GetterDeck } from '@/store/DeckStore';
 
 @Options({
 	components: {
@@ -165,6 +168,10 @@ export default class CardCmp extends Vue {
 
 	@Prop({ required: true })
 	private videoDimensions!: IVideoDimensions; //in px
+
+	get canEditCurrentDeck() {
+		return this.$store.getters[GetterDeck.CAN_EDIT_CURRENT_DECK];
+	}
 
 	@Watch('card.from')
 	onCardFromChange() {

@@ -14,6 +14,7 @@
 				remove_red_eye
 			</div>
 			<div
+				v-if="canEditCurrentDeck"
 				class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
 				:class="animate ? 'animate-bounce' : ''"
 				@click="editCard()"
@@ -26,6 +27,7 @@
 				edit
 			</div>
 			<div
+				v-if="canDeleteCurrentDeck"
 				class="material-icons text-4xl text-gray-300 hover:text-white cursor-pointer ml-4"
 				:class="animate ? 'animate-bounce' : ''"
 				@click="deleteCard()"
@@ -101,7 +103,7 @@ import MatTooltip from '@/components/material/MatTooltip.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { ActionMain, MutationMain } from '@/store/Store';
 import { MutationCard } from '@/store/CardStore';
-import { MutationDeck } from '@/store/DeckStore';
+import { GetterDeck, MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: { TimeSelector, PercentageInput, MatTooltip },
 	props: {},
@@ -112,6 +114,13 @@ export default class CardDetail extends Vue {
 	@Prop({ required: true })
 	index!: number;
 	animate = false;
+
+	get canEditCurrentDeck() {
+		return this.$store.getters[GetterDeck.CAN_EDIT_CURRENT_DECK];
+	}
+	get canDeleteCurrentDeck() {
+		return this.$store.getters[GetterDeck.CAN_DELETE_CURRENT_DECK];
+	}
 
 	goToCard() {
 		this.$store.state.video?.pause();

@@ -17,7 +17,7 @@ import { removeElemIf } from '@/Utils/MainUtils';
 import { login, userInfo } from '@/Utils/WebService';
 import { UserInfo } from '@/models/ApiTypes';
 
-type UserState = { isLogged: boolean; info?: { username: string } };
+type UserState = { isLogged: boolean; info?: UserInfo };
 interface IState {
 	video?: HTMLVideoElement;
 	netflixPlayer?: any;
@@ -46,6 +46,10 @@ const ActionMain = {
 	TOGGLE_CARD_EDITED: 'TOGGLE_CARD_EDITED',
 	FETCH_USER: 'FETCH_USER',
 	LOG_IN: 'LOG_IN',
+};
+const GetterMain = {
+	IS_LOGGED: 'IS_LOGGED',
+	CAN_CREATE_DECKS: 'CAN_CREATE_DECKS',
 };
 const store = createStore<IState>({
 	state() {
@@ -234,5 +238,13 @@ const store = createStore<IState>({
 			commit(MutationMain.SET_PROGRESS_INDEX, progressIndex);
 		},
 	},
+	getters: {
+		[GetterMain.IS_LOGGED](state) {
+			return state.user.isLogged;
+		},
+		[GetterMain.CAN_CREATE_DECKS](state, getters) {
+			return state.user.info?.permissions.includes('CREATE_DECKS');
+		},
+	},
 });
-export { IState, store, MutationMain, ActionMain, UserState };
+export { IState, store, MutationMain, ActionMain, GetterMain, UserState };

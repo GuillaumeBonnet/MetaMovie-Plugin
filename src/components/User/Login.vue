@@ -16,12 +16,14 @@
 		</div>
 		<template v-else>
 			<div class="">Username: {{ userInfo?.username }}</div>
-			<MatButton
-				label="Log out"
-				type="outlined"
-				@click="logoutHandler()"
-				class=""
-			></MatButton>
+			<div class="flex justify-center">
+				<MatButton
+					label="Log out"
+					type="outlined"
+					@click="logoutHandler()"
+					class=""
+				></MatButton>
+			</div>
 		</template>
 		<MatPopup ref="popup-login" title="Log In pop-up">
 			Log In:
@@ -121,9 +123,8 @@ import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
 import MatButton from '@/components/material/MatButton.vue';
-import { DeckData } from '@/models/DeckData';
 import { login, logout, signUp } from '@/Utils/WebService';
-import { MutationMain, UserState } from '@/store/Store';
+import { GetterMain, MutationMain, UserState } from '@/store/Store';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
 	components: { MatPopup, MatTextField, MatButton },
@@ -143,7 +144,7 @@ export default class Login extends Vue {
 	errorMessage = '';
 
 	get isLogged() {
-		return this.$store.state.user.isLogged;
+		return this.$store.getters[GetterMain.IS_LOGGED];
 	}
 	get userInfo() {
 		return this.$store.state.user.info;
@@ -175,6 +176,8 @@ export default class Login extends Vue {
 				info: userInfo.data,
 			};
 			this.$store.commit(MutationMain.SET_USER, userState);
+			this.$store.dispatch(ActionDeck.FETCH_DECKS);
+			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 			(this.$refs['popup-login'] as MatPopup).close();
 		} catch (err) {
 			this.errorMessage = axiosErrorMessage(err);
@@ -197,6 +200,8 @@ export default class Login extends Vue {
 				isLogged: false,
 			};
 			this.$store.commit(MutationMain.SET_USER, userState);
+			this.$store.dispatch(ActionDeck.FETCH_DECKS);
+			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 		} catch (err) {
 			console.error('Cannot logout correctly: ', err);
 		}

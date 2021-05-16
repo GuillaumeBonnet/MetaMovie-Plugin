@@ -81,7 +81,7 @@ import Login from '@/components/User/Login.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
-import { MutationDeck } from '@/store/DeckStore';
+import { ActionDeck, MutationDeck } from '@/store/DeckStore';
 import { fetchAllDecks, userInfo } from '@/Utils/WebService';
 import { ActionMain, MutationMain } from '@/store/Store';
 
@@ -126,8 +126,7 @@ const MenuItem = defineComponent({
 export default class Menu extends Vue {
 	async created() {
 		await this.$store.dispatch(ActionMain.FETCH_USER);
-		const decks = (await fetchAllDecks()).data;
-		this.$store.commit(MutationDeck.SET_DECKS, decks);
+		this.$store.dispatch(ActionDeck.FETCH_DECKS);
 	}
 
 	/* -------------------------------------------------------------------------- */

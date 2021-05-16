@@ -9,7 +9,6 @@ import { MutationCard } from '@/store/CardStore';
 console.log('gboDebug: content overlay');
 import '@/assets/styles/styles.css';
 import { MutationDeck } from '@/store/DeckStore';
-import { DeckData } from '@/models/DeckData';
 const appMenu = createApp(Menu);
 appMenu.use(store);
 appMenu.mount('#plugin-meta-movie-menu');

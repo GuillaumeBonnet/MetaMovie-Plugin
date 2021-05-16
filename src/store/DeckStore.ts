@@ -5,12 +5,12 @@ import {
 	DeckApi_WithoutCards,
 } from '@/models/ApiTypes';
 import CardData from '@/models/CardData';
-import { DeckData } from '@/models/DeckData';
 import {
 	fetchCompleteDeck,
 	updateDeck,
 	saveDeck,
 	deleteDeck,
+	fetchAllDecks,
 } from '@/Utils/WebService';
 import { Module } from 'vuex';
 import { MutationCard } from './CardStore';
@@ -22,15 +22,20 @@ const MutationDeck = {
 	CURRENT_DECK_MODIFIED: 'CURRENT_DECK_MODIFIED',
 };
 const ActionDeck = {
+	FETCH_DECKS: 'FETCH_DECKS',
 	REFRESH_CURRENT_DECK: 'REFRESH_CURRENT_DECK',
 	SET_CURRENT_DECK_ACTION: 'SET_CURRENT_DECK_ACTION',
 	SAVE_CURRENT_DECK: 'SAVE_CURRENT_DECK',
 	DELETE_CURRENT_DECK: 'DELETE_CURRENT_DECK',
 	CREATE_DECK: 'CREATE_DECK',
 };
+const GetterDeck = {
+	CAN_EDIT_CURRENT_DECK: 'CAN_EDIT_CURRENT_DECK',
+	CAN_DELETE_CURRENT_DECK: 'CAN_DELETE_CURRENT_DECK',
+};
 interface IDeckState {
-	currentDeck: undefined | (DeckData & { hasLocalModifs: boolean });
-	decks: DeckData[];
+	currentDeck: undefined | (DeckApi_WithoutCards & { hasLocalModifs: boolean });
+	decks: DeckApi_WithoutCards[];
 }
 
 const initialState: IDeckState = {
@@ -43,10 +48,10 @@ const deckModule: Module<IDeckState, IState> = {
 		return initialState;
 	},
 	mutations: {
-		[MutationDeck.SET_DECKS](state, decks: DeckData[]) {
+		[MutationDeck.SET_DECKS](state, decks: DeckApi_WithoutCards[]) {
 			state.decks = decks;
 		},
-		[MutationDeck.SET_CURRENT_DECK](state, currentDeck: DeckData) {
+		[MutationDeck.SET_CURRENT_DECK](state, currentDeck: DeckApi_WithoutCards) {
 			if (currentDeck) {
 				state.currentDeck = {
 					...currentDeck,
@@ -63,6 +68,10 @@ const deckModule: Module<IDeckState, IState> = {
 		},
 	},
 	actions: {
+		async [ActionDeck.FETCH_DECKS]({ commit, state, rootState }) {
+			const decks = (await fetchAllDecks()).data;
+			commit(MutationDeck.SET_DECKS, decks);
+		},
 		async [ActionDeck.REFRESH_CURRENT_DECK]({ commit, state, rootState }) {
 			if (!state.currentDeck) {
 				return;
@@ -85,7 +94,10 @@ const deckModule: Module<IDeckState, IState> = {
 			});
 			rootState.cardModule.displayedCards = [];
 		},
-		async [ActionDeck.SET_CURRENT_DECK_ACTION]({ commit }, deck?: DeckData) {
+		async [ActionDeck.SET_CURRENT_DECK_ACTION](
+			{ commit },
+			deck?: DeckApi_WithoutCards
+		) {
 			if (!deck) {
 				commit(MutationDeck.SET_CURRENT_DECK, null);
 				commit(MutationCard.SET_CARDS, []);
@@ -118,9 +130,10 @@ const deckModule: Module<IDeckState, IState> = {
 				name: currentDeck.name,
 				updatedAt: currentDeck.updatedAt,
 				cards: rootState.cardModule.cards,
+				permissions: [],
 			};
 			const deckResponse = await updateDeck(deckToSave);
-			const nextCurrentDeck: DeckData = deckResponse.data;
+			const nextCurrentDeck: DeckApi_WithoutCards = deckResponse.data;
 			commit(MutationDeck.SET_CURRENT_DECK, nextCurrentDeck);
 			//TODO use update response cards
 		},
@@ -156,5 +169,20 @@ const deckModule: Module<IDeckState, IState> = {
 			}
 		},
 	},
+	getters: {
+		[GetterDeck.CAN_EDIT_CURRENT_DECK]({ currentDeck }) {
+			return currentDeck?.permissions.includes('EDIT');
+		},
+		[GetterDeck.CAN_DELETE_CURRENT_DECK]({ currentDeck }) {
+			return currentDeck?.permissions.includes('DELETE');
+		},
+	},
 };
-export { ActionDeck, MutationDeck, deckModule, IDeckState, initialState };
+export {
+	ActionDeck,
+	MutationDeck,
+	GetterDeck,
+	deckModule,
+	IDeckState,
+	initialState,
+};
