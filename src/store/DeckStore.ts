@@ -131,11 +131,20 @@ const deckModule: Module<IDeckState, IState> = {
 				updatedAt: currentDeck.updatedAt,
 				cards: rootState.cardModule.cards,
 				permissions: [],
+				numberOfCards: rootState.cardModule.cards.length,
 			};
 			const deckResponse = await updateDeck(deckToSave);
-			const nextCurrentDeck: DeckApi_WithoutCards = deckResponse.data;
+			const nextCurrentDeck = deckResponse.data;
+			nextCurrentDeck.numberOfCards = nextCurrentDeck.cards?.length ?? 0;
 			commit(MutationDeck.SET_CURRENT_DECK, nextCurrentDeck);
-			//TODO use update response cards
+			const decksCpy = [...state.decks];
+			const nextCurrentDeckInDeckList = decksCpy.find(
+				deck => deck.id == nextCurrentDeck.id
+			);
+			if (nextCurrentDeckInDeckList) {
+				nextCurrentDeckInDeckList.numberOfCards = nextCurrentDeck.numberOfCards;
+			}
+			commit(MutationDeck.SET_DECKS, decksCpy);
 		},
 		async [ActionDeck.CREATE_DECK](
 			{ commit, state, rootState },
@@ -145,6 +154,8 @@ const deckModule: Module<IDeckState, IState> = {
 				...deck,
 				cards: [],
 			});
+			console.log('gboDebug:[ crate deck deckFromApi]', deckFromApi);
+			deckFromApi.data.numberOfCards = deckFromApi.data.cards?.length ?? 0;
 			const newDeckList = [deckFromApi.data, ...state.decks];
 			commit(MutationDeck.SET_DECKS, newDeckList);
 			return deckFromApi.data;

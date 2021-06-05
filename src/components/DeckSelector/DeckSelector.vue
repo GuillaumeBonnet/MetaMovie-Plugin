@@ -43,7 +43,7 @@
 		</div>
 		<div
 			v-if="isDeckSelectionShown"
-			class="width-deck-selector p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
+			class="min-width-deck-selector p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
 		>
 			<button
 				class="block ml-auto material-icons rounded-md w-12 h-12 text-3xl  hover:shadow-sm outline-none focus:outline-none bg-gray-600 hover:bg-gray-800 border-1 border-solid border-gray-900 hover:shadow transform transition-transform duration-300 ease-in-out"
@@ -59,6 +59,7 @@
 					<tr>
 						<th class="px-4 py-2 font-extrabold">Title</th>
 						<th class="px-4 py-2 font-extrabold">Language</th>
+						<th class="px-4 py-2 font-extrabold">Number of cards</th>
 					</tr>
 				</thead>
 				<tbody class="text-center text-gray-200">
@@ -78,6 +79,9 @@
 						</td>
 						<td class="px-4 py-2 border-l-0">
 							{{ deck.languageTag }}
+						</td>
+						<td class="px-4 py-2 border-l-0">
+							{{ deck.numberOfCards }}
 						</td>
 					</tr>
 				</tbody>
@@ -163,7 +167,7 @@ export default class DeckSelector extends Vue {
 .custom-translate-list {
 	transform: translateX(-110%);
 }
-.width-deck-selector {
-	width: 150%;
+.min-width-deck-selector {
+	min-width: 150%;
 }
 </style>

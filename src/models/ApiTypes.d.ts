@@ -7,6 +7,7 @@ type DeckApi_WithoutCards = {
 	languageTag: string | null;
 	name: string;
 	permissions: ObjectPermission[];
+	numberOfCards: number;
 };
 type DeckApi = DeckApi_WithoutCards & { cards: CardApi[] };
 
