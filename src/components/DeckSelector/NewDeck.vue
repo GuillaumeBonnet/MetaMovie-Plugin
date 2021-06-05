@@ -21,6 +21,9 @@
 					label="Language"
 				></MatTextField>
 			</div>
+			<div class="text-red-600" v-if="errorMessage">
+				{{ errorMessage }}
+			</div>
 			<template v-slot:actions>
 				<MatButton
 					label="Cancel"
@@ -57,6 +60,7 @@ import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
 import MatButton from '@/components/material/MatButton.vue';
 import { DeckApi_WithoutCards } from '@/models/ApiTypes';
+import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
 	components: { MatPopup, MatTextField, MatButton },
 })
@@ -65,14 +69,22 @@ export default class NewDeck extends Vue {
 		languageTag: '',
 		name: '',
 	};
+	errorMessage = '';
 	newDeckPopup() {
 		(this.$refs['popup-new-deck'] as MatPopup).open();
 	}
 	async createDeck() {
-		const newDeck = await this.$store.dispatch(
-			ActionDeck.CREATE_DECK,
-			this.newDeck
-		);
+		this.errorMessage = '';
+		let newDeck;
+		try {
+			newDeck = await this.$store.dispatch(
+				ActionDeck.CREATE_DECK,
+				this.newDeck
+			);
+		} catch (e) {
+			this.errorMessage = axiosErrorMessage(e);
+			return;
+		}
 		if (
 			!this.$store.state.deckModule.currentDeck ||
 			!this.$store.state.deckModule.currentDeck.hasLocalModifs

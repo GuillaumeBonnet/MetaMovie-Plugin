@@ -10,7 +10,7 @@ const removeElemIf = <T>(
 	}
 };
 
-const axiosErrorMessage = (err: AxiosError) => {
+const axiosErrorMessage = (err: AxiosError<{ message: string }>) => {
 	if (err.response && err.response.data.message) {
 		// The request was made and the server responded with a status code
 		// that falls out of the range of 2xx
