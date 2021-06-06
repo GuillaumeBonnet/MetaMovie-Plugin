@@ -8,6 +8,7 @@ type DeckApi_WithoutCards = {
 	name: string;
 	permissions: ObjectPermission[];
 	numberOfCards: number;
+	ownerName: string;
 };
 type DeckApi = DeckApi_WithoutCards & { cards: CardApi[] };
 

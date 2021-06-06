@@ -60,6 +60,7 @@
 						<th class="px-4 py-2 font-extrabold">Title</th>
 						<th class="px-4 py-2 font-extrabold">Language</th>
 						<th class="px-4 py-2 font-extrabold">Number of cards</th>
+						<th class="px-4 py-2 font-extrabold">Author</th>
 					</tr>
 				</thead>
 				<tbody class="text-center text-gray-200">
@@ -82,6 +83,9 @@
 						</td>
 						<td class="px-4 py-2 border-l-0">
 							{{ deck.numberOfCards }}
+						</td>
+						<td class="px-4 py-2 border-l-0">
+							{{ deck.ownerName }}
 						</td>
 					</tr>
 				</tbody>
