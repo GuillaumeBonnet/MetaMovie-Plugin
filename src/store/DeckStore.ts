@@ -132,6 +132,7 @@ const deckModule: Module<IDeckState, IState> = {
 				cards: rootState.cardModule.cards,
 				permissions: [],
 				numberOfCards: rootState.cardModule.cards.length,
+				ownerName: '',
 			};
 			const deckResponse = await updateDeck(deckToSave);
 			const nextCurrentDeck = deckResponse.data;

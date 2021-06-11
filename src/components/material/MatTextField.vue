@@ -11,7 +11,7 @@
 		<span class="mdc-notched-outline" :class="disabled ? 'toto' : 'titi'">
 			<span class="mdc-notched-outline__leading"></span>
 			<span class="mdc-notched-outline__notch">
-				<span class="mdc-floating-label" :id="uIlabelId">{{ label }}</span>
+				<span class="mdc-floating-label" :id="labelId">{{ label }}</span>
 			</span>
 			<span class="mdc-notched-outline__trailing"></span>
 		</span>
@@ -24,7 +24,7 @@
 		<input
 			:type="InnerType"
 			class="mdc-text-field__input"
-			:aria-labelledby="uIlabelId"
+			:aria-labelledby="labelId"
 			:value="modelValue"
 			@input="$emit('update:modelValue', $event.target.value)"
 			:required="required"
@@ -65,10 +65,10 @@ import { Prop } from 'vue-property-decorator';
 
 @Options({ components: {}, emits: ['update:modelValue'] })
 export default class MatTextField extends Vue {
-	uIlabelId!: string;
+	labelId!: string;
 	InnerType = '';
 	created() {
-		this.uIlabelId = 'mat-text-field-ui-label-' + Date.now();
+		this.labelId = 'mat-text-field-ui-label-' + Date.now();
 		this.InnerType = this.type;
 	}
 
