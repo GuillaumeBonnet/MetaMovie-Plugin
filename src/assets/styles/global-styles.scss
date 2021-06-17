@@ -1,12 +1,37 @@
-$mdc-theme-primary: hotpink;
-$mdc-theme-on-primary: hotpink;
-$mdc-theme-secondary: hotpink;
-$mdc-theme-on-secondary: hotpink;
-$mdc-theme-surface: hotpink;
-$mdc-theme-on-surface: hotpink;
-$mdc-theme-background: hotpink;
-$mdc-theme-on-background: hotpink;
-$mdc-theme-text-primary-on-background: white;
+$yellow-600: rgb(217, 119, 6);
+$yellow-700: rgb(180, 83, 9);
+$gray-500: rgb(107, 114, 128);
+$gray-600: rgb(75, 85, 99);
+$gray-700: rgb(55, 65, 81);
+$gray-800: rgb(31, 41, 55);
+$gray-900: rgb(17, 24, 39);
 
+@use "@material/theme" with (
+  $primary: $yellow-600,
+  $secondary: $yellow-700,
+  $background: $gray-500	,
+  $on-primary: $yellow-700,
+  $on-secondary: $yellow-600,
+  $on-surface: $yellow-700
+);
+@use "material-components-web";
+
+@use "@material/chips/mdc-chips";
+@use "@material/button";
 @use "@material/button/mixins";
+@use "@material/list";
+
+@use "@material/list/mdc-list";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/menu/mdc-menu";
+@use "@material/select/mdc-select";
+@use '@material/select/styles';
+@use '@material/select';
+
 @include mixins.core-styles;
+@include list.core-styles;
+
+.mdc-select {
+	width: 100%;
+	@include select.container-fill-color($gray-800);
+}

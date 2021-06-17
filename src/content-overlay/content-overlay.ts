@@ -9,8 +9,13 @@ import { MutationCard } from '@/store/CardStore';
 console.log('gboDebug: content overlay');
 import '@/assets/styles/styles.css';
 import { MutationDeck } from '@/store/DeckStore';
+/* eslint-disable */
+// @ts-ignore
+import VueMaterialAdapter from 'vue-material-adapter';
+
 const appMenu = createApp(Menu);
 appMenu.use(store);
+appMenu.use(VueMaterialAdapter);
 appMenu.mount('#plugin-meta-movie-menu');
 
 const appOverlay = createApp(VideoOverlay);

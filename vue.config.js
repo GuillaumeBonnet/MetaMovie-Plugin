@@ -11,10 +11,9 @@ module.exports = {
 				// Prefer Dart Sass
 				implementation: require('sass'),
 				// See https://github.com/webpack-contrib/sass-loader/issues/804
-				additionalData: `@use 'src/assets/styles/global-styles';`, // ain't working
 				webpackImporter: false,
 				sassOptions: {
-					includePaths: ['./node_modules'],
+					includePaths: [path.resolve(__dirname, 'node_modules')],
 				},
 			},
 		},

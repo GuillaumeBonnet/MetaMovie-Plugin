@@ -3,7 +3,7 @@
 		<div class="mdc-dialog" ref="popup">
 			<div class="mdc-dialog__container">
 				<div
-					class="mdc-dialog__surface"
+					class="mdc-dialog__surface overflow-visible"
 					role="alertdialog"
 					aria-modal="true"
 					:aria-labelledby="title"

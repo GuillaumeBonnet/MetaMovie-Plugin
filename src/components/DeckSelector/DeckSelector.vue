@@ -79,7 +79,7 @@
 							{{ deck.name }}
 						</td>
 						<td class="px-4 py-2 border-l-0">
-							{{ deck.languageTag }}
+							{{ countryLabel(deck.languageTag) }}
 						</td>
 						<td class="px-4 py-2 border-l-0">
 							{{ deck.numberOfCards }}
@@ -111,6 +111,7 @@ import MatPopup from '@/components/material/MatPopup.vue';
 import MatButton from '@/components/material/MatButton.vue';
 import NewDeck from '@/components/DeckSelector/NewDeck.vue';
 import { GetterMain } from '@/store/Store';
+import langSelectData from './langSelectData';
 @Options({
 	components: { MatPopup, NewDeck, MatButton },
 	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
@@ -133,6 +134,12 @@ export default class DeckSelector extends Vue {
 	}
 	closeButton() {
 		this.$emit('deck-selector-close');
+	}
+	countryLabel(countryCode: string | null) {
+		return (
+			langSelectData.find(elem => elem.value == countryCode)?.label ||
+			countryCode
+		);
 	}
 	async rowClicked(index: number) {
 		if (this.decks && this.currentDeck?.id == this.decks[index].id) {

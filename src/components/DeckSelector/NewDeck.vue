@@ -6,7 +6,7 @@
 		>
 			Create Deck
 		</button>
-		<MatPopup ref="popup-new-deck" title="New Deck pop-up">
+		<MatPopup ref="popup-new-deck" title="New Deck pop-up" class="">
 			Start a new deck for this movie:
 			<div class="p-4">
 				<MatTextField
@@ -15,11 +15,22 @@
 					required="true"
 				></MatTextField>
 			</div>
-			<div class="p-4">
-				<MatTextField
+			<div class="p-4 overflow-visible">
+				<mcw-select
 					v-model="newDeck.languageTag"
 					label="Language"
-				></MatTextField>
+					helptext="Pick a language"
+					leading-icon="language"
+				>
+					<mcw-list-item
+						v-for="elem in langSelectData"
+						:key="elem.value"
+						:data-value="elem.value"
+						role="option"
+						icon
+						>{{ elem.label }}</mcw-list-item
+					>
+				</mcw-select>
 			</div>
 			<div class="text-red-600" v-if="errorMessage">
 				{{ errorMessage }}
@@ -61,18 +72,20 @@ import MatTextField from '@/components/material/MatTextField.vue';
 import MatButton from '@/components/material/MatButton.vue';
 import { DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
+import langSelectData from './langSelectData';
 @Options({
 	components: { MatPopup, MatTextField, MatButton },
 })
 export default class NewDeck extends Vue {
 	newDeck: Pick<DeckApi_WithoutCards, 'languageTag' | 'name'> = {
-		languageTag: '',
+		languageTag: 'en',
 		name: '',
 	};
 	errorMessage = '';
 	newDeckPopup() {
 		(this.$refs['popup-new-deck'] as MatPopup).open();
 	}
+	langSelectData = langSelectData;
 	async createDeck() {
 		this.errorMessage = '';
 		let newDeck;
@@ -96,7 +109,19 @@ export default class NewDeck extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-@use "@material/dialog";
-@include dialog.core-styles;
+<style lang="scss">
+@use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
+.mdc-dialog__surface > div,
+.mdc-dialog__surface,
+ul.mdc-list,
+.mdc-select,
+.select-wrapper {
+	overflow: visible !important;
+}
+
+.mdc-menu-surface--open {
+	max-height: 25vh !important;
+}
 </style>
+
+<style scoped lang="scss"></style>
