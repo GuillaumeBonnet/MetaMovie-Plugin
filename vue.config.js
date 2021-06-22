@@ -55,9 +55,12 @@ module.exports = {
 			cert: fs.readFileSync('dev-page/certs/localhost.crt'),
 			// ca: fs.readFileSync('/path/to/ca.pem'),
 		},
+		historyApiFallback: {
+			rewrites: [
+				{ from: '/watch/.', to: '/dev-page.html' },
+				// /watch/123?trackId=456 is a path format used too
+			],
+		},
 		public: 'https://localhost:8080',
-		// hot: {
-		// 	https: true,
-		// },
 	},
 };
