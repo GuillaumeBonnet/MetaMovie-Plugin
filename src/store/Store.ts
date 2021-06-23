@@ -21,6 +21,8 @@ type UserState = { isLogged: boolean; info?: UserInfo };
 interface IState {
 	video?: HTMLVideoElement;
 	netflixPlayer?: any;
+	movieId?: number;
+	movieTitle?: string;
 	isFullScreen: boolean;
 	cardEdited?: CardData;
 	currentTime: number;
@@ -32,6 +34,8 @@ interface IState {
 }
 
 const MutationMain = {
+	SET_MOVIE_ID: 'SET_MOVIE_ID',
+	SET_MOVIE_TITLE: 'SET_MOVIE_TITLE',
 	SET_VIDEO: 'SET_VIDEO',
 	SET_VIDEO_CURRENT_TIME_S: 'SET_VIDEO_CURRENT_TIME_S',
 	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
@@ -73,6 +77,18 @@ const store = createStore<IState>({
 		cardModule,
 	},
 	mutations: {
+		[MutationMain.SET_MOVIE_ID]: (
+			state: IState,
+			movieId: IState['movieId']
+		) => {
+			state.movieId = movieId;
+		},
+		[MutationMain.SET_MOVIE_TITLE]: (
+			state: IState,
+			movieTitle: IState['movieTitle']
+		) => {
+			state.movieTitle = movieTitle;
+		},
 		[MutationMain.SET_VIDEO]: (state: IState, video: IState['video']) => {
 			state.video = video;
 			if (process.env.VUE_APP_MODE != 'DEV_SERVE') {

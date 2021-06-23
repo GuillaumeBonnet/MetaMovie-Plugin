@@ -1,9 +1,4 @@
-import {
-	CardApi,
-	DeckApi,
-	CreateFields,
-	DeckApi_WithoutCards,
-} from '@/models/ApiTypes';
+import { DeckApi, CreateFields, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import CardData from '@/models/CardData';
 import {
 	fetchCompleteDeck,
@@ -124,15 +119,16 @@ const deckModule: Module<IDeckState, IState> = {
 			}
 			const currentDeck = state.currentDeck;
 			const deckToSave: DeckApi = {
-				createdAt: currentDeck.createdAt,
 				id: currentDeck.id,
+				createdAt: currentDeck.createdAt,
+				updatedAt: currentDeck.updatedAt,
 				languageTag: currentDeck.languageTag,
 				name: currentDeck.name,
-				updatedAt: currentDeck.updatedAt,
 				cards: rootState.cardModule.cards,
 				permissions: [],
 				numberOfCards: rootState.cardModule.cards.length,
 				ownerName: '',
+				movie: currentDeck.movie,
 			};
 			const deckResponse = await updateDeck(deckToSave);
 			const nextCurrentDeck = deckResponse.data;
@@ -151,9 +147,19 @@ const deckModule: Module<IDeckState, IState> = {
 			{ commit, state, rootState },
 			deck: CreateFields<DeckApi_WithoutCards>
 		) {
+			if (!rootState.movieId) {
+				throw Error('Movied Id not found on current Page.');
+			}
+			if (!rootState.movieTitle) {
+				throw Error('Movied Title not found on current Page.');
+			}
 			const deckFromApi = await saveDeck({
 				...deck,
 				cards: [],
+				movie: {
+					id: rootState.movieId,
+					title: rootState.movieTitle,
+				},
 			});
 			console.log('gboDebug:[ crate deck deckFromApi]', deckFromApi);
 			deckFromApi.data.numberOfCards = deckFromApi.data.cards?.length ?? 0;

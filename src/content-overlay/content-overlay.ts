@@ -22,6 +22,17 @@ const appOverlay = createApp(VideoOverlay);
 appOverlay.use(store);
 appOverlay.mount('#plugin-meta-movie-video-overlay');
 
+console.log('gboDebug:[location]', location);
+if (/watch\/(\d+)/.test(location.pathname)) {
+	const netflixMovieId = Number.parseInt(
+		/watch\/(\d+)/.exec(location.pathname)?.[1] || ''
+	);
+	store.commit(MutationMain.SET_MOVIE_ID, netflixMovieId);
+	const movieTitle = document
+		.querySelector('.video-title')
+		?.textContent?.trim();
+	store.commit(MutationMain.SET_MOVIE_TITLE, movieTitle);
+}
 document.addEventListener('fullscreenchange', event => {
 	store.commit(MutationMain.SET_IS_FULL_SCREEN, !!document.fullscreenElement);
 });
