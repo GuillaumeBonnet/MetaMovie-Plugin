@@ -1,5 +1,5 @@
 <template>
-	<div class="border-4 border-solid border-gray-900 rounded-md m-4 p-3">
+	<div class="border-4 border-solid border-gray-400 rounded-md m-4 p-3">
 		<MatPopup
 			ref="popup-deck-selector-modifications"
 			title="Deck has unsaved modifications."
@@ -34,7 +34,7 @@
 		</div>
 		<div class="px-2">
 			<button
-				class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-800"
+				class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-400"
 				@click="handleButtonClick()"
 			>
 				<template v-if="!currentDeck">Select a deck</template>
