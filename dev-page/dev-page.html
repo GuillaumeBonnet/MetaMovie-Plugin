@@ -606,11 +606,41 @@
 															</div>
 															<div
 																class="PlayerControls--control-element text-control video-title"
-															>
-																<h4 class="ellipsize-text">
-																	Zodiac
-																</h4>
-															</div>
+															></div>
+															<script>
+																const videoTitleLoaded = () => {
+																	console.log('gboDebug: onload');
+
+																	if (/watch\/(\d+)/.test(location.pathname)) {
+																		const netflixMovieId = Number.parseInt(
+																			/watch\/(\d+)/.exec(
+																				location.pathname
+																			)?.[1] || ''
+																		);
+																		console.log(
+																			'gboDebug:[netflixMovieId host apge]',
+																			netflixMovieId
+																		);
+																		document.querySelector(
+																			'.video-title'
+																		).innerHTML = titleHtml(netflixMovieId);
+																	}
+																};
+																videoTitleLoaded();
+
+																function titleHtml(netflixMovieId) {
+																	if (netflixMovieId == 80223953) {
+																		return `<div id="" class="ellipsize-text" data-uia=""><h4>Love, Death &amp; Robots</h4><span>ICE AGE</span></div>`;
+																	} else if (netflixMovieId == 81025595) {
+																		return `<h4 class="ellipsize-text">I'm No Longer Here</h4>`;
+																	} else if (netflixMovieId == 70044686) {
+																		return `<h4 class="ellipsize-text">Zodiac</h4>`;
+																	} else {
+																		return `<h4 class="ellipsize-text">movie Of Id (${netflixMovieId})</h4>`;
+																	}
+																}
+															</script>
+
 															<div id="plugin-meta-movie-menu"></div>
 															<div
 																class="touchable ReportAProblemPopupContainer PlayerControls--control-element nfp-popup-control"
