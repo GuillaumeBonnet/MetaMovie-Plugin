@@ -1,5 +1,9 @@
 $yellow-600: rgb(217, 119, 6);
 $yellow-700: rgb(180, 83, 9);
+$gray-100: rgb(243, 244, 246);
+$gray-200: rgb(229, 231, 235);
+$gray-300: rgb(209, 213, 219);
+$gray-400: rgb(156, 163, 175);
 $gray-500: rgb(107, 114, 128);
 $gray-600: rgb(75, 85, 99);
 $gray-700: rgb(55, 65, 81);
@@ -7,11 +11,11 @@ $gray-800: rgb(31, 41, 55);
 $gray-900: rgb(17, 24, 39);
 
 @use "@material/theme" with (
-  $primary: $yellow-600,
+  $primary: $yellow-700,
   $secondary: $yellow-700,
   $background: $gray-500	,
-  $on-primary: $yellow-700,
-  $on-secondary: $yellow-600,
+  $on-primary: black,
+  $on-secondary: black,
   $on-surface: $yellow-700
 );
 @use "material-components-web";
@@ -34,4 +38,36 @@ $gray-900: rgb(17, 24, 39);
 .mdc-select {
 	width: 100%;
 	@include select.container-fill-color($gray-800);
+}
+
+.mdc-button {
+	@include button.ink-color(
+		(
+			default: $gray-200,
+			hover: white,
+			focus: white,
+			pressed: white,
+			disabled: $gray-400,
+		)
+	);
+	&:not(.mdc-button--raised):not(.mdc-button--outlined) {
+		@include button.container-fill-color(
+			(
+				hover: rgba($gray-100, 0.1),
+			)
+		);
+	}
+	&--raised {
+	}
+	&--outlined {
+		@include button.outline-color(
+			(
+				default: $gray-200,
+				hover: white,
+				focus: $gray-400,
+				pressed: white,
+				disabled: $gray-400,
+			)
+		);
+	}
 }

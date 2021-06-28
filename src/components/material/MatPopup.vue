@@ -52,9 +52,8 @@
 import { MDCDialog, MDCDialogCloseEvent } from '@material/dialog';
 import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import MatButton from '@/components/material/MatButton.vue';
 
-@Options({ components: { MatButton }, emits: [] })
+@Options({ components: {}, emits: [] })
 export default class MatPopup extends Vue {
 	confirmCallback?: CallableFunction;
 	id!: string;

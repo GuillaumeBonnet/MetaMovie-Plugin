@@ -1,28 +1,17 @@
 <template>
 	<div class="">
 		<div v-if="!isLogged" class="flex justify-center">
-			<MatButton
-				label="Log In"
-				type=""
-				@click="logInPopup()"
-				class=""
-			></MatButton>
-			<MatButton
-				label="Sign In"
-				type="outlined"
-				@click="signInPopup()"
-				class="ml-2"
-			></MatButton>
+			<mcw-button @click="logInPopup()">LOG IN</mcw-button>
+			<mcw-button @click="signInPopup()" outlined class="ml-2"
+				>SIGN IN</mcw-button
+			>
 		</div>
 		<template v-else>
 			<div class="">Username: {{ userInfo?.username }}</div>
 			<div class="flex justify-center">
-				<MatButton
-					label="Log out"
-					type="outlined"
-					@click="logoutHandler()"
-					class=""
-				></MatButton>
+				<mcw-button @click="logoutHandler()" outlined class=""
+					>Log out</mcw-button
+				>
 			</div>
 		</template>
 		<MatPopup ref="popup-login" title="Log In pop-up">
@@ -46,19 +35,20 @@
 				{{ errorMessage }}
 			</div>
 			<template v-slot:actions>
-				<MatButton
-					label="Cancel"
-					type="outlined"
+				<mcw-button
+					@click="logoutHandler()"
 					data-mdc-dialog-action="cancel"
+					outlined
 					class="mdc-dialog__button"
-				></MatButton>
-				<MatButton
-					label="Log In"
-					type="outlined"
+					>Cancel</mcw-button
+				>
+				<mcw-button
 					@click="logIn()"
+					outlined
 					class="mdc-dialog__button"
 					:disabled="!user.email || !user.password"
-				></MatButton>
+					>Log In</mcw-button
+				>
 			</template>
 		</MatPopup>
 		<MatPopup ref="popup-signup" title="Sign Up pop-up">
@@ -89,19 +79,20 @@
 				{{ errorMessage }}
 			</div>
 			<template v-slot:actions>
-				<MatButton
-					label="Cancel"
-					type="outlined"
+				<mcw-button
+					outlined
 					data-mdc-dialog-action="cancel"
 					class="mdc-dialog__button"
-				></MatButton>
-				<MatButton
-					label="Sign Up"
-					type="outlined"
+					>Cancel</mcw-button
+				>
+				<mcw-button
+					outlined
 					@click="signUpHandler()"
+					data-mdc-dialog-action="cancel"
 					class="mdc-dialog__button"
 					:disabled="!newUser.email || !newUser.username || !newUser.password"
-				></MatButton>
+					>Sign Up</mcw-button
+				>
 			</template>
 		</MatPopup>
 	</div>
@@ -122,12 +113,11 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
-import MatButton from '@/components/material/MatButton.vue';
 import { login, logout, signUp } from '@/Utils/WebService';
 import { GetterMain, MutationMain, UserState } from '@/store/Store';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
-	components: { MatPopup, MatTextField, MatButton },
+	components: { MatPopup, MatTextField },
 })
 export default class Login extends Vue {
 	user = {

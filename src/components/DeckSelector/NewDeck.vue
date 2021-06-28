@@ -36,19 +36,19 @@
 				{{ errorMessage }}
 			</div>
 			<template v-slot:actions>
-				<MatButton
-					label="Cancel"
-					type="outlined"
+				<mcw-button
+					outlined
 					data-mdc-dialog-action="cancel"
 					class="mdc-dialog__button"
-				></MatButton>
-				<MatButton
-					label="Create Deck"
-					type="outlined"
+					>Cancel</mcw-button
+				>
+				<mcw-button
 					@click="createDeck()"
+					outlined
 					class="mdc-dialog__button"
 					:disabled="!newDeck.name"
-				></MatButton>
+					>Create Deck</mcw-button
+				>
 			</template>
 		</MatPopup>
 	</div>
@@ -69,12 +69,11 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
-import MatButton from '@/components/material/MatButton.vue';
 import { DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 import langSelectData from './langSelectData';
 @Options({
-	components: { MatPopup, MatTextField, MatButton },
+	components: { MatPopup, MatTextField },
 })
 export default class NewDeck extends Vue {
 	newDeck: Pick<DeckApi_WithoutCards, 'languageTag' | 'name'> = {

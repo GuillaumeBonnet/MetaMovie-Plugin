@@ -23,19 +23,19 @@
 				</div>
 			</div>
 			<template v-slot:actions>
-				<MatButton
-					label="Cancel"
-					type="outlined"
+				<mcw-button
+					outlined
 					data-mdc-dialog-action="cancel"
 					class="mdc-dialog__button m-2"
-				></MatButton>
-				<MatButton
-					label="Confirm"
+					>Cancel</mcw-button
+				>
+				<mcw-button
+					outlined
 					:disabled="confirmationInput != currentDeck.name"
-					type="outlined"
 					data-mdc-dialog-action="confirm"
 					class="mdc-dialog__button m-2"
-				></MatButton>
+					>Confirm</mcw-button
+				>
 			</template>
 		</MatPopup>
 		<div
@@ -60,11 +60,10 @@ import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import MatTooltip from '@/components/material/MatTooltip.vue';
 import MatPopup from '@/components/material/MatPopup.vue';
-import MatButton from '@/components/material/MatButton.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
 import { ActionDeck } from '@/store/DeckStore';
 @Options({
-	components: { MatTooltip, MatPopup, MatTextField, MatButton },
+	components: { MatTooltip, MatPopup, MatTextField },
 })
 export default class DeleteDeckConfirmation extends Vue {
 	get currentDeck() {
