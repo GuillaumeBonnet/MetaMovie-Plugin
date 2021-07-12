@@ -47,6 +47,11 @@ module.exports = {
 						height: `${i}vh`,
 					},
 				});
+				addUtilities({
+					[`.mh-screen${i}`]: {
+						['max-height']: `${i}vh`,
+					},
+				});
 			}
 			for (let i = 1000000; i <= 1000000 + 50; i += 10) {
 				addUtilities({

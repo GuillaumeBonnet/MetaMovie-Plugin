@@ -28,6 +28,10 @@
 					@deck-selector-button-clicked="deckSelectorButtonClicked()"
 					@deck-selector-close="isDeckSelectionShown = false"
 				></DeckSelector>
+				<CardsCurrentDeck
+					v-if="currentDeck && isCardListShown"
+					:isCardListShown="isCardListShown"
+				></CardsCurrentDeck>
 				<div class="p-5">
 					<template v-if="!isMoviePage">
 						<MenuCard>
@@ -62,7 +66,11 @@
 								{{ currentDeck.numberOfCards }} cards
 							</div>
 							<div class="flex justify-center">
-								<mcw-button class="mt-5" @click="createADeck()" outlined>
+								<mcw-button
+									class="mt-5"
+									@click="isCardListShown = !isCardListShown"
+									outlined
+								>
 									Card list
 								</mcw-button>
 							</div>
@@ -263,9 +271,7 @@ export default class Menu extends Vue {
 	isDeckSelectionShown = false;
 	get isMenuOppened() {
 		return (
-			this.isMenuForcedOpen ||
-			this.isDeckSelectionShown ||
-			this.forceDisplayDeckCards
+			this.isMenuForcedOpen || this.isDeckSelectionShown || this.isCardListShown
 		);
 	}
 	browseAllDecks() {
@@ -278,7 +284,7 @@ export default class Menu extends Vue {
 		if (this.isMenuOppened) {
 			this.isMenuForcedOpen = false;
 			this.isDeckSelectionShown = false;
-			this.forceDisplayDeckCards = false;
+			this.isCardListShown = false;
 		} else {
 			this.isMenuForcedOpen = true;
 		}
@@ -288,7 +294,7 @@ export default class Menu extends Vue {
 	/*                               internal logic                               */
 	/* -------------------------------------------------------------------------- */
 
-	forceDisplayDeckCards = false;
+	isCardListShown = false;
 
 	seeCurrentFactList() {
 		console.log('gboDebug:[seeCurrentFactList]');

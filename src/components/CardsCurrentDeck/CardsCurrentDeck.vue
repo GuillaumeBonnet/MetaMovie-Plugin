@@ -1,9 +1,7 @@
 <template>
 	<ul
-		class="border-black border-1 shadow-xl scrollbar cursor-default max-h-96 overflow-y-auto p-0 origin-bottom-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full bottom-0 left-0 bg-gray-800 rounded-md"
-		:class="
-			forceDisplayDeckCards ? '' : 'scale-0 group-menuItem-hover:scale-100'
-		"
+		class="border-black border-1 shadow-xl scrollbar cursor-default mh-screen50 overflow-y-auto p-0 origin-top-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full top-0 left-0 bg-gray-800 rounded-md"
+		:class="isCardListShown ? '' : 'scale-0 group-menuItem-hover:scale-100'"
 	>
 		<li class="custo-min-with-li flex" v-if="currentDeck && canEditCurrentDeck">
 			<div
@@ -112,7 +110,7 @@ import { ActionDeck, GetterDeck, MutationDeck } from '@/store/DeckStore';
 })
 export default class CardsCurrentDeck extends Vue {
 	@Prop({ required: true, default: false })
-	forceDisplayDeckCards!: boolean;
+	isCardListShown!: boolean;
 
 	get cards() {
 		return this.$store.state.cardModule.cards;
