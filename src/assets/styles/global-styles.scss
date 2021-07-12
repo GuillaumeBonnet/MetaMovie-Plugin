@@ -58,6 +58,14 @@ $gray-900: rgb(17, 24, 39);
 		);
 	}
 	&--raised {
+		@include button.container-fill-color(
+			(
+				default: #784b18,
+				hover: #8c581c,
+				focus: #b47023,
+				pressed: #784b18d3,
+			)
+		);
 	}
 	&--outlined {
 		@include button.outline-color(

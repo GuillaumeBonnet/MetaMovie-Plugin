@@ -58,7 +58,7 @@ module.exports = {
 		historyApiFallback: {
 			rewrites: [
 				{ from: '/watch/.', to: '/dev-page.html' },
-				// /watch/123?trackId=456 is a path format used too
+				{ from: '/home', to: '/dev-page.html' },
 			],
 		},
 		public: 'https://localhost:8080',

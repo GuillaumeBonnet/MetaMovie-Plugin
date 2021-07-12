@@ -1,11 +1,5 @@
 <template>
 	<div class="">
-		<button
-			class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-800"
-			@click="newDeckPopup()"
-		>
-			Create Deck
-		</button>
 		<MatPopup ref="popup-new-deck" title="New Deck pop-up" class="">
 			Start a new deck for this movie:
 			<div class="p-4">

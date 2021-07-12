@@ -54,6 +54,7 @@ const ActionMain = {
 const GetterMain = {
 	IS_LOGGED: 'IS_LOGGED',
 	CAN_CREATE_DECKS: 'CAN_CREATE_DECKS',
+	IS_MOVIE_PAGE: 'IS_MOVIE_PAGE',
 };
 const store = createStore<IState>({
 	state() {
@@ -260,6 +261,9 @@ const store = createStore<IState>({
 		},
 		[GetterMain.CAN_CREATE_DECKS](state, getters) {
 			return state.user.info?.permissions.includes('CREATE_DECKS');
+		},
+		[GetterMain.IS_MOVIE_PAGE](state, getters) {
+			return state.movieId && state.movieTitle;
 		},
 	},
 });

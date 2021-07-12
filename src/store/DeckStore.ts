@@ -9,7 +9,7 @@ import {
 } from '@/Utils/WebService';
 import { Module } from 'vuex';
 import { MutationCard } from './CardStore';
-import { IState } from './Store';
+import { GetterMain, IState } from './Store';
 
 const MutationDeck = {
 	SET_DECKS: 'SET_DECKS',
@@ -64,7 +64,7 @@ const deckModule: Module<IDeckState, IState> = {
 	},
 	actions: {
 		async [ActionDeck.FETCH_DECKS]({ commit, state, rootState }) {
-			const decks = (await fetchAllDecks()).data;
+			const decks = (await fetchAllDecks({ movieId: rootState.movieId })).data;
 			commit(MutationDeck.SET_DECKS, decks);
 		},
 		async [ActionDeck.REFRESH_CURRENT_DECK]({ commit, state, rootState }) {
@@ -144,7 +144,7 @@ const deckModule: Module<IDeckState, IState> = {
 			commit(MutationDeck.SET_DECKS, decksCpy);
 		},
 		async [ActionDeck.CREATE_DECK](
-			{ commit, state, rootState },
+			{ commit, state, rootState, getters },
 			deck: CreateFields<DeckApi_WithoutCards>
 		) {
 			if (!rootState.movieId) {

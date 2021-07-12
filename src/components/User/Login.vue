@@ -1,19 +1,39 @@
 <template>
 	<div class="">
-		<div v-if="!isLogged" class="flex justify-center">
-			<mcw-button @click="logInPopup()">LOG IN</mcw-button>
-			<mcw-button @click="signInPopup()" outlined class="ml-2"
-				>SIGN IN</mcw-button
-			>
-		</div>
-		<template v-else>
-			<div class="">Username: {{ userInfo?.username }}</div>
-			<div class="flex justify-center">
-				<mcw-button @click="logoutHandler()" outlined class=""
-					>Log out</mcw-button
+		<div v-if="!isLogged" class="">
+			<div class="material-icons text-7xl text-gray-500 flex justify-center">
+				account_circle
+			</div>
+			<div class="flex justify-center mt-5">
+				<mcw-button @click="logInPopup()">LOG IN</mcw-button>
+				<mcw-button @click="signInPopup()" outlined class="ml-2"
+					>SIGN IN</mcw-button
 				>
 			</div>
+		</div>
+		<template v-else>
+			<div class="flex justify-center align-middle">
+				<div class="material-icons text-7xl text-gray-500">
+					account_circle
+				</div>
+				<div class="ml-5">
+					<div class="align-middle font-bold">
+						{{ userInfo?.username }}
+					</div>
+					<mcw-button class="font-light italic text-base">
+						N decks
+					</mcw-button>
+					<!-- todo N decks -->
+					<div class=""></div>
+				</div>
+			</div>
+			<div class="flex justify-center">
+				<mcw-button @click="logoutHandler()" outlined class="mt-5">
+					Log out
+				</mcw-button>
+			</div>
 		</template>
+
 		<MatPopup ref="popup-login" title="Log In pop-up">
 			Log In:
 			<div class="p-4">

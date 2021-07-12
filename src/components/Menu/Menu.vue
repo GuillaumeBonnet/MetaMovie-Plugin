@@ -4,57 +4,140 @@
 	>
 		<div class="h-auto m-auto relative bottom-5">
 			<button
-				class="material-icons rounded-full bg-yellow-800 outline-none w-16 h-16 m-auto"
-				:class="isMenuOppened ? 'ring ring-yellow-700' : ''"
+				class="material-icons bg-gray-700 rounded-full outline-none w-16 h-16 m-auto"
+				:class="{
+					['ring ring-yellow-700']: isMenuOppened && isMoviePage,
+					['ring ring-gray-500']: isMenuOppened && !isMoviePage,
+					['bg-yellow-800']: isMoviePage,
+				}"
 				@click="menuButtonClicked()"
 			>
 				question_answer
 			</button>
 
 			<div
-				class="z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 -left-40 bg-gray-700 text-transparent h-auto w-max rounded-md"
-				:class="isMenuOppened ? 'block' : 'hidden group-hover:block'"
+				class="w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 transform -translate-x-1/2 bg-gray-700 text-transparent h-auto rounded-md"
+				:class="{
+					['block']: isMenuOppened,
+					['hidden group-hover:block']: !isMenuOppened,
+				}"
 			>
-				<Login></Login>
 				<DeckSelector
 					class="px-5 pt-5"
 					:isDeckSelectionShown="isDeckSelectionShown"
 					@deck-selector-button-clicked="deckSelectorButtonClicked()"
 					@deck-selector-close="isDeckSelectionShown = false"
 				></DeckSelector>
-				<ul class="">
-					<li class="h-14 px-5 flex content-center">
-						<MatSwitch
-							class="my-auto"
-							v-model="areCardsHidden_VueModel"
-							label="Hide Cards"
-						></MatSwitch>
-					</li>
-					<MenuItem
-						label="Detail current list"
-						@click="
-							if (currentDeck) {
-								forceDisplayDeckCards = !forceDisplayDeckCards;
-							}
-						"
-						class="relative group-menuItem"
-						:isActive="forceDisplayDeckCards"
-						:disabled="!currentDeck"
-					>
-						<CardsCurrentDeck
-							v-if="currentDeck"
-							class=""
-							:forceDisplayDeckCards="forceDisplayDeckCards"
-							@click.stop
-						></CardsCurrentDeck>
-					</MenuItem>
-					<MenuItem
-						label="displayed Card"
-						@click="gboDebugDisplayedCard()"
-					></MenuItem>
-					<MenuItem label="all card" @click="gboDebugCard()"></MenuItem>
-					<MenuItem label="add a new card at this time"></MenuItem>
-				</ul>
+				<div class="p-5">
+					<template v-if="!isMoviePage">
+						<MenuCard>
+							<div class="flex justify-center flex-col">
+								<div
+									class="material-icons text-9xl text-gray-500 flex justify-center"
+								>
+									lightbulb
+								</div>
+								<div class="text-center">
+									Start a movie or an episode to see if it has decks
+								</div>
+							</div>
+						</MenuCard>
+						<MenuCard class="mt-5"
+							><div class="flex justify-center flex-col">
+								<div
+									class="material-icons text-9xl text-gray-500 flex justify-center"
+								>
+									view_list
+								</div>
+								<mcw-button class="" @click="browseAllDecks()"
+									>Browse all decks</mcw-button
+								>
+							</div>
+						</MenuCard>
+					</template>
+					<template v-else-if="currentDeck">
+						<MenuCard class="">
+							<div class="font-bold">{{ currentDeck.name }}</div>
+							<div class="text-gray-400 text-base text-center">
+								{{ currentDeck.numberOfCards }} cards
+							</div>
+							<div class="flex justify-center">
+								<mcw-button class="mt-5" @click="createADeck()" outlined>
+									Card list
+								</mcw-button>
+							</div>
+							<MatSwitch
+								class="my-auto mt-5"
+								v-model="areCardsHidden_VueModel"
+								label="Hide Cards"
+							></MatSwitch>
+						</MenuCard>
+						<MenuCard class="mt-5">
+							<div
+								class="material-icons text-7xl text-gray-500 flex justify-center"
+							>
+								work
+							</div>
+							<div class="text-center">
+								{{ decks.length }} available decks for this movie/episode
+							</div>
+							<div class="mt-5 flex justify-center">
+								<mcw-button raised @click="deckSelectorButtonClicked()">
+									Select another Deck
+								</mcw-button>
+							</div>
+						</MenuCard>
+					</template>
+					<template v-else>
+						<!-- movie page but no current deck selected -->
+						<template v-if="decks.length == 0">
+							<MenuCard class="">
+								<div
+									class="material-icons text-7xl text-gray-500 flex justify-center"
+								>
+									work_off
+								</div>
+								<div class="text-center">
+									This movie/episode doesn't have a deck yet.
+								</div>
+								<div class="flex justify-center">
+									<mcw-button
+										class="mt-5"
+										:disabled="!isLogged"
+										@click="createADeck()"
+										raised
+									>
+										Create a deck
+									</mcw-button>
+									<NewDeck ref="create-deck-popup" class=""></NewDeck>
+								</div>
+							</MenuCard>
+						</template>
+						<template v-else>
+							<MenuCard class="">
+								<div
+									class="material-icons text-7xl text-gray-500 flex justify-center"
+								>
+									work
+								</div>
+								<div class="text-center">
+									{{ decks.length }} available decks for this movie/episode
+								</div>
+								<div class="mt-5 flex justify-center">
+									<mcw-button raised @click="deckSelectorButtonClicked()">
+										Select A Deck
+									</mcw-button>
+								</div>
+							</MenuCard>
+						</template>
+					</template>
+					<MenuCard class="mt-5">
+						<div class="text-center" v-if="!isLogged && decks.length == 0">
+							Log In to create a deck
+						</div>
+						<Login class="mt-5"></Login>
+					</MenuCard>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -78,12 +161,14 @@ import CardsCurrentDeck from '@/components/CardsCurrentDeck/CardsCurrentDeck.vue
 import MatSwitch from '@/components/material/MatSwitch.vue';
 import DeckSelector from '@/components/DeckSelector/DeckSelector.vue';
 import Login from '@/components/User/Login.vue';
+import MenuCard from '@/components/Menu/MenuCard.vue';
 import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
 import { ActionDeck, MutationDeck } from '@/store/DeckStore';
 import { fetchAllDecks, userInfo } from '@/Utils/WebService';
-import { ActionMain, MutationMain } from '@/store/Store';
+import { ActionMain, GetterMain, MutationMain } from '@/store/Store';
+import NewDeck from '../DeckSelector/NewDeck.vue';
 
 const MenuItem = defineComponent({
 	template: `
@@ -117,10 +202,12 @@ const MenuItem = defineComponent({
 @Options({
 	components: {
 		MenuItem,
+		MenuCard,
 		CardsCurrentDeck,
 		MatSwitch,
 		DeckSelector,
 		Login,
+		NewDeck,
 	},
 })
 export default class Menu extends Vue {
@@ -133,12 +220,25 @@ export default class Menu extends Vue {
 	/*                                store methods                               */
 	/* -------------------------------------------------------------------------- */
 
+	get isMoviePage() {
+		return this.$store.getters[GetterMain.IS_MOVIE_PAGE];
+	}
+	get isLogged() {
+		return this.$store.getters[GetterMain.IS_LOGGED];
+	}
+	get userInfo() {
+		return this.$store.state.user.info;
+	}
 	get displayedCards() {
 		return this.$store.state.cardModule.displayedCards;
 	}
 
 	get currentDeck() {
 		return this.$store.state.deckModule.currentDeck;
+	}
+
+	get decks() {
+		return this.$store.state.deckModule.decks;
 	}
 
 	get cards() {
@@ -167,6 +267,9 @@ export default class Menu extends Vue {
 			this.isDeckSelectionShown ||
 			this.forceDisplayDeckCards
 		);
+	}
+	browseAllDecks() {
+		alert('todo');
 	}
 	deckSelectorButtonClicked() {
 		this.isDeckSelectionShown = !this.isDeckSelectionShown;
@@ -197,7 +300,13 @@ export default class Menu extends Vue {
 	gboDebugCard() {
 		console.log('gboDebug:[this.cards]', this.cards);
 	}
+
+	createADeck() {
+		(this.$refs['create-deck-popup'] as NewDeck).newDeckPopup();
+	}
 }
 </script>
-
+<style lang="scss">
+@use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
+</style>
 <style scoped lang="scss"></style>

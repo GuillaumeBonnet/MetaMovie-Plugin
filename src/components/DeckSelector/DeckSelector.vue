@@ -1,5 +1,5 @@
 <template>
-	<div class="border-4 border-solid border-gray-400 rounded-md m-4 p-3">
+	<div class="">
 		<MatPopup
 			ref="popup-deck-selector-modifications"
 			title="Deck has unsaved modifications."
@@ -9,38 +9,26 @@
 				modifications
 			</div>
 			<template v-slot:actions>
-				<MatButton
-					label="Cancel"
-					type="outlined"
+				<mcw-button
+					outlined
 					data-mdc-dialog-action="cancel"
 					class="mdc-dialog__button m-2"
-				></MatButton>
-				<MatButton
-					label="Discard ?"
-					type="outlined"
+					>Cancel</mcw-button
+				>
+				<mcw-button
+					outlined
 					data-mdc-dialog-action="discard"
 					class="mdc-dialog__button m-2"
-				></MatButton>
-				<MatButton
-					label="Save ?"
-					type="outlined"
+					>Discard ?</mcw-button
+				>
+				<mcw-button
+					outlined
 					data-mdc-dialog-action="save"
 					class="mdc-dialog__button m-2"
-				></MatButton>
+					>Save ?</mcw-button
+				>
 			</template>
 		</MatPopup>
-		<div class="underline">
-			Current deck:
-		</div>
-		<div class="px-2">
-			<button
-				class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-400"
-				@click="handleButtonClick()"
-			>
-				<template v-if="!currentDeck">Select a deck</template>
-				<template v-else>{{ currentDeck.name }}</template>
-			</button>
-		</div>
 		<div
 			v-if="isDeckSelectionShown"
 			class="min-width-deck-selector p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
@@ -52,44 +40,58 @@
 			>
 				close
 			</button>
-			<NewDeck v-if="canCreateDecks" class="my-8"></NewDeck>
-			<div class="underline mb-4 mt-8">Available decks:</div>
-			<table class=" w-full text-3xl table-auto border-1 border-black">
-				<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
-					<tr>
-						<th class="px-4 py-2 font-extrabold">Title</th>
-						<th class="px-4 py-2 font-extrabold">Language</th>
-						<th class="px-4 py-2 font-extrabold">Number of cards</th>
-						<th class="px-4 py-2 font-extrabold">Author</th>
-					</tr>
-				</thead>
-				<tbody class="text-center text-gray-200">
-					<tr
-						class="border-b-1 border-black font-medium"
-						v-for="(deck, index) in decks"
-						:class="
-							currentDeck?.id == deck.id
-								? 'bg-gray-700 hover:bg-gray-800'
-								: 'bg-gray-500 hover:bg-gray-600'
-						"
-						:key="deck.id"
-						@click="rowClicked(index)"
-					>
-						<td class="px-4 py-2 border-r-0">
-							{{ deck.name }}
-						</td>
-						<td class="px-4 py-2 border-l-0">
-							{{ countryLabel(deck.languageTag) }}
-						</td>
-						<td class="px-4 py-2 border-l-0">
-							{{ deck.numberOfCards }}
-						</td>
-						<td class="px-4 py-2 border-l-0">
-							{{ deck.ownerName }}
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<button
+				class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-800"
+				@click="newDeckPopup()"
+			>
+				Create Deck
+			</button>
+			<NewDeck
+				ref="new-deck-popup"
+				v-if="canCreateDecks"
+				class="my-8"
+			></NewDeck>
+			<template v-if="isMoviePage">
+				<div class="underline mb-4 mt-8">
+					Decks for the current movie:
+				</div>
+				<table class=" w-full text-3xl table-auto border-1 border-black">
+					<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
+						<tr>
+							<th class="px-4 py-2 font-extrabold">Title</th>
+							<th class="px-4 py-2 font-extrabold">Language</th>
+							<th class="px-4 py-2 font-extrabold">Number of cards</th>
+							<th class="px-4 py-2 font-extrabold">Author</th>
+						</tr>
+					</thead>
+					<tbody class="text-center text-gray-200">
+						<tr
+							class="border-b-1 border-black font-medium"
+							v-for="(deck, index) in decks"
+							:class="
+								currentDeck?.id == deck.id
+									? 'bg-gray-700 hover:bg-gray-800'
+									: 'bg-gray-500 hover:bg-gray-600'
+							"
+							:key="deck.id"
+							@click="rowClicked(index)"
+						>
+							<td class="px-4 py-2 border-r-0">
+								{{ deck.name }}
+							</td>
+							<td class="px-4 py-2 border-l-0">
+								{{ countryLabel(deck.languageTag) }}
+							</td>
+							<td class="px-4 py-2 border-l-0">
+								{{ deck.numberOfCards }}
+							</td>
+							<td class="px-4 py-2 border-l-0">
+								{{ deck.ownerName }}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</template>
 		</div>
 	</div>
 </template>
@@ -108,13 +110,12 @@ import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
-import MatButton from '@/components/material/MatButton.vue';
 import NewDeck from '@/components/DeckSelector/NewDeck.vue';
 import { GetterMain } from '@/store/Store';
 import langSelectData from './langSelectData';
 @Options({
-	components: { MatPopup, NewDeck, MatButton },
-	emits: ['deck-selector-button-clicked', 'deck-selector-close'],
+	components: { MatPopup, NewDeck },
+	emits: ['deck-selector-close'],
 })
 export default class DeckSelector extends Vue {
 	get decks() {
@@ -126,14 +127,19 @@ export default class DeckSelector extends Vue {
 	get canCreateDecks() {
 		return this.$store.getters[GetterMain.IS_LOGGED];
 	}
+
+	get isMoviePage() {
+		return this.$store.getters[GetterMain.IS_MOVIE_PAGE];
+	}
+
 	@Prop()
 	isDeckSelectionShown!: boolean;
 
-	handleButtonClick() {
-		this.$emit('deck-selector-button-clicked');
-	}
 	closeButton() {
 		this.$emit('deck-selector-close');
+	}
+	newDeckPopup() {
+		(this.$refs['new-deck-popup'] as NewDeck).newDeckPopup();
 	}
 	countryLabel(countryCode: string | null) {
 		return (

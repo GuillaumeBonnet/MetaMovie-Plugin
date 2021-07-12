@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 
-import Menu from '../components/Menu.vue';
+import Menu from '../components/Menu/Menu.vue';
 import VideoOverlay from '../components/VideoOverlay.vue';
 
 import { store, MutationMain } from '@/store/Store';
