@@ -25,6 +25,7 @@ type CardApi = {
 };
 type UserInfo = {
 	username: string;
+	nbOfDecks: number;
 	permissions: 'READ_DECKS' | 'CREATE_DECKS';
 };
 

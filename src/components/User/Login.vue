@@ -21,9 +21,8 @@
 						{{ userInfo?.username }}
 					</div>
 					<mcw-button class="font-light italic text-base">
-						N decks
+						{{ userInfo?.nbOfDecks }} decks
 					</mcw-button>
-					<!-- todo N decks -->
 					<div class=""></div>
 				</div>
 			</div>
