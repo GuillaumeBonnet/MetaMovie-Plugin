@@ -14,14 +14,10 @@ const fetchCompleteDeck = (deck: Pick<DeckApi_WithoutCards, 'id'>) => {
 	return axios.get<DeckApi>(`${rootUrl}/decks/${deck.id}`);
 };
 
-const fetchAllDecks = (params?: { movieId?: number }) => {
-	if (params?.movieId) {
-		return axios.get<DeckApi_WithoutCards[]>(
-			`${rootUrl}/decks?movieId=${params.movieId}`
-		);
-	} else {
-		return axios.get<DeckApi_WithoutCards[]>(`${rootUrl}/decks`);
-	}
+const fetchAllDecks = (params?: { movieId?: number; userId?: number }) => {
+	return axios.get<DeckApi_WithoutCards[]>(`${rootUrl}/decks`, {
+		params,
+	});
 };
 
 const saveDeck = async (deck: CreateFields<DeckApi>) => {

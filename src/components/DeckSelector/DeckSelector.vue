@@ -51,9 +51,14 @@
 				v-if="canCreateDecks"
 				class="my-8"
 			></NewDeck>
-			<template v-if="isMoviePage">
+			<template v-if="isMoviePage || originDecks == 'CURRENT_USER'">
 				<div class="underline mb-4 mt-8">
-					Decks for the current movie:
+					<template v-if="originDecks == 'CURRENT_MOVIE'">
+						Decks for the current movie:
+					</template>
+					<template v-else-if="originDecks == 'CURRENT_USER'">
+						Your decks:
+					</template>
 				</div>
 				<table class=" w-full text-3xl table-auto border-1 border-black">
 					<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
@@ -61,7 +66,18 @@
 							<th class="px-4 py-2 font-extrabold">Title</th>
 							<th class="px-4 py-2 font-extrabold">Language</th>
 							<th class="px-4 py-2 font-extrabold">Number of cards</th>
-							<th class="px-4 py-2 font-extrabold">Author</th>
+							<th
+								v-if="originDecks == 'CURRENT_USER'"
+								class="px-4 py-2 font-extrabold"
+							>
+								Movie
+							</th>
+							<th
+								v-if="originDecks == 'CURRENT_MOVIE'"
+								class="px-4 py-2 font-extrabold"
+							>
+								Author
+							</th>
 						</tr>
 					</thead>
 					<tbody class="text-center text-gray-200">
@@ -85,8 +101,17 @@
 							<td class="px-4 py-2 border-l-0">
 								{{ deck.numberOfCards }}
 							</td>
-							<td class="px-4 py-2 border-l-0">
+							<td
+								class="px-4 py-2 border-l-0"
+								v-if="originDecks == 'CURRENT_MOVIE'"
+							>
 								{{ deck.ownerName }}
+							</td>
+							<td
+								class="px-4 py-2 border-l-0"
+								v-if="originDecks == 'CURRENT_USER'"
+							>
+								{{ deck.movie.title }}
 							</td>
 						</tr>
 					</tbody>
@@ -120,6 +145,9 @@ import langSelectData from './langSelectData';
 export default class DeckSelector extends Vue {
 	get decks() {
 		return this.$store.state.deckModule.decks;
+	}
+	get originDecks() {
+		return this.$store.state.deckModule.originDecks;
 	}
 	get currentDeck() {
 		return this.$store.state.deckModule.currentDeck;

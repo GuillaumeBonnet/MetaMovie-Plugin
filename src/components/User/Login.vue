@@ -20,7 +20,10 @@
 					<div class="align-middle font-bold">
 						{{ userInfo?.username }}
 					</div>
-					<mcw-button class="font-light italic text-base">
+					<mcw-button
+						@click="openUserDecks()"
+						class="font-light italic text-base"
+					>
 						{{ userInfo?.nbOfDecks }} decks
 					</mcw-button>
 					<div class=""></div>
@@ -137,6 +140,7 @@ import { GetterMain, MutationMain, UserState } from '@/store/Store';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
 	components: { MatPopup, MatTextField },
+	emits: ['open-user-decks'],
 })
 export default class Login extends Vue {
 	user = {
@@ -185,7 +189,7 @@ export default class Login extends Vue {
 				info: userInfo.data,
 			};
 			this.$store.commit(MutationMain.SET_USER, userState);
-			this.$store.dispatch(ActionDeck.FETCH_DECKS);
+			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
 			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 			(this.$refs['popup-login'] as MatPopup).close();
 		} catch (err) {
@@ -209,11 +213,14 @@ export default class Login extends Vue {
 				isLogged: false,
 			};
 			this.$store.commit(MutationMain.SET_USER, userState);
-			this.$store.dispatch(ActionDeck.FETCH_DECKS);
+			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
 			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 		} catch (err) {
 			console.error('Cannot logout correctly: ', err);
 		}
+	}
+	openUserDecks() {
+		this.$emit('open-user-decks');
 	}
 }
 </script>

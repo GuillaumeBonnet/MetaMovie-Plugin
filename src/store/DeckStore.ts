@@ -13,11 +13,13 @@ import { GetterMain, IState } from './Store';
 
 const MutationDeck = {
 	SET_DECKS: 'SET_DECKS',
+	SET_DECKS_ORIGIN: 'SET_DECKS_ORIGIN',
 	SET_CURRENT_DECK: 'SET_CURRENT_DECK',
 	CURRENT_DECK_MODIFIED: 'CURRENT_DECK_MODIFIED',
 };
 const ActionDeck = {
-	FETCH_DECKS: 'FETCH_DECKS',
+	FETCH_DECKS_CURRENT_MOVIE: 'FETCH_DECKS_CURRENT_MOVIE',
+	FETCH_DECKS_CURRENT_USER: 'FETCH_DECKS_CURRENT_USER',
 	REFRESH_CURRENT_DECK: 'REFRESH_CURRENT_DECK',
 	SET_CURRENT_DECK_ACTION: 'SET_CURRENT_DECK_ACTION',
 	SAVE_CURRENT_DECK: 'SAVE_CURRENT_DECK',
@@ -31,6 +33,7 @@ const GetterDeck = {
 interface IDeckState {
 	currentDeck: undefined | (DeckApi_WithoutCards & { hasLocalModifs: boolean });
 	decks: DeckApi_WithoutCards[];
+	originDecks?: 'CURRENT_MOVIE' | 'CURRENT_USER';
 }
 
 const initialState: IDeckState = {
@@ -45,6 +48,12 @@ const deckModule: Module<IDeckState, IState> = {
 	mutations: {
 		[MutationDeck.SET_DECKS](state, decks: DeckApi_WithoutCards[]) {
 			state.decks = decks;
+		},
+		[MutationDeck.SET_DECKS_ORIGIN](
+			state,
+			originDecks: IDeckState['originDecks']
+		) {
+			state.originDecks = originDecks;
 		},
 		[MutationDeck.SET_CURRENT_DECK](state, currentDeck: DeckApi_WithoutCards) {
 			if (currentDeck) {
@@ -63,9 +72,24 @@ const deckModule: Module<IDeckState, IState> = {
 		},
 	},
 	actions: {
-		async [ActionDeck.FETCH_DECKS]({ commit, state, rootState }) {
+		async [ActionDeck.FETCH_DECKS_CURRENT_MOVIE]({ commit, state, rootState }) {
 			const decks = (await fetchAllDecks({ movieId: rootState.movieId })).data;
 			commit(MutationDeck.SET_DECKS, decks);
+
+			const deckOrigin: IDeckState['originDecks'] = 'CURRENT_MOVIE';
+			commit(MutationDeck.SET_DECKS_ORIGIN, deckOrigin);
+		},
+		async [ActionDeck.FETCH_DECKS_CURRENT_USER]({ commit, state, rootState }) {
+			if (!rootState.user.isLogged) {
+				throw new Error("Not Logged, can't fetch decks for current User.");
+			}
+			const decks = (
+				await fetchAllDecks({ userId: rootState.user.info?.['id'] as number })
+			).data;
+			commit(MutationDeck.SET_DECKS, decks);
+
+			const deckOrigin: IDeckState['originDecks'] = 'CURRENT_USER';
+			commit(MutationDeck.SET_DECKS_ORIGIN, deckOrigin);
 		},
 		async [ActionDeck.REFRESH_CURRENT_DECK]({ commit, state, rootState }) {
 			if (!state.currentDeck) {

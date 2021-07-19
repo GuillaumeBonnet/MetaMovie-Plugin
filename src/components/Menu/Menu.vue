@@ -25,7 +25,6 @@
 				<DeckSelector
 					class="px-5 pt-5"
 					:isDeckSelectionShown="isDeckSelectionShown"
-					@deck-selector-button-clicked="deckSelectorButtonClicked()"
 					@deck-selector-close="isDeckSelectionShown = false"
 				></DeckSelector>
 				<CardsCurrentDeck
@@ -90,7 +89,7 @@
 								{{ decks.length }} available decks for this movie/episode
 							</div>
 							<div class="mt-5 flex justify-center">
-								<mcw-button raised @click="deckSelectorButtonClicked()">
+								<mcw-button raised @click="toggleDeckSelectorMovie()">
 									Select another Deck
 								</mcw-button>
 							</div>
@@ -132,7 +131,7 @@
 									{{ decks.length }} available decks for this movie/episode
 								</div>
 								<div class="mt-5 flex justify-center">
-									<mcw-button raised @click="deckSelectorButtonClicked()">
+									<mcw-button raised @click="toggleDeckSelectorMovie()">
 										Select A Deck
 									</mcw-button>
 								</div>
@@ -143,7 +142,7 @@
 						<div class="text-center" v-if="!isLogged && decks.length == 0">
 							Log In to create a deck
 						</div>
-						<Login class="mt-5"></Login>
+						<Login class="mt-5" @open-user-decks="openUserDecks()"></Login>
 					</MenuCard>
 				</div>
 			</div>
@@ -221,7 +220,7 @@ const MenuItem = defineComponent({
 export default class Menu extends Vue {
 	async created() {
 		await this.$store.dispatch(ActionMain.FETCH_USER);
-		this.$store.dispatch(ActionDeck.FETCH_DECKS);
+		this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -277,8 +276,23 @@ export default class Menu extends Vue {
 	browseAllDecks() {
 		alert('todo');
 	}
-	deckSelectorButtonClicked() {
-		this.isDeckSelectionShown = !this.isDeckSelectionShown;
+	toggleDeckSelectorMovie() {
+		const originDeck = this.$store.state.deckModule.originDecks;
+		if (originDeck == 'CURRENT_MOVIE') {
+			this.isDeckSelectionShown = !this.isDeckSelectionShown;
+		} else {
+			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
+			this.isDeckSelectionShown = true;
+		}
+	}
+	openUserDecks() {
+		const originDeck = this.$store.state.deckModule.originDecks;
+		if (originDeck == 'CURRENT_USER') {
+			this.isDeckSelectionShown = !this.isDeckSelectionShown;
+		} else {
+			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_USER);
+			this.isDeckSelectionShown = true;
+		}
 	}
 	menuButtonClicked() {
 		if (this.isMenuOppened) {
