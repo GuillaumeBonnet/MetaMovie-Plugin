@@ -12,7 +12,8 @@ import { MutationCard } from './CardStore';
 import { GetterMain, IState } from './Store';
 
 const MutationDeck = {
-	SET_DECKS: 'SET_DECKS',
+	SET_DECKS_CURR_USER: 'SET_DECKS_CURR_USER',
+	SET_DECKS_CURR_MOVIE: 'SET_DECKS_CURR_MOVIE',
 	SET_DECKS_ORIGIN: 'SET_DECKS_ORIGIN',
 	SET_CURRENT_DECK: 'SET_CURRENT_DECK',
 	CURRENT_DECK_MODIFIED: 'CURRENT_DECK_MODIFIED',
@@ -32,13 +33,14 @@ const GetterDeck = {
 };
 interface IDeckState {
 	currentDeck: undefined | (DeckApi_WithoutCards & { hasLocalModifs: boolean });
-	decks: DeckApi_WithoutCards[];
-	originDecks?: 'CURRENT_MOVIE' | 'CURRENT_USER';
+	decksCurrMovie: DeckApi_WithoutCards[];
+	decksCurrUser: DeckApi_WithoutCards[];
 }
 
 const initialState: IDeckState = {
 	currentDeck: undefined,
-	decks: [],
+	decksCurrMovie: [],
+	decksCurrUser: [],
 };
 
 const deckModule: Module<IDeckState, IState> = {
@@ -46,14 +48,11 @@ const deckModule: Module<IDeckState, IState> = {
 		return initialState;
 	},
 	mutations: {
-		[MutationDeck.SET_DECKS](state, decks: DeckApi_WithoutCards[]) {
-			state.decks = decks;
+		[MutationDeck.SET_DECKS_CURR_USER](state, decks: DeckApi_WithoutCards[]) {
+			state.decksCurrUser = decks;
 		},
-		[MutationDeck.SET_DECKS_ORIGIN](
-			state,
-			originDecks: IDeckState['originDecks']
-		) {
-			state.originDecks = originDecks;
+		[MutationDeck.SET_DECKS_CURR_MOVIE](state, decks: DeckApi_WithoutCards[]) {
+			state.decksCurrMovie = decks;
 		},
 		[MutationDeck.SET_CURRENT_DECK](state, currentDeck: DeckApi_WithoutCards) {
 			if (currentDeck) {
@@ -74,10 +73,7 @@ const deckModule: Module<IDeckState, IState> = {
 	actions: {
 		async [ActionDeck.FETCH_DECKS_CURRENT_MOVIE]({ commit, state, rootState }) {
 			const decks = (await fetchAllDecks({ movieId: rootState.movieId })).data;
-			commit(MutationDeck.SET_DECKS, decks);
-
-			const deckOrigin: IDeckState['originDecks'] = 'CURRENT_MOVIE';
-			commit(MutationDeck.SET_DECKS_ORIGIN, deckOrigin);
+			commit(MutationDeck.SET_DECKS_CURR_MOVIE, decks);
 		},
 		async [ActionDeck.FETCH_DECKS_CURRENT_USER]({ commit, state, rootState }) {
 			if (!rootState.user.isLogged) {
@@ -86,18 +82,19 @@ const deckModule: Module<IDeckState, IState> = {
 			const decks = (
 				await fetchAllDecks({ userId: rootState.user.info?.['id'] as number })
 			).data;
-			commit(MutationDeck.SET_DECKS, decks);
-
-			const deckOrigin: IDeckState['originDecks'] = 'CURRENT_USER';
-			commit(MutationDeck.SET_DECKS_ORIGIN, deckOrigin);
+			commit(MutationDeck.SET_DECKS_CURR_USER, decks);
 		},
 		async [ActionDeck.REFRESH_CURRENT_DECK]({ commit, state, rootState }) {
 			if (!state.currentDeck) {
 				return;
 			}
 			const deck = (await fetchCompleteDeck(state.currentDeck)).data;
-			const index = state.decks.findIndex(deckElem => deckElem.id == deck.id);
-			state.decks.splice(index, 1, deck);
+			const updateDeckInList = (decks: DeckApi_WithoutCards[]) => {
+				const index = decks.findIndex(deckElem => deckElem.id == deck.id);
+				decks.splice(index, 1, deck);
+			};
+			updateDeckInList(state.decksCurrMovie);
+			updateDeckInList(state.decksCurrUser);
 			state.currentDeck = {
 				...deck,
 				hasLocalModifs: false,
@@ -158,14 +155,24 @@ const deckModule: Module<IDeckState, IState> = {
 			const nextCurrentDeck = deckResponse.data;
 			nextCurrentDeck.numberOfCards = nextCurrentDeck.cards?.length ?? 0;
 			commit(MutationDeck.SET_CURRENT_DECK, nextCurrentDeck);
-			const decksCpy = [...state.decks];
-			const nextCurrentDeckInDeckList = decksCpy.find(
-				deck => deck.id == nextCurrentDeck.id
+			const deckListWithUpdatedInfo = (decks: DeckApi_WithoutCards[]) => {
+				const decksCpy = [...decks];
+				const currentDeckInDeckList = decksCpy.find(
+					deck => deck.id == nextCurrentDeck.id
+				);
+				if (currentDeckInDeckList) {
+					currentDeckInDeckList.numberOfCards = nextCurrentDeck.numberOfCards;
+				}
+				return decksCpy;
+			};
+			commit(
+				MutationDeck.SET_DECKS_CURR_MOVIE,
+				deckListWithUpdatedInfo(state.decksCurrMovie)
 			);
-			if (nextCurrentDeckInDeckList) {
-				nextCurrentDeckInDeckList.numberOfCards = nextCurrentDeck.numberOfCards;
-			}
-			commit(MutationDeck.SET_DECKS, decksCpy);
+			commit(
+				MutationDeck.SET_DECKS_CURR_USER,
+				deckListWithUpdatedInfo(state.decksCurrUser)
+			);
 		},
 		async [ActionDeck.CREATE_DECK](
 			{ commit, state, rootState, getters },
@@ -187,8 +194,14 @@ const deckModule: Module<IDeckState, IState> = {
 			});
 			console.log('gboDebug:[ crate deck deckFromApi]', deckFromApi);
 			deckFromApi.data.numberOfCards = deckFromApi.data.cards?.length ?? 0;
-			const newDeckList = [deckFromApi.data, ...state.decks];
-			commit(MutationDeck.SET_DECKS, newDeckList);
+			commit(MutationDeck.SET_DECKS_CURR_USER, [
+				deckFromApi.data,
+				...state.decksCurrUser,
+			]);
+			commit(MutationDeck.SET_DECKS_CURR_MOVIE, [
+				deckFromApi.data,
+				...state.decksCurrMovie,
+			]);
 			return deckFromApi.data;
 		},
 		async [ActionDeck.DELETE_CURRENT_DECK]({
@@ -199,13 +212,20 @@ const deckModule: Module<IDeckState, IState> = {
 		}) {
 			if (state.currentDeck) {
 				await deleteDeck(state.currentDeck.id);
-				const index = state.decks.findIndex(
-					deck => deck.id == state.currentDeck?.id
-				);
+				const listWithoutDeletedDeck = (decks: DeckApi_WithoutCards[]) => {
+					const index = decks.findIndex(
+						deck => deck.id == state.currentDeck?.id
+					);
+					decks.filter(deck => deck.id != state.currentDeck?.id);
+				};
 
 				commit(
-					MutationDeck.SET_DECKS,
-					state.decks.filter(deck => deck.id != state.currentDeck?.id)
+					MutationDeck.SET_DECKS_CURR_USER,
+					listWithoutDeletedDeck(state.decksCurrUser)
+				);
+				commit(
+					MutationDeck.SET_DECKS_CURR_MOVIE,
+					listWithoutDeletedDeck(state.decksCurrMovie)
 				);
 				dispatch(ActionDeck.SET_CURRENT_DECK_ACTION, null);
 			}

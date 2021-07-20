@@ -51,12 +51,12 @@
 				v-if="canCreateDecks"
 				class="my-8"
 			></NewDeck>
-			<template v-if="isMoviePage || originDecks == 'CURRENT_USER'">
+			<template v-if="isMoviePage || decksSource == 'CURRENT_USER'">
 				<div class="underline mb-4 mt-8">
-					<template v-if="originDecks == 'CURRENT_MOVIE'">
+					<template v-if="decksSource == 'CURRENT_MOVIE'">
 						Decks for the current movie:
 					</template>
-					<template v-else-if="originDecks == 'CURRENT_USER'">
+					<template v-else-if="decksSource == 'CURRENT_USER'">
 						Your decks:
 					</template>
 				</div>
@@ -67,13 +67,13 @@
 							<th class="px-4 py-2 font-extrabold">Language</th>
 							<th class="px-4 py-2 font-extrabold">Number of cards</th>
 							<th
-								v-if="originDecks == 'CURRENT_USER'"
+								v-if="decksSource == 'CURRENT_USER'"
 								class="px-4 py-2 font-extrabold"
 							>
 								Movie
 							</th>
 							<th
-								v-if="originDecks == 'CURRENT_MOVIE'"
+								v-if="decksSource == 'CURRENT_MOVIE'"
 								class="px-4 py-2 font-extrabold"
 							>
 								Author
@@ -103,13 +103,13 @@
 							</td>
 							<td
 								class="px-4 py-2 border-l-0"
-								v-if="originDecks == 'CURRENT_MOVIE'"
+								v-if="decksSource == 'CURRENT_MOVIE'"
 							>
 								{{ deck.ownerName }}
 							</td>
 							<td
 								class="px-4 py-2 border-l-0"
-								v-if="originDecks == 'CURRENT_USER'"
+								v-if="decksSource == 'CURRENT_USER'"
 							>
 								{{ deck.movie.title }}
 							</td>
@@ -143,11 +143,18 @@ import langSelectData from './langSelectData';
 	emits: ['deck-selector-close'],
 })
 export default class DeckSelector extends Vue {
-	get decks() {
-		return this.$store.state.deckModule.decks;
+	get decksCurrMovie() {
+		return this.$store.state.deckModule.decksCurrMovie;
 	}
-	get originDecks() {
-		return this.$store.state.deckModule.originDecks;
+	get decksCurrUser() {
+		return this.$store.state.deckModule.decksCurrUser;
+	}
+	get decks() {
+		if (this.decksSource == 'CURRENT_MOVIE') {
+			return this.decksCurrMovie;
+		} else {
+			return this.decksCurrUser;
+		}
 	}
 	get currentDeck() {
 		return this.$store.state.deckModule.currentDeck;
@@ -162,6 +169,8 @@ export default class DeckSelector extends Vue {
 
 	@Prop()
 	isDeckSelectionShown!: boolean;
+	@Prop()
+	decksSource: 'CURRENT_MOVIE' | 'CURRENT_USER' = 'CURRENT_MOVIE';
 
 	closeButton() {
 		this.$emit('deck-selector-close');

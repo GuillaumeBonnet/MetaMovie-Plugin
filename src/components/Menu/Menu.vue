@@ -26,6 +26,7 @@
 					class="px-5 pt-5"
 					:isDeckSelectionShown="isDeckSelectionShown"
 					@deck-selector-close="isDeckSelectionShown = false"
+					:decksSource="originDeck"
 				></DeckSelector>
 				<CardsCurrentDeck
 					v-if="currentDeck && isCardListShown"
@@ -86,7 +87,8 @@
 								work
 							</div>
 							<div class="text-center">
-								{{ decks.length }} available decks for this movie/episode
+								{{ decksCurrMovie.length }} available decks for this
+								movie/episode
 							</div>
 							<div class="mt-5 flex justify-center">
 								<mcw-button raised @click="toggleDeckSelectorMovie()">
@@ -97,7 +99,7 @@
 					</template>
 					<template v-else>
 						<!-- movie page but no current deck selected -->
-						<template v-if="decks.length == 0">
+						<template v-if="decksCurrMovie.length == 0">
 							<MenuCard class="">
 								<div
 									class="material-icons text-7xl text-gray-500 flex justify-center"
@@ -128,7 +130,8 @@
 									work
 								</div>
 								<div class="text-center">
-									{{ decks.length }} available decks for this movie/episode
+									{{ decksCurrMovie.length }} available decks for this
+									movie/episode
 								</div>
 								<div class="mt-5 flex justify-center">
 									<mcw-button raised @click="toggleDeckSelectorMovie()">
@@ -139,7 +142,10 @@
 						</template>
 					</template>
 					<MenuCard class="mt-5">
-						<div class="text-center" v-if="!isLogged && decks.length == 0">
+						<div
+							class="text-center"
+							v-if="!isLogged && decksCurrMovie.length == 0"
+						>
 							Log In to create a deck
 						</div>
 						<Login class="mt-5" @open-user-decks="openUserDecks()"></Login>
@@ -244,8 +250,8 @@ export default class Menu extends Vue {
 		return this.$store.state.deckModule.currentDeck;
 	}
 
-	get decks() {
-		return this.$store.state.deckModule.decks;
+	get decksCurrMovie() {
+		return this.$store.state.deckModule.decksCurrMovie;
 	}
 
 	get cards() {
@@ -277,19 +283,19 @@ export default class Menu extends Vue {
 		alert('todo');
 	}
 	toggleDeckSelectorMovie() {
-		const originDeck = this.$store.state.deckModule.originDecks;
-		if (originDeck == 'CURRENT_MOVIE') {
+		if (this.originDeck == 'CURRENT_MOVIE') {
 			this.isDeckSelectionShown = !this.isDeckSelectionShown;
 		} else {
+			this.originDeck = 'CURRENT_MOVIE';
 			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
 			this.isDeckSelectionShown = true;
 		}
 	}
 	openUserDecks() {
-		const originDeck = this.$store.state.deckModule.originDecks;
-		if (originDeck == 'CURRENT_USER') {
+		if (this.originDeck == 'CURRENT_USER') {
 			this.isDeckSelectionShown = !this.isDeckSelectionShown;
 		} else {
+			this.originDeck = 'CURRENT_USER';
 			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_USER);
 			this.isDeckSelectionShown = true;
 		}
@@ -309,6 +315,7 @@ export default class Menu extends Vue {
 	/* -------------------------------------------------------------------------- */
 
 	isCardListShown = false;
+	originDeck: 'CURRENT_USER' | 'CURRENT_MOVIE' = 'CURRENT_MOVIE';
 
 	seeCurrentFactList() {
 		console.log('gboDebug:[seeCurrentFactList]');
