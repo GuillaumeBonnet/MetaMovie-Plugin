@@ -17,12 +17,12 @@ const appMenu = createApp(Menu);
 appMenu.use(store);
 appMenu.use(VueMaterialAdapter);
 appMenu.mount('#plugin-meta-movie-menu');
+appMenu.config.globalProperties.window = window;
 
 const appOverlay = createApp(VideoOverlay);
 appOverlay.use(store);
 appOverlay.mount('#plugin-meta-movie-video-overlay');
 
-console.log('gboDebug:[location]', location);
 if (/watch\/(\d+)/.test(location.pathname)) {
 	const netflixMovieId = Number.parseInt(
 		/watch\/(\d+)/.exec(location.pathname)?.[1] || ''

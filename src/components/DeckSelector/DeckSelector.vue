@@ -82,13 +82,16 @@
 					</thead>
 					<tbody class="text-center text-gray-200">
 						<tr
-							class="border-b-1 border-black font-medium"
+							class="border-b-1 border-black font-medium bg-gray-500"
 							v-for="(deck, index) in decks"
-							:class="
-								currentDeck?.id == deck.id
-									? 'bg-gray-700 hover:bg-gray-800'
-									: 'bg-gray-500 hover:bg-gray-600'
-							"
+							:class="{
+								['bg-gray-700 hover:bg-gray-800']:
+									currentDeck?.id == deck.id && isDeckCurrentMovie(deck),
+								['hover:bg-gray-600']:
+									currentDeck?.id != deck.id && isDeckCurrentMovie(deck),
+								['cursor-pointer']: isDeckCurrentMovie(deck),
+								['text-gray-800 ']: !isDeckCurrentMovie(deck),
+							}"
 							:key="deck.id"
 							@click="rowClicked(index)"
 						>
@@ -111,7 +114,11 @@
 								class="px-4 py-2 border-l-0"
 								v-if="decksSource == 'CURRENT_USER'"
 							>
-								{{ deck.movie.title }}
+								<a
+									class="underline text-white"
+									:href="`${rootUrl}/watch/${deck.movie.id}`"
+									>{{ deck.movie.title }}</a
+								>
 							</td>
 						</tr>
 					</tbody>
@@ -138,6 +145,7 @@ import MatPopup from '@/components/material/MatPopup.vue';
 import NewDeck from '@/components/DeckSelector/NewDeck.vue';
 import { GetterMain } from '@/store/Store';
 import langSelectData from './langSelectData';
+import { DeckApi_WithoutCards } from '@/models/ApiTypes';
 @Options({
 	components: { MatPopup, NewDeck },
 	emits: ['deck-selector-close'],
@@ -167,6 +175,10 @@ export default class DeckSelector extends Vue {
 		return this.$store.getters[GetterMain.IS_MOVIE_PAGE];
 	}
 
+	get rootUrl() {
+		return window.location.origin;
+	}
+
 	@Prop()
 	isDeckSelectionShown!: boolean;
 	@Prop()
@@ -184,8 +196,15 @@ export default class DeckSelector extends Vue {
 			countryCode
 		);
 	}
+
+	isDeckCurrentMovie(deck: DeckApi_WithoutCards) {
+		return deck.movie.id == this.$store.state.movieId;
+	}
 	async rowClicked(index: number) {
-		if (this.decks && this.currentDeck?.id == this.decks[index].id) {
+		if (
+			(this.decks && this.currentDeck?.id == this.decks[index].id) ||
+			!this.isDeckCurrentMovie(this.decks[index])
+		) {
 			return;
 		}
 		if (this.currentDeck && this.currentDeck.hasLocalModifs) {
