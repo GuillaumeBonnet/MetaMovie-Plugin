@@ -20,6 +20,7 @@
 		"@material/switch": "^10.0.0",
 		"@material/textfield": "^10.0.0",
 		"@material/tooltip": "^10.0.0",
+		"@material/typography": "^10.0.0",
 		"@mdi/font": "^3.6.95",
 		"axios": "^0.21.1",
 		"core-js": "^3.6.4",

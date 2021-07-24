@@ -1,33 +1,35 @@
 <template>
 	<div class="">
-		<MatPopup ref="popup-new-deck" title="New Deck pop-up" class="">
-			Start a new deck for this movie:
-			<div class="p-4">
-				<MatTextField
-					v-model="newDeck.name"
-					label="Name"
-					required="true"
-				></MatTextField>
-			</div>
-			<div class="p-4 overflow-visible">
-				<mcw-select
-					v-model="newDeck.languageTag"
-					label="Language"
-					helptext="Pick a language"
-					leading-icon="language"
-				>
-					<mcw-list-item
-						v-for="elem in langSelectData"
-						:key="elem.value"
-						:data-value="elem.value"
-						role="option"
-						icon
-						>{{ elem.label }}</mcw-list-item
+		<MatPopup ref="popup-new-deck" title="New Deck pop-up">
+			<div class="popup-new-deck">
+				Start a new deck for this movie:
+				<div class="p-4">
+					<MatTextField
+						v-model="newDeck.name"
+						label="Name"
+						required="true"
+					></MatTextField>
+				</div>
+				<div class="p-4 overflow-visible">
+					<mcw-select
+						v-model="newDeck.languageTag"
+						label="Language"
+						helptext="Pick a language"
+						leading-icon="language"
 					>
-				</mcw-select>
-			</div>
-			<div class="text-red-600" v-if="errorMessage">
-				{{ errorMessage }}
+						<mcw-list-item
+							v-for="elem in langSelectData"
+							:key="elem.value"
+							:data-value="elem.value"
+							role="option"
+							icon
+							>{{ elem.label }}</mcw-list-item
+						>
+					</mcw-select>
+				</div>
+				<div class="text-red-600" v-if="errorMessage">
+					{{ errorMessage }}
+				</div>
 			</div>
 			<template v-slot:actions>
 				<mcw-button
@@ -104,16 +106,17 @@ export default class NewDeck extends Vue {
 
 <style lang="scss">
 @use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
-.mdc-dialog__surface > div,
-.mdc-dialog__surface,
-ul.mdc-list,
-.mdc-select,
-.select-wrapper {
-	overflow: visible !important;
-}
-
-.mdc-menu-surface--open {
-	max-height: 25vh !important;
+div[aria-labelledby='New Deck pop-up'] {
+	&.mdc-dialog__surface,
+	& .mdc-dialog__surface > div,
+	& ul.mdc-list,
+	& .mdc-select,
+	& .select-wrapper {
+		overflow: visible !important;
+	}
+	& .mdc-menu-surface--open {
+		max-height: 25vh !important;
+	}
 }
 </style>
 

@@ -31,6 +31,7 @@ $gray-900: rgb(17, 24, 39);
 @use "@material/select/mdc-select";
 @use '@material/select/styles';
 @use '@material/select';
+@use "@material/typography/mdc-typography";
 
 @include mixins.core-styles;
 @include list.core-styles;

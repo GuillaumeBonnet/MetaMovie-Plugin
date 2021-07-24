@@ -30,4 +30,13 @@ type UserInfo = {
 	permissions: 'READ_DECKS' | 'CREATE_DECKS';
 };
 
-export { CreateFields, DeckApi, CardApi, DeckApi_WithoutCards, UserInfo };
+type MovieAndCount = { nbDecks: number; name: string; netflixId: string };
+
+export {
+	CreateFields,
+	DeckApi,
+	CardApi,
+	DeckApi_WithoutCards,
+	UserInfo,
+	MovieAndCount,
+};

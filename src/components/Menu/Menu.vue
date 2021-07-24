@@ -28,6 +28,10 @@
 					@deck-selector-close="isDeckSelectionShown = false"
 					:decksSource="originDeck"
 				></DeckSelector>
+				<MovieList
+					:isShown="isMovieListOpenned"
+					@movie-list-close="isMovieListOpenned = false"
+				></MovieList>
 				<CardsCurrentDeck
 					v-if="currentDeck && isCardListShown"
 					:isCardListShown="isCardListShown"
@@ -53,9 +57,9 @@
 								>
 									view_list
 								</div>
-								<mcw-button class="" @click="browseAllDecks()"
-									>Browse all decks</mcw-button
-								>
+								<mcw-button class="" @click="toggleMovieList()">
+									Movies with decks
+								</mcw-button>
 							</div>
 						</MenuCard>
 					</template>
@@ -95,6 +99,11 @@
 									Select another Deck
 								</mcw-button>
 							</div>
+						</MenuCard>
+						<MenuCard class="mt-5">
+							<mcw-button class="block mx-auto" @click="toggleMovieList()">
+								Movies with decks
+							</mcw-button>
 						</MenuCard>
 					</template>
 					<template v-else>
@@ -140,6 +149,11 @@
 								</div>
 							</MenuCard>
 						</template>
+						<MenuCard class="mt-5">
+							<mcw-button class="block mx-auto" @click="toggleMovieList()">
+								Movies with decks
+							</mcw-button>
+						</MenuCard>
 					</template>
 					<MenuCard class="mt-5">
 						<div
@@ -179,9 +193,10 @@ import axios, { AxiosResponse } from 'axios';
 import { DeckApi, DeckApi_WithoutCards } from '@/models/ApiTypes';
 import { defineComponent } from 'vue';
 import { ActionDeck, MutationDeck } from '@/store/DeckStore';
-import { fetchAllDecks, userInfo } from '@/Utils/WebService';
+import { fetchAllDecks, fetchMovies, userInfo } from '@/Utils/WebService';
 import { ActionMain, GetterMain, MutationMain } from '@/store/Store';
 import NewDeck from '../DeckSelector/NewDeck.vue';
+import MovieList from '../MovieList.vue';
 
 const MenuItem = defineComponent({
 	template: `
@@ -221,6 +236,7 @@ const MenuItem = defineComponent({
 		DeckSelector,
 		Login,
 		NewDeck,
+		MovieList,
 	},
 })
 export default class Menu extends Vue {
@@ -274,13 +290,17 @@ export default class Menu extends Vue {
 	/* -------------------------------------------------------------------------- */
 	isMenuForcedOpen = false;
 	isDeckSelectionShown = false;
+	isMovieListOpenned = false;
 	get isMenuOppened() {
 		return (
-			this.isMenuForcedOpen || this.isDeckSelectionShown || this.isCardListShown
+			this.isMenuForcedOpen ||
+			this.isDeckSelectionShown ||
+			this.isMovieListOpenned ||
+			this.isCardListShown
 		);
 	}
-	browseAllDecks() {
-		alert('todo');
+	async toggleMovieList() {
+		this.isMovieListOpenned = !this.isMovieListOpenned;
 	}
 	toggleDeckSelectorMovie() {
 		if (this.originDeck == 'CURRENT_MOVIE') {

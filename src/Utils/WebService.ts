@@ -2,6 +2,7 @@ import {
 	CreateFields,
 	DeckApi,
 	DeckApi_WithoutCards,
+	MovieAndCount,
 	UserInfo,
 } from '@/models/ApiTypes';
 import axios from 'axios';
@@ -49,6 +50,10 @@ const signUp = (credentials: {
 const userInfo = () => {
 	return axios.get<UserInfo>(`${rootUrl}/users/info`);
 };
+const fetchMovies = () => {
+	return axios.get<MovieAndCount[]>(`${rootUrl}/movies/`);
+};
+
 export {
 	fetchCompleteDeck,
 	fetchAllDecks,
@@ -59,4 +64,5 @@ export {
 	userInfo,
 	logout,
 	signUp,
+	fetchMovies,
 };
