@@ -99,7 +99,7 @@ export default class NewDeck extends Vue {
 		) {
 			this.$store.dispatch(ActionDeck.SET_CURRENT_DECK_ACTION, newDeck);
 		}
-		(this.$refs['popup-new-deck'] as MatPopup).close();
+		(this.$refs['popup-new-deck'] as MatPopup)?.close();
 	}
 }
 </script>

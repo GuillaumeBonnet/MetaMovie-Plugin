@@ -144,6 +144,7 @@ const deckModule: Module<IDeckState, IState> = {
 				createdAt: currentDeck.createdAt,
 				updatedAt: currentDeck.updatedAt,
 				languageTag: currentDeck.languageTag,
+				description: currentDeck.description,
 				name: currentDeck.name,
 				cards: rootState.cardModule.cards,
 				permissions: [],
@@ -216,7 +217,7 @@ const deckModule: Module<IDeckState, IState> = {
 					const index = decks.findIndex(
 						deck => deck.id == state.currentDeck?.id
 					);
-					decks.filter(deck => deck.id != state.currentDeck?.id);
+					return decks.filter(deck => deck.id != state.currentDeck?.id);
 				};
 
 				commit(
