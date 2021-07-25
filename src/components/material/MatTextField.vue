@@ -6,41 +6,58 @@
 			'mdc-text-field--disabled': disabled,
 			'mdc-text-field--with-leading-icon': leadingIcon,
 			'mdc-text-field--with-trailing-icon': _trailingIcon,
+			'mdc-text-field--textarea mdc-text-field--no-label': textArea,
 		}"
 	>
-		<span class="mdc-notched-outline" :class="disabled ? 'toto' : 'titi'">
+		<span class="mdc-notched-outline" :class="disabled ? '' : ''">
 			<span class="mdc-notched-outline__leading"></span>
 			<span class="mdc-notched-outline__notch">
 				<span class="mdc-floating-label" :id="labelId">{{ label }}</span>
 			</span>
 			<span class="mdc-notched-outline__trailing"></span>
 		</span>
-		<i
-			ref="mdc-text-leading-icon"
-			v-if="leadingIcon"
-			class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
-			>{{ leadingIcon }}</i
-		>
-		<input
-			:type="InnerType"
-			class="mdc-text-field__input"
-			:aria-labelledby="labelId"
-			:value="modelValue"
-			@input="$emit('update:modelValue', $event.target.value)"
-			:required="required"
-			:invalid="invalid"
-		/>
-		<i
-			ref="mdc-text-trailing-icon"
-			v-if="_trailingIcon"
-			class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing"
-			tabindex="0"
-			role="button"
-			@mousedown="showPassword()"
-			@mouseup="hidePassword()"
-			@mouseout="hidePassword()"
-			>{{ _trailingIcon }}</i
-		>
+		<template v-if="!textArea">
+			<i
+				ref="mdc-text-leading-icon"
+				v-if="leadingIcon"
+				class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
+				>{{ leadingIcon }}</i
+			>
+			<input
+				:type="InnerType"
+				class="mdc-text-field__input"
+				:aria-labelledby="labelId"
+				:value="modelValue"
+				@input="$emit('update:modelValue', $event.target.value)"
+				:required="required"
+				:invalid="invalid"
+			/>
+			<i
+				ref="mdc-text-trailing-icon"
+				v-if="_trailingIcon"
+				class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing"
+				tabindex="0"
+				role="button"
+				@mousedown="showPassword()"
+				@mouseup="hidePassword()"
+				@mouseout="hidePassword()"
+				>{{ _trailingIcon }}</i
+			>
+		</template>
+		<template v-else-if="textArea">
+			<span class="mdc-text-field__resizer">
+				<textarea
+					class="mdc-text-field__input"
+					rows="8"
+					cols="40"
+					:aria-labelledby="labelId"
+					:value="modelValue"
+					@input="$emit('update:modelValue', $event.target.value)"
+					:required="required"
+					:invalid="invalid"
+				></textarea>
+			</span>
+		</template>
 	</label>
 	<div class="mdc-text-field-helper-line">
 		<div class="mdc-text-field-helper-text" aria-hidden="true">
@@ -139,6 +156,8 @@ export default class MatTextField extends Vue {
 	leadingIcon!: string;
 	@Prop({ required: false, default: false })
 	trailingIcon!: string;
+	@Prop({ required: false, default: false })
+	textArea!: string;
 }
 </script>
 

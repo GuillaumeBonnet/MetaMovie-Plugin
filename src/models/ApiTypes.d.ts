@@ -6,6 +6,7 @@ type DeckApi_WithoutCards = {
 	updatedAt: Date;
 	languageTag: string | null;
 	name: string;
+	description: string;
 	permissions: ObjectPermission[];
 	numberOfCards: number;
 	ownerName: string;

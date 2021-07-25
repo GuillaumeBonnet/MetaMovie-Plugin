@@ -337,17 +337,6 @@ export default class Menu extends Vue {
 	isCardListShown = false;
 	originDeck: 'CURRENT_USER' | 'CURRENT_MOVIE' = 'CURRENT_MOVIE';
 
-	seeCurrentFactList() {
-		console.log('gboDebug:[seeCurrentFactList]');
-	}
-
-	gboDebugDisplayedCard() {
-		console.log('gboDebug:[this.displayedCards]', this.displayedCards);
-	}
-	gboDebugCard() {
-		console.log('gboDebug:[this.cards]', this.cards);
-	}
-
 	createADeck() {
 		(this.$refs['create-deck-popup'] as NewDeck).newDeckPopup();
 	}

@@ -73,7 +73,6 @@ export default class DeleteDeckConfirmation extends Vue {
 	confirmationInput = '';
 
 	deleteDeck() {
-		console.log('gboDebug:[this.currentDeck]', this.currentDeck);
 		if (!this.currentDeck) {
 			return;
 		}

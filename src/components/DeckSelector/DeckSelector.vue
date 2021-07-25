@@ -210,7 +210,6 @@ export default class DeckSelector extends Vue {
 		if (this.currentDeck && this.currentDeck.hasLocalModifs) {
 			(this.$refs['popup-deck-selector-modifications'] as MatPopup).open(
 				async (eventName: 'close' | 'discard' | 'save') => {
-					console.log('gboDebug:[eventName]', eventName);
 					if (eventName == 'discard') {
 						await this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
 						await this.$store.dispatch(

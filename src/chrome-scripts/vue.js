@@ -1,4 +1,4 @@
-var Vue = (function(exports) {
+const Vue = (function(exports) {
 	'use strict';
 
 	/**
@@ -2010,7 +2010,7 @@ var Vue = (function(exports) {
 			return comp.__emits;
 		}
 		const raw = comp.emits;
-		let normalized = {};
+		const normalized = {};
 		// apply mixin/extends props
 		let hasExtends = false;
 		if (!isFunction(comp)) {
@@ -3426,7 +3426,7 @@ var Vue = (function(exports) {
 		const rawValues = toRaw(props);
 		const options = instance.propsOptions[0];
 		for (const key in options) {
-			let opt = options[key];
+			const opt = options[key];
 			if (opt == null) continue;
 			validateProp(key, rawValues[key], opt, !hasOwn(rawValues, key));
 		}
@@ -4986,7 +4986,7 @@ var Vue = (function(exports) {
 					if (
 						!optimized ||
 						patchFlag & 16 /* FULL_PROPS */ ||
-							patchFlag & 32 /* HYDRATE_EVENTS */
+						patchFlag & 32 /* HYDRATE_EVENTS */
 					) {
 						for (const key in props) {
 							if (!isReservedProp(key) && isOn(key)) {
@@ -6393,7 +6393,7 @@ var Vue = (function(exports) {
 					// This is triggered by mutation of component's own state (next: null)
 					// OR parent calling processComponent (next: VNode)
 					let { next, bu, u, parent, vnode } = instance;
-					let originNext = next;
+					const originNext = next;
 					let vnodeHook;
 					{
 						pushWarningContext(next || instance.vnode);
@@ -6953,7 +6953,7 @@ var Vue = (function(exports) {
 					dynamicChildren &&
 					// #1153: fast path should not be taken for non-stable (v-for) fragments
 					(type !== Fragment ||
-						(patchFlag > 0 && patchFlag & 64) /* STABLE_FRAGMENT */)
+						(patchFlag > 0 && patchFlag & 64)) /* STABLE_FRAGMENT */
 				) {
 					// fast path for block nodes: only need to unmount dynamic children.
 					unmountChildren(
@@ -6966,7 +6966,7 @@ var Vue = (function(exports) {
 				} else if (
 					(type === Fragment &&
 						(patchFlag & 128 /* KEYED_FRAGMENT */ ||
-							patchFlag & 256) /* UNKEYED_FRAGMENT */) ||
+							patchFlag & 256)) /* UNKEYED_FRAGMENT */ ||
 					(!optimized && shapeFlag & 16) /* ARRAY_CHILDREN */
 				) {
 					unmountChildren(children, parentComponent, parentSuspense);
@@ -9998,7 +9998,7 @@ var Vue = (function(exports) {
 		DOMTransitionPropsValidators
 	));
 	function resolveTransitionProps(rawProps) {
-		let {
+		const {
 			name = 'v',
 			type,
 			css = true,
@@ -13485,7 +13485,8 @@ var Vue = (function(exports) {
 			}
 			if (
 				exp.type !== 4 /* SIMPLE_EXPRESSION */ ||
-				exp.isStatic !== branchExp.isStatic || exp.content !== branchExp.content
+				exp.isStatic !== branchExp.isStatic ||
+				exp.content !== branchExp.content
 			) {
 				return false;
 			}
@@ -14036,8 +14037,10 @@ var Vue = (function(exports) {
 	const transformElement = (node, context) => {
 		if (
 			!(
-				node.type === 1 /* ELEMENT */ &&
-				(node.tagType === 0 /* ELEMENT */ || node.tagType === 1) /* COMPONENT */
+				(
+					node.type === 1 /* ELEMENT */ &&
+					(node.tagType === 0 /* ELEMENT */ || node.tagType === 1)
+				) /* COMPONENT */
 			)
 		) {
 			return;
@@ -14272,7 +14275,7 @@ var Vue = (function(exports) {
 			const prop = props[i];
 			if (prop.type === 6 /* ATTRIBUTE */) {
 				const { loc, name, value } = prop;
-				let isStatic = true;
+				const isStatic = true;
 				if (name === 'ref') {
 					hasRef = true;
 				}
@@ -14627,7 +14630,7 @@ var Vue = (function(exports) {
 		if (exp && !exp.content.trim()) {
 			exp = undefined;
 		}
-		let shouldCache = context.cacheHandlers && !exp;
+		const shouldCache = context.cacheHandlers && !exp;
 		if (exp) {
 			const isMemberExp = isMemberExpression(exp.content);
 			const isInlineStatement = !(isMemberExp || fnExpRE.test(exp.content));
@@ -14760,7 +14763,7 @@ var Vue = (function(exports) {
 					(children.length === 1 &&
 						(node.type === 0 /* ROOT */ ||
 							(node.type === 1 /* ELEMENT */ &&
-								node.tagType === 0) /* ELEMENT */))
+								node.tagType === 0))) /* ELEMENT */
 				) {
 					return;
 				}

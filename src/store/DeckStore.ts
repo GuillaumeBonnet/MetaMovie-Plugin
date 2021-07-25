@@ -193,7 +193,6 @@ const deckModule: Module<IDeckState, IState> = {
 					title: rootState.movieTitle,
 				},
 			});
-			console.log('gboDebug:[ crate deck deckFromApi]', deckFromApi);
 			deckFromApi.data.numberOfCards = deckFromApi.data.cards?.length ?? 0;
 			commit(MutationDeck.SET_DECKS_CURR_USER, [
 				deckFromApi.data,

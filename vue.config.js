@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = {
+	// lintOnSave: false,
 	css: {
 		extract: process.env.npm_lifecycle_event == 'build',
 		loaderOptions: {

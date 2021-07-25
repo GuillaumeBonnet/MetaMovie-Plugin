@@ -35,7 +35,7 @@ function getAwaitedNode() {
 }
 
 function htmlToElem(html: string) {
-	let temp = document.createElement('template');
+	const temp = document.createElement('template');
 	html = html.trim(); // Never return a space text node as a result
 	temp.innerHTML = html;
 	if (!temp.content.firstChild) {

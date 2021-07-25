@@ -33,6 +33,12 @@ $gray-900: rgb(17, 24, 39);
 @use '@material/select';
 @use "@material/typography/mdc-typography";
 
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/textfield";
+
+@include textfield.core-styles;
 @include mixins.core-styles;
 @include list.core-styles;
 

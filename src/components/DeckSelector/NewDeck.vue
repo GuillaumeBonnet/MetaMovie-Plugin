@@ -27,6 +27,13 @@
 						>
 					</mcw-select>
 				</div>
+				<div class="p-4">
+					<MatTextField
+						v-model="newDeck.description"
+						label="Description"
+						textArea="true"
+					></MatTextField>
+				</div>
 				<div class="text-red-600" v-if="errorMessage">
 					{{ errorMessage }}
 				</div>
@@ -72,9 +79,13 @@ import langSelectData from './langSelectData';
 	components: { MatPopup, MatTextField },
 })
 export default class NewDeck extends Vue {
-	newDeck: Pick<DeckApi_WithoutCards, 'languageTag' | 'name'> = {
+	newDeck: Pick<
+		DeckApi_WithoutCards,
+		'languageTag' | 'name' | 'description'
+	> = {
 		languageTag: 'en',
 		name: '',
+		description: '',
 	};
 	errorMessage = '';
 	newDeckPopup() {
