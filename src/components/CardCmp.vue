@@ -5,7 +5,7 @@ from // displayedCards and put back at the right place when the edit is done
 <template>
 	<div
 		:style="dynamicCardStyle"
-		class="z-1000000 group absolute p-3 text-4xl rounded-md min-w-card text-center"
+		class="card z-1000000 group absolute p-3 text-4xl rounded-md min-w-card text-center"
 		:class="
 			isEditDraggingPreview
 				? 'bg-black bg-opacity-70 text-yellow-100 text-5xl'
@@ -366,4 +366,16 @@ export default class CardCmp extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.card:hover:after {
+	// https://codepen.io/csilverman/post/fixing-the-jitter-bug
+	content: '';
+	height: calc(100% + 1em);
+	position: absolute;
+	left: -0.05%;
+	width: 101%;
+	z-index: -1;
+	bottom: -1em;
+	top: 0;
+}
+</style>
