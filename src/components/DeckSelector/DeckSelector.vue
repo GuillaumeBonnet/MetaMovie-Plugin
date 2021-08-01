@@ -60,69 +60,14 @@
 						Your decks:
 					</template>
 				</div>
-				<table class=" w-full text-3xl table-auto border-1 border-black">
-					<thead class="text-gray-900 bg-gray-500 border-b-1 border-black">
-						<tr>
-							<th class="px-4 py-2 font-extrabold">Title</th>
-							<th class="px-4 py-2 font-extrabold">Language</th>
-							<th class="px-4 py-2 font-extrabold">Number of cards</th>
-							<th
-								v-if="decksSource == 'CURRENT_USER'"
-								class="px-4 py-2 font-extrabold"
-							>
-								Movie
-							</th>
-							<th
-								v-if="decksSource == 'CURRENT_MOVIE'"
-								class="px-4 py-2 font-extrabold"
-							>
-								Author
-							</th>
-						</tr>
-					</thead>
-					<tbody class="text-center text-gray-200">
-						<tr
-							class="border-b-1 border-black font-medium bg-gray-500"
-							v-for="(deck, index) in decks"
-							:class="{
-								['bg-gray-700 hover:bg-gray-800']:
-									currentDeck?.id == deck.id && isDeckCurrentMovie(deck),
-								['hover:bg-gray-600']:
-									currentDeck?.id != deck.id && isDeckCurrentMovie(deck),
-								['cursor-pointer']: isDeckCurrentMovie(deck),
-								['text-gray-800 ']: !isDeckCurrentMovie(deck),
-							}"
-							:key="deck.id"
-							@click="rowClicked(index)"
-						>
-							<td class="px-4 py-2 border-r-0">
-								{{ deck.name }}
-							</td>
-							<td class="px-4 py-2 border-l-0">
-								{{ countryLabel(deck.languageTag) }}
-							</td>
-							<td class="px-4 py-2 border-l-0">
-								{{ deck.numberOfCards }}
-							</td>
-							<td
-								class="px-4 py-2 border-l-0"
-								v-if="decksSource == 'CURRENT_MOVIE'"
-							>
-								{{ deck.ownerName }}
-							</td>
-							<td
-								class="px-4 py-2 border-l-0"
-								v-if="decksSource == 'CURRENT_USER'"
-							>
-								<a
-									class="underline text-white"
-									:href="`${rootUrl}/watch/${deck.movie.id}`"
-									>{{ deck.movie.title }}</a
-								>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<DeckSelectionItem
+					@click="rowClicked(index)"
+					v-for="(deck, index) of decks"
+					:key="deck.id"
+					:deck="deck"
+					:isSelected="currentDeck?.id == deck.id"
+					:isDeckCurrentMovie="isDeckCurrentMovie(deck)"
+				></DeckSelectionItem>
 			</template>
 		</div>
 	</div>
@@ -143,11 +88,12 @@ import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import NewDeck from '@/components/DeckSelector/NewDeck.vue';
+import DeckSelectionItem from '@/components/DeckSelector/DeckSelectionItem.vue';
 import { GetterMain } from '@/store/Store';
 import langSelectData from './langSelectData';
 import { DeckApi_WithoutCards } from '@/models/ApiTypes';
 @Options({
-	components: { MatPopup, NewDeck },
+	components: { MatPopup, NewDeck, DeckSelectionItem },
 	emits: ['deck-selector-close'],
 })
 export default class DeckSelector extends Vue {
@@ -190,13 +136,6 @@ export default class DeckSelector extends Vue {
 	newDeckPopup() {
 		(this.$refs['new-deck-popup'] as NewDeck).newDeckPopup();
 	}
-	countryLabel(countryCode: string | null) {
-		return (
-			langSelectData.find(elem => elem.value == countryCode)?.label ||
-			countryCode
-		);
-	}
-
 	isDeckCurrentMovie(deck: DeckApi_WithoutCards) {
 		return deck.movie.id == this.$store.state.movieId;
 	}
