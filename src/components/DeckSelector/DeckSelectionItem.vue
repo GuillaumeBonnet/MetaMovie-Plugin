@@ -3,7 +3,8 @@
 		class="my-4 p-4 font-medium text-white bg-gray-800 border-gray-400 border-2 rounded-lg"
 		:class="{
 			['bg-gray-900']: isSelected,
-			['hover:border-white hover:bg-gray-900 cursor-pointer']: isDeckCurrentMovie,
+			['hover:border-white hover:bg-gray-900 cursor-pointer']:
+				isDeckCurrentMovie && !isSelected,
 		}"
 	>
 		<div class="font-bold text-white text-4xl">{{ deck.name }}</div>
@@ -21,9 +22,26 @@
 			</div>
 		</div>
 		<div
-			class="mt-4 text-2xl text-gray-300 overflow-hidden overflow-ellipsis whitespace-nowrap"
+			@click="isDescExpanded = !isDescExpanded"
+			class="mt-4 text-2xl text-gray-300 hover:text-white cursor-pointer relative"
 		>
-			{{ deck.description }}
+			<div
+				class="text-transparent"
+				:class="{
+					['absolute']: isDescExpanded,
+				}"
+			>
+				Hidden text
+			</div>
+			<div
+				class=""
+				:class="{
+					['absolute top-0 left-0 overflow-hidden overflow-ellipsis whitespace-nowrap w-full']: !isDescExpanded,
+				}"
+				:title="isDescExpanded ? 'Click to minimize' : 'Click to expand'"
+			>
+				{{ deck.description }}
+			</div>
 		</div>
 	</div>
 </template>
