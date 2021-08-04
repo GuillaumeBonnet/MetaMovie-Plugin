@@ -17,7 +17,9 @@
 			</span>
 			·
 			<div class="mx-2 flex align-middle">
-				<span class="material-icons text-gray-500 mr-2">account_circle</span>
+				<div class="material-icons text-gray-500 mr-2 flex items-center">
+					account_circle
+				</div>
 				{{ deck.ownerName }}
 			</div>
 		</div>
