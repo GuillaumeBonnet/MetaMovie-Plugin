@@ -59,15 +59,7 @@ function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 		'href',
 		'//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons'
 	);
-	const materialCss = htmlToElem(`<link
-	rel="stylesheet"
-	href="https://unpkg.com/material-components-web/dist/material-components-web.min.css"
-/>`);
-	const materialJs = htmlToElem(`
-	<script src="https://unpkg.com/material-components-web/dist/material-components-web.min.js"></script>`);
 	document.querySelector('head')?.appendChild(fontsNode);
-	document.querySelector('head')?.appendChild(materialCss);
-	document.querySelector('head')?.appendChild(materialJs);
 }
 
 function loadScripts() {

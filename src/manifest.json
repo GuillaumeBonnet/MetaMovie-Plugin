@@ -21,7 +21,6 @@
 		{
 			"matches": ["<all_urls>"],
 			"js": ["chrome-scripts/content.js"],
-			"css": ["css/content-overlay.css"],
 			"run_at": "document_idle",
 			"all_frames": true
 		}
