@@ -2,7 +2,9 @@
 	<div class="">
 		<MatPopup ref="popup-new-deck" title="New Deck pop-up">
 			<div class="popup-new-deck">
-				Start a new deck for this movie:
+				Create a new deck for
+				<span class="italic">{{ $store.state.movieTitle }}</span
+				>:
 				<div class="p-4">
 					<MatTextField
 						v-model="newDeck.name"

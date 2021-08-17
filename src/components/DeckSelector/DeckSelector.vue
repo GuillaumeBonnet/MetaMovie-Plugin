@@ -40,19 +40,13 @@
 			>
 				close
 			</button>
-			<button
-				class="bg-gray-600 hover:bg-gray-800 mt-2 p-3 w-full rounded-md border border-solid border-gray-800"
-				@click="newDeckPopup()"
-			>
-				Create Deck
-			</button>
 			<NewDeck
 				ref="new-deck-popup"
 				v-if="canCreateDecks"
 				class="my-8"
 			></NewDeck>
 			<template v-if="isMoviePage || decksSource == 'CURRENT_USER'">
-				<div class="underline mb-4 mt-8">
+				<div class="underline whitespace-nowrap mb-4 mt-8">
 					<template v-if="decksSource == 'CURRENT_MOVIE'">
 						Decks for the current movie:
 					</template>
@@ -60,6 +54,15 @@
 						Your decks:
 					</template>
 				</div>
+				<mcw-button
+					v-if="isMoviePage"
+					@click="newDeckPopup()"
+					class="w-full"
+					outlined
+					:disabled="!$store.state.user.isLogged"
+				>
+					Create Deck
+				</mcw-button>
 				<DeckSelectionItem
 					@click="rowClicked(index)"
 					v-for="(deck, index) of decks"
