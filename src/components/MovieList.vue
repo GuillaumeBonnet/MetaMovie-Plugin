@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="isShown"
-		class="min-width-deck-selector p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
+		class="min-width-deck-selector border-black border-1 shadow-xl p-6 absolute bottom-0 transform custom-translate-list rounded-md bg-gray-700"
 	>
 		<button
 			class="block ml-auto material-icons rounded-md w-12 h-12 text-3xl outline-none focus:outline-none bg-gray-600 hover:bg-gray-800 border-1 border-solid border-gray-900 hover:shadow transform transition-transform duration-300 ease-in-out"
