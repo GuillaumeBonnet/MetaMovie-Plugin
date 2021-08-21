@@ -1,82 +1,97 @@
 <template>
-	<ul
-		class="border-black border-1 shadow-xl scrollbar cursor-default mh-screen50 overflow-y-auto p-0 origin-top-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full top-0 left-0 bg-gray-800 rounded-md"
+	<div
+		class="cursor-default bg-gray-800 rounded-md border-black border-1 shadow-xl p-0 origin-top-right absolute transform transition-all delay-300 group-menuItem-hover:delay-100 duration-300 -translate-x-full top-0 left-0"
 		:class="isCardListShown ? '' : 'scale-0 group-menuItem-hover:scale-100'"
 	>
-		<li class="custo-min-with-li flex" v-if="currentDeck && canEditCurrentDeck">
-			<div
-				class="flex-grow p-5 group-currentDeckAction cursor-pointer rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
-				@click="addNewCard()"
-				aria-describedby="tooltip-new-card"
+		<button
+			class="m-6 block ml-auto material-icons rounded-md w-12 h-12 text-3xl  hover:shadow-sm outline-none focus:outline-none bg-gray-600 hover:bg-gray-800 border-1 border-solid border-gray-900 transform transition-transform duration-300 ease-in-out"
+			@click="closeButton()"
+			@mousedown.stop
+		>
+			close
+		</button>
+		<ul class="scrollbar overflow-y-auto mh-screen50 ">
+			<li
+				class="custo-min-with-li flex"
+				v-if="currentDeck && canEditCurrentDeck"
 			>
-				<MatTooltip id="tooltip-new-card" label="New Card"></MatTooltip>
 				<div
-					class="material-icons text-gray-300 group-currentDeckAction-hover:text-white"
+					class="flex-grow p-5 group-currentDeckAction cursor-pointer rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
+					@click="addNewCard()"
+					aria-describedby="tooltip-new-card"
 				>
-					note_add
+					<MatTooltip id="tooltip-new-card" label="New Card"></MatTooltip>
+					<div
+						class="material-icons text-gray-300 group-currentDeckAction-hover:text-white"
+					>
+						note_add
+					</div>
 				</div>
-			</div>
-			<div
-				class="flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
-				:class="
-					currentDeck.hasLocalModifs
-						? 'cursor-pointer group-currentDeckAction'
-						: ''
-				"
-				@click="updateDeck()"
-				aria-describedby="tooltip-backup"
-			>
-				<MatTooltip id="tooltip-backup" label="Save modifications"></MatTooltip>
-				<MatPopup
-					ref="popup-update-current-deck"
-					title="Save deck confirmation"
-				>
-					Save deck modifications ?
-				</MatPopup>
 				<div
-					class="material-icons  group-currentDeckAction-hover:text-white "
+					class="flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
 					:class="
-						currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+						currentDeck.hasLocalModifs
+							? 'cursor-pointer group-currentDeckAction'
+							: ''
 					"
+					@click="updateDeck()"
+					aria-describedby="tooltip-backup"
 				>
-					backup
+					<MatTooltip
+						id="tooltip-backup"
+						label="Save modifications"
+					></MatTooltip>
+					<MatPopup
+						ref="popup-update-current-deck"
+						title="Save deck confirmation"
+					>
+						Save deck modifications ?
+					</MatPopup>
+					<div
+						class="material-icons  group-currentDeckAction-hover:text-white "
+						:class="
+							currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+						"
+					>
+						backup
+					</div>
 				</div>
-			</div>
-			<div
-				class="flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
-				:class="
-					currentDeck.hasLocalModifs
-						? 'cursor-pointer group-currentDeckAction'
-						: ''
-				"
-				@click="restoreDeck()"
-				aria-describedby="tooltip-restore"
-			>
-				<MatTooltip
-					id="tooltip-restore"
-					label="Discard modifications"
-				></MatTooltip>
-				<MatPopup ref="popup-discard" title="Confirm deck discarded">
-					Discard deck modifications ?
-				</MatPopup>
 				<div
-					class="material-icons group-currentDeckAction-hover:text-white "
+					class="flex-grow p-5 rounded-md bg-gray-500 m-3 flex align-middle justify-center h-full"
 					:class="
-						currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+						currentDeck.hasLocalModifs
+							? 'cursor-pointer group-currentDeckAction'
+							: ''
 					"
+					@click="restoreDeck()"
+					aria-describedby="tooltip-restore"
 				>
-					restore
+					<MatTooltip
+						id="tooltip-restore"
+						label="Discard modifications"
+					></MatTooltip>
+					<MatPopup ref="popup-discard" title="Confirm deck discarded">
+						Discard deck modifications ?
+					</MatPopup>
+					<div
+						class="material-icons group-currentDeckAction-hover:text-white "
+						:class="
+							currentDeck.hasLocalModifs ? 'text-gray-300' : 'text-gray-400'
+						"
+					>
+						restore
+					</div>
 				</div>
-			</div>
-			<DeleteDeckConfirmation></DeleteDeckConfirmation>
-		</li>
-		<CardDetail
-			v-for="(card, index) in cards"
-			:key="index"
-			:card="card"
-			:index="index"
-		></CardDetail>
-	</ul>
+				<DeleteDeckConfirmation></DeleteDeckConfirmation>
+			</li>
+			<CardDetail
+				v-for="(card, index) in cards"
+				:key="index"
+				:card="card"
+				:index="index"
+			></CardDetail>
+		</ul>
+	</div>
 </template>
 
 <script lang="ts">
@@ -107,6 +122,7 @@ import { ActionDeck, GetterDeck, MutationDeck } from '@/store/DeckStore';
 		MatPopup,
 		DeleteDeckConfirmation,
 	},
+	emits: ['close-card-list'],
 })
 export default class CardsCurrentDeck extends Vue {
 	@Prop({ required: true, default: false })
@@ -122,6 +138,9 @@ export default class CardsCurrentDeck extends Vue {
 		return this.$store.getters[GetterDeck.CAN_EDIT_CURRENT_DECK];
 	}
 
+	closeButton() {
+		this.$emit('close-card-list');
+	}
 	addNewCard() {
 		this.$store.commit(MutationDeck.CURRENT_DECK_MODIFIED);
 		this.$store.commit(

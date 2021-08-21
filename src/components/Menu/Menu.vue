@@ -35,6 +35,7 @@
 				<CardsCurrentDeck
 					v-if="currentDeck && isCardListShown"
 					:isCardListShown="isCardListShown"
+					@close-card-list="isCardListShown = false"
 				></CardsCurrentDeck>
 				<div class="p-5">
 					<template v-if="!isMoviePage">
