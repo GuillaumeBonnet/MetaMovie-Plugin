@@ -181,23 +181,11 @@ export default class CardsCurrentDeck extends Vue {
 }
 </script>
 
+<style lang="scss">
+@use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
+</style>
 <style scoped lang="scss">
 .custo-min-with-li {
 	min-width: 200px;
-}
-.scrollbar {
-	&::-webkit-scrollbar {
-		width: 8px;
-	}
-	&::-webkit-scrollbar-track {
-		border-radius: 8px;
-	}
-	&::-webkit-scrollbar-thumb {
-		border-radius: 8px;
-		background: #757575;
-	}
-	&::-webkit-scrollbar-button {
-		display: none;
-	}
 }
 </style>

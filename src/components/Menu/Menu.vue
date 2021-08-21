@@ -16,7 +16,7 @@
 			</button>
 
 			<div
-				class="w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 transform -translate-x-1/2 bg-gray-700 text-transparent h-auto rounded-md"
+				class="w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 transform -translate-x-1/2 bg-gray-700 text-transparent rounded-md"
 				:class="{
 					['block']: isMenuOppened,
 					['hidden group-hover:block']: !isMenuOppened,
@@ -37,7 +37,7 @@
 					:isCardListShown="isCardListShown"
 					@close-card-list="isCardListShown = false"
 				></CardsCurrentDeck>
-				<div class="p-5">
+				<div class="p-5 mh-screen80 scrollbar overflow-y-auto">
 					<template v-if="!isMoviePage">
 						<MenuCard>
 							<div class="flex justify-center flex-col">
@@ -343,6 +343,10 @@ export default class Menu extends Vue {
 	}
 }
 </script>
+
+<style lang="scss">
+@use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
+</style>
 <style lang="scss">
 @use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
 </style>

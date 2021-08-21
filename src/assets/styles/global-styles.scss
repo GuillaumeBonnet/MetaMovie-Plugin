@@ -86,3 +86,19 @@ $gray-900: rgb(17, 24, 39);
 		);
 	}
 }
+
+.scrollbar {
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+	&::-webkit-scrollbar-track {
+		border-radius: 8px;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 8px;
+		background: #757575;
+	}
+	&::-webkit-scrollbar-button {
+		display: none;
+	}
+}
