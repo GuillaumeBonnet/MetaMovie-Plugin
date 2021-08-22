@@ -16,7 +16,7 @@
 			</button>
 
 			<div
-				class="w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-2 absolute bottom-20 transform -translate-x-1/2 bg-gray-700 text-transparent rounded-md"
+				class="w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-3 absolute bottom-20 transform -translate-x-1/2 bg-gray-700 text-transparent rounded-md"
 				:class="{
 					['block']: isMenuOppened,
 					['hidden group-hover:block']: !isMenuOppened,
