@@ -261,8 +261,13 @@ export default class CardCmp extends Vue {
 		}
 	}
 	handleDragButton(event: MouseEvent) {
-		this.isEditDraggingPreview = true;
-		this.clickToDrag(event);
+		event.stopPropagation();
+		if (!this.isEditDraggingPreview) {
+			this.isEditDraggingPreview = true;
+			this.clickToDrag(event);
+		} else {
+			this.clickToDrag(event);
+		}
 	}
 	updatePositionChanged(axis: 'x' | 'y', value: number) {
 		this.card.position[axis] = value;
@@ -270,8 +275,6 @@ export default class CardCmp extends Vue {
 	}
 	clickToDrag(event: MouseEvent) {
 		const card = this.$el as HTMLElement;
-		const shiftX_cursorCard = event.clientX - card.getBoundingClientRect().left;
-		const shiftY_cursorCard = event.clientY - card.getBoundingClientRect().top;
 		const previousPosition = {
 			clientX: event.clientX,
 			clientY: event.clientY,
@@ -279,7 +282,7 @@ export default class CardCmp extends Vue {
 		const bottomController_borders = document
 			.querySelector('.PlayerControlsNeo__bottom-controls')
 			?.getBoundingClientRect();
-		//TODO mutation to update bottomController_borders
+		//TODO mutation to update bottomController_borders in order to not do a querySelector at every drag event
 		if (!bottomController_borders) {
 			return;
 		}
@@ -287,31 +290,49 @@ export default class CardCmp extends Vue {
 			card.style.left = clientX + 'px';
 			card.style.top = clientY + 'px';
 		}
-		// taking initial shifts into account
 
 		const headerHeight = this.isEditDraggingPreview
 			? 0
 			: (this.$el.querySelector('#header') as HTMLElement)?.clientHeight;
-		bottomController_borders.top + headerHeight;
-		const onMouseMove = (event: MouseEvent) => {
+		const calculateShiftToBeBound = () => {
+			const shiftToComeBackInBounds = {
+				x: 0,
+				y: 0,
+			};
+			if (card.getBoundingClientRect().top < 0) {
+				shiftToComeBackInBounds.y = -card.getBoundingClientRect().top;
+			}
+			if (card.getBoundingClientRect().left < 0) {
+				shiftToComeBackInBounds.x = -card.getBoundingClientRect().left;
+			}
 			if (
-				card.getBoundingClientRect().top +
-					event.clientY -
-					previousPosition.clientY >
-					0 &&
-				card.getBoundingClientRect().bottom +
-					event.clientY -
-					previousPosition.clientY <
-					bottomController_borders.top + headerHeight + 1 &&
-				card.getBoundingClientRect().left +
-					event.clientX -
-					previousPosition.clientX >
-					0 &&
-				card.getBoundingClientRect().right +
-					event.clientX -
-					previousPosition.clientX <
-					window.innerWidth
+				card.getBoundingClientRect().bottom >
+				bottomController_borders.top + headerHeight + 1
 			) {
+				shiftToComeBackInBounds.y =
+					bottomController_borders.top +
+					headerHeight +
+					1 -
+					card.getBoundingClientRect().bottom;
+			}
+			if (card.getBoundingClientRect().right > window.innerWidth) {
+				shiftToComeBackInBounds.x =
+					window.innerWidth - card.getBoundingClientRect().right;
+			}
+			return shiftToComeBackInBounds;
+		};
+		const onMouseMove = (event: MouseEvent) => {
+			const shiftToBeBound = calculateShiftToBeBound();
+			const cursorShift = {
+				x: event.clientX - previousPosition.clientX,
+				y: event.clientY - previousPosition.clientY,
+			};
+			const canMove =
+				((shiftToBeBound.y >= 0 && cursorShift.y >= 0) ||
+					(shiftToBeBound.y <= 0 && cursorShift.y <= 0)) &&
+				((shiftToBeBound.x >= 0 && cursorShift.x >= 0) ||
+					(shiftToBeBound.x <= 0 && cursorShift.x <= 0));
+			if (canMove) {
 				moveAt(
 					pxToNumber(card.style.left) +
 						event.clientX -
@@ -331,6 +352,14 @@ export default class CardCmp extends Vue {
 			document.removeEventListener('mousemove', onMouseMove);
 			card.onmouseleave = null;
 			card.onmouseup = null;
+			const shiftToComeBackInBounds = calculateShiftToBeBound();
+
+			if (shiftToComeBackInBounds.x != 0 || shiftToComeBackInBounds.y != 0) {
+				moveAt(
+					pxToNumber(card.style.left) + shiftToComeBackInBounds.x,
+					pxToNumber(card.style.top) + shiftToComeBackInBounds.y
+				);
+			}
 			this.$store.commit(MutationMain.UPDATE_CARD_EDITED, {
 				position: toRelativeCoordinate(
 					this.videoDimensions,
@@ -341,6 +370,7 @@ export default class CardCmp extends Vue {
 		};
 
 		if (!this.dragTimeOutId) {
+			// snap out of drag after timeout incase the dragging is stuck to the pointer forever
 			this.dragTimeOutId = setTimeout(() => {
 				endDragging();
 			}, 5000);
