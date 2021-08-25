@@ -18,9 +18,11 @@ function readableTime(timeInSeconds: number) {
 	timeInSeconds -= hours * 3600;
 	const minutes = Math.floor(timeInSeconds / 60);
 	timeInSeconds -= minutes * 60;
-	return `${hours}:${minutes
+	return `${hours}:${minutes.toString().padStart(2, '0')}:${Math.round(
+		timeInSeconds
+	)
 		.toString()
-		.padStart(2, '0')}:${timeInSeconds.toString().padStart(2, '0')}`;
+		.padStart(2, '0')}`;
 }
 
 function removeExpiredCards(cards: CardData[], currentTime: number): void {
