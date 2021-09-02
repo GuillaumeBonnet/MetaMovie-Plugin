@@ -6,7 +6,7 @@ module.exports = {
 		namedGroups: ['menuItem', 'currentDeckAction'],
 		extend: {
 			minWidth: {
-				card: '15rem',
+				card: '20rem',
 			},
 			borderWidth: {
 				'1': '1px',

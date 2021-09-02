@@ -1,118 +1,196 @@
-//regardless of the time clicking on times goes there in the video X Y displays
-// Icon 'is it displayed right now' when a card is in edit mode it is removed
-from // displayedCards and put back at the right place when the edit is done
-//TODO add // a card button
 <template>
 	<div
 		:style="dynamicCardStyle"
-		class="card z-1000000 group absolute p-3 text-4xl rounded-md min-w-card text-center"
+		class="card z-1000000 group absolute p-3 text-3xl rounded-md min-w-card text-center"
 		:class="
 			isEditDraggingPreview
-				? 'bg-black bg-opacity-70 text-yellow-100 text-5xl'
+				? 'bg-black bg-opacity-70 text-yellow-100'
 				: isInEdition
 				? 'bg-gray-600'
-				: 'text-yellow-100 text-5xl hover:text-4xl hover:text-white bg-opacity-70 hover:bg-opacity-100 bg-black hover:bg-gray-600'
+				: 'text-yellow-100 hover:text-white bg-opacity-70 hover:bg-opacity-100 bg-black hover:bg-gray-600'
 		"
 		@mousedown="handleCardMouseDown($event)"
 	>
 		<div
 			id="header"
-			class="flex justify-between overflow-hidden transition-all duration-100 ease-in-out"
+			class="overflow-hidden transition-all duration-100 ease-in-out"
 			:class="
 				isEditDraggingPreview
 					? 'h-0 w-0'
 					: isInEdition
-					? 'h-14'
-					: 'h-0 group-hover:h-14'
+					? 'h-auto'
+					: 'h-0 group-hover:h-auto'
 			"
 		>
-			<button
-				v-if="canEditCurrentDeck"
-				class="material-icons rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
-				:class="
-					isInEdition
-						? 'text-yellow-700 hover:text-yellow-800'
-						: 'hover:text-gray-300 scale-0 group-hover:scale-100'
-				"
-				@click="handleEditButton()"
-				@mousedown.stop
-				aria-describedby="tooltip-edit-card-in-layout"
-			>
-				<MatTooltip
-					id="tooltip-edit-card-in-layout"
-					:label="isInEdition ? 'Validate edition' : 'Edit card'"
-				></MatTooltip>
-				edit
-			</button>
-			<div v-else></div>
-			<template v-if="isInEdition">
+			<div class="flex justify-between">
+				<div>
+					<button
+						v-if="canEditCurrentDeck"
+						class="material-icons rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out"
+						:class="
+							isInEdition
+								? 'text-yellow-700 hover:text-yellow-800'
+								: 'hover:text-gray-300 scale-0 group-hover:scale-100'
+						"
+						@click="handleEditButton()"
+						@mousedown.stop
+						aria-describedby="tooltip-edit-card-in-layout"
+					>
+						<MatTooltip
+							id="tooltip-edit-card-in-layout"
+							:label="isInEdition ? 'Validate edition' : 'Edit card'"
+						></MatTooltip>
+						edit
+					</button>
+					<button
+						v-if="isInEdition"
+						class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out text-gray-300 hover:text-white"
+						@mousedown="handleDragButton($event)"
+						aria-describedby="tooltip-drag-card-in-layout"
+					>
+						<MatTooltip
+							v-if="!isEditDraggingPreview"
+							id="tooltip-drag-card-in-layout"
+							label="Place card"
+						></MatTooltip>
+						dynamic_feed
+					</button>
+				</div>
+
 				<button
-					class="material-icons mx-2 rounded-full w-12 h-12 text-3xl bg-gray-700 shadow-sm hover:shadow-lg focus:outline-none outline-none transform transition-transform duration-300 ease-in-out text-gray-300 hover:text-white"
-					@mousedown="handleDragButton($event)"
-					aria-describedby="tooltip-drag-card-in-layout"
+					class="material-icons rounded-full w-12 h-12 text-3xl  hover:shadow-sm hover:text-gray-300 outline-none focus:outline-none hover:bg-gray-700 transform transition-transform duration-300 ease-in-out"
+					:class="
+						isInEdition
+							? ''
+							: isEditDraggingPreview
+							? ''
+							: 'scale-0 group-hover:scale-100'
+					"
+					id="close-button"
+					@click="handleCloseButton()"
+					@mousedown.stop
+					aria-describedby="tooltip-close-card-in-layout"
 				>
 					<MatTooltip
-						v-if="!isEditDraggingPreview"
-						id="tooltip-drag-card-in-layout"
-						label="Place card"
+						id="tooltip-close-card-in-layout"
+						label="Hide card"
 					></MatTooltip>
-					dynamic_feed
+					close
 				</button>
-				<time-selector
-					class="mx-2"
-					v-model="card.from"
-					label="From"
-					@mousedown.stop
-				></time-selector>
-				<time-selector
-					class="mx-2"
-					v-model="card.to"
-					label="To"
-					@mousedown.stop
-				></time-selector>
-				<percentage-input
-					class="mx-2"
-					:modelValue="card.position.x"
-					label="x: horizontal position(%)"
-					@mousedown.stop
-					@update:modelValue="updatePositionChanged('x', $event)"
-				></percentage-input>
-				<percentage-input
-					class="mx-2"
-					:modelValue="card.position.y"
-					label="y: vertical position(%)"
-					@mousedown.stop
-					@update:modelValue="updatePositionChanged('y', $event)"
-				></percentage-input>
+			</div>
+
+			<template v-if="isInEdition">
+				<button
+					@click="playOrPause()"
+					class="material-icons focus:outline-none outline-none"
+				>
+					{{
+						$store.state.aboutVideo.playOrPause == 'PLAY'
+							? 'pause_circle_outline'
+							: 'play_circle_outline'
+					}}
+				</button>
+				<div>{{ readableTime($store.state.aboutVideo.currentTime) }}</div>
+				<div class="flex justify-center mt-2">
+					<button
+						class="material-icons rounded-full w-12 h-12 text-3xl  hover:shadow-sm hover:text-gray-300 outline-none focus:outline-none hover:bg-gray-700 transform transition-transform duration-300 ease-in-out"
+						id="close-button"
+						@click="handleGoBackwardButton()"
+						@mousedown.stop
+						aria-describedby="tooltip-go-backward"
+					>
+						<MatTooltip
+							id="tooltip-go-backward"
+							label="Go backward"
+						></MatTooltip>
+						restore
+					</button>
+					<div
+						class="px-1 text-xl flex items-center text-white bg-gray-900 border border-solid border-gray-500 hover:border-yellow-600 rounded-lg"
+					>
+						<label for="duration-input">+/-</label>
+						<input
+							id="duration-input"
+							class="w-12 bg-transparent outline-none text-center"
+							v-model="timeInterval.value"
+							@blur="timeInterval.handleBlur()"
+						/>
+						<label for="duration-input">s</label>
+					</div>
+					<button
+						class="material-icons rounded-full w-12 h-12 text-3xl  hover:shadow-sm hover:text-gray-300 outline-none focus:outline-none hover:bg-gray-700 transform transition-transform duration-300 ease-in-out"
+						:class="
+							isInEdition
+								? ''
+								: isEditDraggingPreview
+								? ''
+								: 'scale-0 group-hover:scale-100'
+						"
+						id="close-button"
+						@click="handleGoForwardButton()"
+						@mousedown.stop
+						aria-describedby="tooltip-go-forward"
+					>
+						<MatTooltip id="tooltip-go-forward" label="Hide card"></MatTooltip>
+						more_time
+					</button>
+				</div>
+				<div class="text-sm italic mt-2">
+					Click on the clock icons to set the current time as the From or To
+					timestamp of the card
+				</div>
+				<div class="text-sm italic mt-2">
+					Or type the numbers
+				</div>
+				<div class="flex">
+					<div class="p-2 w-1/2">
+						<time-selector
+							class=""
+							v-model="card.from"
+							label="From"
+							@mousedown.stop
+							:iconCallback="setCurrentTimeAsFrom"
+						></time-selector>
+					</div>
+					<div class="p-2 w-1/2">
+						<time-selector
+							class=""
+							v-model="card.to"
+							label="To"
+							@mousedown.stop
+							:iconCallback="setCurrentTimeAsTo"
+						></time-selector>
+					</div>
+				</div>
+				<div class="flex">
+					<div class="p-2 w-1/2">
+						<percentage-input
+							class=""
+							:modelValue="card.position.x"
+							label="x: horizontal position(%)"
+							@mousedown.stop
+							@update:modelValue="updatePositionChanged('x', $event)"
+						></percentage-input>
+					</div>
+					<div class="p-2 w-1/2">
+						<percentage-input
+							class=""
+							:modelValue="card.position.y"
+							label="y: vertical position(%)"
+							@mousedown.stop
+							@update:modelValue="updatePositionChanged('y', $event)"
+						></percentage-input>
+					</div>
+				</div>
 			</template>
-			<button
-				class="material-icons rounded-full w-12 h-12 text-3xl  hover:shadow-sm hover:text-gray-300 outline-none focus:outline-none hover:bg-gray-700 hover:shadow transform transition-transform duration-300 ease-in-out"
-				:class="
-					isInEdition
-						? ''
-						: isEditDraggingPreview
-						? ''
-						: 'scale-0 group-hover:scale-100'
-				"
-				id="close-button"
-				@click="handleCloseButton()"
-				@mousedown.stop
-				aria-describedby="tooltip-close-card-in-layout"
-			>
-				<MatTooltip
-					id="tooltip-close-card-in-layout"
-					label="Hide card"
-				></MatTooltip>
-				close
-			</button>
 		</div>
-		<div v-if="isInEdition && !isEditDraggingPreview" class="px-10 my-5">
+		<div v-if="isInEdition && !isEditDraggingPreview" class="my-5">
 			<label
 				class="block rounded-2xl border-solid border-2 border-gray-800 hover:border-gray-900 p-2 focus-within:border-gray-900"
 				for="text-edit-card"
 			>
 				<textarea
-					class="mb-4 bg-transparent border-gray-800 hover:border-black focus:border-yellow-600 border-solid border-b-1 p-2 block outline-none resize-none w-full"
+					class="text-base mb-4 bg-transparent border-gray-800 hover:border-black focus:border-yellow-600 border-solid border-b-1 p-2 block outline-none resize-none w-full"
 					v-model="card.text"
 					@mousedown.stop
 					id="text-edit-card"
@@ -155,6 +233,15 @@ import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
 import { GetterDeck } from '@/store/DeckStore';
 
+type Duration = {
+	_value: string;
+	value: string;
+	unit: 's' | 'min';
+	handleBlur: Function;
+};
+
+const MIN_INTERVAL = 1;
+
 @Options({
 	components: {
 		TimeSelector,
@@ -163,11 +250,32 @@ import { GetterDeck } from '@/store/DeckStore';
 	},
 })
 export default class CardCmp extends Vue {
+	readableTime = readableTime;
 	@Prop({ required: true })
 	private card!: CardData;
 
 	@Prop({ required: true })
 	private videoDimensions!: IVideoDimensions; //in px
+
+	timeInterval: Duration = {
+		_value: '10',
+		get value() {
+			return this._value;
+		},
+		set value(value) {
+			if (value == '') {
+				this._value = '';
+			} else if (Number.isInteger(Number.parseInt(value))) {
+				this._value = '' + Number.parseInt(value); // '10a' parse into 10
+			}
+		},
+		unit: 's',
+		handleBlur() {
+			if (!this._value) {
+				this._value = '10';
+			}
+		},
+	};
 
 	get canEditCurrentDeck() {
 		return this.$store.getters[GetterDeck.CAN_EDIT_CURRENT_DECK];
@@ -175,26 +283,38 @@ export default class CardCmp extends Vue {
 
 	@Watch('card.from')
 	onCardFromChange() {
-		if (this.card.toInSeconds() - this.card.fromInSeconds() < 1) {
-			this.card.to = readableTime(this.card.fromInSeconds() + 1);
+		if (this.card.toInSeconds() - this.card.fromInSeconds() < MIN_INTERVAL) {
+			this.card.to = readableTime(this.card.fromInSeconds() + MIN_INTERVAL);
 		}
 		this.$store.commit(
 			MutationMain.SET_VIDEO_CURRENT_TIME_S,
 			this.card.fromInSeconds()
 		);
 	}
+
+	setCurrentTimeAsFrom() {
+		this.card.from = readableTime(this.$store.state.aboutVideo.currentTime);
+		// will trigger onCardFromChange()
+	}
 	@Watch('card.to')
 	onCardToChange() {
-		if (this.card.toInSeconds() < 1) {
+		if (this.card.toInSeconds() < MIN_INTERVAL) {
 			this.card.from = readableTime(0);
-			this.card.to = readableTime(1);
-		} else if (this.card.toInSeconds() - this.card.fromInSeconds() < 1) {
-			this.card.from = readableTime(this.card.toInSeconds() - 1);
+			this.card.to = readableTime(MIN_INTERVAL);
+		} else if (
+			this.card.toInSeconds() - this.card.fromInSeconds() <
+			MIN_INTERVAL
+		) {
+			this.card.from = readableTime(this.card.toInSeconds() - MIN_INTERVAL);
 		}
 		this.$store.commit(
 			MutationMain.SET_VIDEO_CURRENT_TIME_S,
 			this.card.toInSeconds()
 		);
+	}
+	setCurrentTimeAsTo() {
+		this.card.to = readableTime(this.$store.state.aboutVideo.currentTime);
+		// will trigger onCardToChange()
 	}
 
 	private xyPosition: IPositionXY = { top: '50vh', left: '50vw' };
@@ -221,7 +341,7 @@ export default class CardCmp extends Vue {
 	}
 
 	get video() {
-		return this.$store.state.video;
+		return this.$store.state.aboutVideo.video;
 	}
 
 	get isInEdition() {
@@ -248,7 +368,7 @@ export default class CardCmp extends Vue {
 	}
 	handleEditButton() {
 		if (!this.isInEdition) {
-			this.$store.state.video?.pause();
+			this.$store.state.aboutVideo.video?.pause();
 		}
 		this.$store.dispatch(
 			ActionMain.TOGGLE_CARD_EDITED,
@@ -256,9 +376,7 @@ export default class CardCmp extends Vue {
 		);
 	}
 	handleCardMouseDown(event: MouseEvent) {
-		if (!this.isInEdition) {
-			this.clickToDrag(event);
-		}
+		this.clickToDrag(event);
 	}
 	handleDragButton(event: MouseEvent) {
 		event.stopPropagation();
@@ -392,6 +510,29 @@ export default class CardCmp extends Vue {
 				this.$el
 			);
 		}
+	}
+
+	playOrPause() {
+		if (this.$store.state.aboutVideo.video?.paused) {
+			this.$store.state.aboutVideo.video?.play();
+		} else {
+			this.$store.state.aboutVideo.video?.pause();
+		}
+	}
+
+	handleGoBackwardButton() {
+		this.$store.commit(
+			MutationMain.SET_VIDEO_CURRENT_TIME_S,
+			this.$store.state.aboutVideo.currentTime -
+				Number.parseInt(this.timeInterval._value)
+		);
+	}
+	handleGoForwardButton() {
+		this.$store.commit(
+			MutationMain.SET_VIDEO_CURRENT_TIME_S,
+			this.$store.state.aboutVideo.currentTime +
+				Number.parseInt(this.timeInterval._value)
+		);
 	}
 }
 </script>

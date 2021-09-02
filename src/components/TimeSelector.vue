@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="border-1 flex items-center text-sm border-solid rounded-lg overflow-hidden bg-gray-900"
+		class="border-1 flex items-center text-sm border-solid rounded-lg bg-gray-900"
 		:class="
 			timeInputs.isOneOrMoreFocused
 				? 'border-yellow-600'
@@ -20,7 +20,7 @@
 			<label class="text-xs font-medium flex items-start ml-1 mt-0 -mb-1.5">{{
 				label
 			}}</label>
-			<div class="flex -mb-2">
+			<div class="flex">
 				<input
 					@click="digitClicked($event)"
 					@blur="handleBlur($event, 'hours')"
@@ -86,6 +86,8 @@ export default class TimeSelector extends Vue {
 	modelValue!: string;
 	@Prop({ default: false })
 	readonly!: boolean;
+	@Prop()
+	iconCallback!: Function;
 	@Watch('modelValue')
 	onModelValueChange(newModelValue: string, oldModelValue: string) {
 		if (/\d+:\d+:\d+/.test(newModelValue)) {
@@ -226,7 +228,11 @@ export default class TimeSelector extends Vue {
 		this.timeInputs.isOneOrMoreFocused = true;
 	}
 	handleIconClick() {
-		(this.$refs.hours as HTMLElement).focus();
+		if (this.iconCallback) {
+			this.iconCallback();
+		} else {
+			(this.$refs.hours as HTMLInputElement).focus();
+		}
 	}
 }
 </script>

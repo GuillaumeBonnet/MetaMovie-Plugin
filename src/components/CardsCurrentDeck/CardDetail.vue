@@ -123,7 +123,8 @@ export default class CardDetail extends Vue {
 	}
 
 	goToCard() {
-		this.$store.state.video?.pause();
+		this.$store.dispatch(ActionMain.PAUSE_PLAY_VIDEO, 'PAUSE');
+		this.$store.commit(MutationMain.SET_VIDEO_PLAY_PAUSE);
 		this.$store.commit(
 			MutationMain.SET_VIDEO_CURRENT_TIME_S,
 			(this.card.fromInSeconds() + this.card.toInSeconds()) / 2
@@ -131,7 +132,7 @@ export default class CardDetail extends Vue {
 	}
 
 	editCard() {
-		this.$store.state.video?.pause();
+		this.$store.dispatch(ActionMain.PAUSE_PLAY_VIDEO, 'PAUSE');
 		this.$store.commit(MutationDeck.CURRENT_DECK_MODIFIED);
 		this.$store.commit(
 			MutationMain.SET_VIDEO_CURRENT_TIME_S,

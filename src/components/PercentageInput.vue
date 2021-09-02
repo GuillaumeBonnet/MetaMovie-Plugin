@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="border-1 flex items-center text-sm border-solid rounded-lg overflow-hidden bg-gray-900"
+		class="border-1 flex items-center text-sm border-solid rounded-lg bg-gray-900"
 		:class="
 			readonly ? 'border-gray-500' : 'border-gray-500 hover:border-yellow-600'
 		"
@@ -22,7 +22,7 @@
 			<input
 				ref="input"
 				v-model="inputText.value"
-				class="w-20 h-8 -mb-2 bg-transparent text-lg font-extrabold border-none focus:outline-none"
+				class="w-20 h-8 bg-transparent text-lg font-extrabold border-none focus:outline-none"
 				type="text"
 				:disabled="readonly"
 				@blur="handleBlur($event)"
@@ -79,6 +79,8 @@ export default class PercentageInput extends Vue {
 	label!: string;
 	@Prop({ default: false })
 	readonly!: boolean;
+	@Prop()
+	iconCallback!: Function;
 
 	@Watch('modelValue')
 	onModelValueChange(newModelValue: number, oldModelValue: number) {
@@ -106,7 +108,11 @@ export default class PercentageInput extends Vue {
 	};
 
 	handleIconClick() {
-		(this.$refs.input as HTMLInputElement).focus();
+		if (this.iconCallback) {
+			this.iconCallback();
+		} else {
+			(this.$refs.input as HTMLInputElement).focus();
+		}
 	}
 
 	handleBlur(event: Event) {

@@ -49,7 +49,7 @@ export default class VideoOverlay extends Vue {
 	/* -------------------------------------------------------------------------- */
 
 	get video() {
-		return this.$store.state.video;
+		return this.$store.state.aboutVideo.video;
 	}
 	private videoDimensions: IVideoDimensions = { x: 0, y: 0 }; //in px
 
@@ -92,6 +92,12 @@ export default class VideoOverlay extends Vue {
 						ActionMain.HANDLE_VIDEO_PROGRESSION,
 						currentTime
 					);
+				});
+				video.addEventListener('pause', event => {
+					this.$store.commit(MutationMain.SET_VIDEO_PLAY_PAUSE, 'PAUSE');
+				});
+				video.addEventListener('play', event => {
+					this.$store.commit(MutationMain.SET_VIDEO_PLAY_PAUSE, 'PLAY');
 				});
 				setVideoDimensions();
 			} else {

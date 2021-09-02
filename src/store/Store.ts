@@ -19,14 +19,17 @@ import { UserInfo } from '@/models/ApiTypes';
 
 type UserState = { isLogged: boolean; info?: UserInfo };
 interface IState {
-	video?: HTMLVideoElement;
-	netflixPlayer?: any;
+	aboutVideo: {
+		video?: HTMLVideoElement;
+		netflixPlayer?: any;
+		currentTime: number;
+		previousTime: number;
+		playOrPause: 'PAUSE' | 'PLAY';
+		isFullScreen: boolean;
+	};
 	movieId?: number;
 	movieTitle?: string;
-	isFullScreen: boolean;
 	cardEdited?: CardData;
-	currentTime: number;
-	previousTime: number;
 	progressIndex: number;
 	cardModule: ICardState;
 	deckModule: IDeckState;
@@ -38,6 +41,7 @@ const MutationMain = {
 	SET_MOVIE_TITLE: 'SET_MOVIE_TITLE',
 	SET_VIDEO: 'SET_VIDEO',
 	SET_VIDEO_CURRENT_TIME_S: 'SET_VIDEO_CURRENT_TIME_S',
+	SET_VIDEO_PLAY_PAUSE: 'SET_VIDEO_PLAY_PAUSE',
 	SET_IS_FULL_SCREEN: 'SET_IS_FULL_SCREEN',
 	SET_CURRENT_TIME: 'SET_CURRENT_TIME',
 	SET_PREVIOUS_TIME: 'SET_PREVIOUS_TIME',
@@ -46,6 +50,8 @@ const MutationMain = {
 	SET_USER: 'SET_USER',
 };
 const ActionMain = {
+	HANDLE_VIDEO_PAUSE_PLAY: 'HANDLE_VIDEO_PAUSE_PLAY',
+	PAUSE_PLAY_VIDEO: 'PAUSE_PLAY_VIDEO',
 	HANDLE_VIDEO_PROGRESSION: 'HANDLE_VIDEO_PROGRESSION',
 	TOGGLE_CARD_EDITED: 'TOGGLE_CARD_EDITED',
 	FETCH_USER: 'FETCH_USER',
@@ -61,11 +67,14 @@ const store = createStore<IState>({
 		return {
 			progressIndex: 0,
 			cardEdited: undefined,
-			currentTime: 0,
-			previousTime: 0,
-			isFullScreen: !!document.fullscreenElement,
-			video: undefined,
-			netflixPlayer: undefined,
+			aboutVideo: {
+				video: undefined,
+				netflixPlayer: undefined,
+				currentTime: 0,
+				previousTime: 0,
+				isFullScreen: !!document.fullscreenElement,
+				playOrPause: 'PAUSE',
+			},
 			cardModule: initialStateCardModule,
 			deckModule: initialStateDeckModule,
 			user: {
@@ -90,13 +99,16 @@ const store = createStore<IState>({
 		) => {
 			state.movieTitle = movieTitle;
 		},
-		[MutationMain.SET_VIDEO]: (state: IState, video: IState['video']) => {
-			state.video = video;
+		[MutationMain.SET_VIDEO]: (
+			state: IState,
+			video: IState['aboutVideo']['video']
+		) => {
+			state.aboutVideo.video = video;
 			if (process.env.VUE_APP_MODE != 'DEV_SERVE') {
 				const netflix = (window as any).netflix;
 				const videoPlayer = netflix.appContext.state.playerApp.getAPI()
 					.videoPlayer;
-				state.netflixPlayer = videoPlayer.getVideoPlayerBySessionId(
+				state.aboutVideo.netflixPlayer = videoPlayer.getVideoPlayerBySessionId(
 					videoPlayer.getAllPlayerSessionIds()[0]
 				);
 			}
@@ -105,29 +117,35 @@ const store = createStore<IState>({
 			state: IState,
 			timeInS: number
 		) => {
-			if (process.env.VUE_APP_MODE == 'DEV_SERVE' && state.video) {
-				state.video.currentTime = timeInS;
+			if (process.env.VUE_APP_MODE == 'DEV_SERVE' && state.aboutVideo.video) {
+				state.aboutVideo.video.currentTime = timeInS;
 			} else {
-				state.netflixPlayer.seek(timeInS * 1000);
+				state.aboutVideo.netflixPlayer.seek(timeInS * 1000);
 			}
+		},
+		[MutationMain.SET_VIDEO_PLAY_PAUSE]: (
+			state: IState,
+			playOrPause: IState['aboutVideo']['playOrPause']
+		) => {
+			state.aboutVideo.playOrPause = playOrPause;
 		},
 		[MutationMain.SET_IS_FULL_SCREEN]: (
 			state: IState,
-			isFullScreen: IState['isFullScreen']
+			isFullScreen: IState['aboutVideo']['isFullScreen']
 		) => {
-			state.isFullScreen = isFullScreen;
+			state.aboutVideo.isFullScreen = isFullScreen;
 		},
 		[MutationMain.SET_CURRENT_TIME]: (
 			state: IState,
-			currentTime: IState['currentTime']
+			currentTime: IState['aboutVideo']['currentTime']
 		) => {
-			state.currentTime = currentTime;
+			state.aboutVideo.currentTime = currentTime;
 		},
 		[MutationMain.SET_PREVIOUS_TIME]: (
 			state: IState,
-			previousTime: IState['previousTime']
+			previousTime: IState['aboutVideo']['previousTime']
 		) => {
-			state.previousTime = previousTime;
+			state.aboutVideo.previousTime = previousTime;
 		},
 		[MutationMain.SET_PROGRESS_INDEX]: (
 			state: IState,
@@ -148,6 +166,26 @@ const store = createStore<IState>({
 		},
 	},
 	actions: {
+		[ActionMain.PAUSE_PLAY_VIDEO]: async (
+			{ commit, state },
+			playOrPause: IState['aboutVideo']['playOrPause']
+		) => {
+			let videoOrPlayer;
+			if (process.env.VUE_APP_MODE == 'DEV_SERVE' && state.aboutVideo.video) {
+				videoOrPlayer = state.aboutVideo.video;
+			} else {
+				videoOrPlayer = state.aboutVideo.netflixPlayer;
+			}
+			if (!videoOrPlayer) {
+				throw Error('No video or player found.');
+			}
+			if (playOrPause == 'PAUSE') {
+				videoOrPlayer.pause();
+			} else if (playOrPause == 'PLAY') {
+				videoOrPlayer.play();
+			}
+			// state will be changed with pause play event handler
+		},
 		[ActionMain.FETCH_USER]: async ({ commit, state }) => {
 			const userState: UserState = {
 				isLogged: false,
@@ -190,7 +228,7 @@ const store = createStore<IState>({
 					MutationMain.SET_VIDEO_CURRENT_TIME_S,
 					state.cardEdited?.fromInSeconds() - 2
 				);
-				state.video?.play();
+				state.aboutVideo.video?.play();
 			} else if (cardEdited) {
 				removeElemIf(cards, card => card.id == cardEdited.id);
 				removeElemIf(
@@ -205,9 +243,9 @@ const store = createStore<IState>({
 		},
 		[ActionMain.HANDLE_VIDEO_PROGRESSION]: (
 			{ commit, state },
-			currentTime: IState['currentTime']
+			currentTime: IState['aboutVideo']['currentTime']
 		) => {
-			commit(MutationMain.SET_PREVIOUS_TIME, state.currentTime);
+			commit(MutationMain.SET_PREVIOUS_TIME, state.aboutVideo.currentTime);
 			commit(MutationMain.SET_CURRENT_TIME, currentTime);
 			const cardList = state.cardModule.cards;
 			if (!cardList || cardList.length < 1) {
@@ -215,23 +253,28 @@ const store = createStore<IState>({
 			}
 			let progressIndex = state.progressIndex;
 			let displayedCards = [] as Array<CardData>;
-			if (Math.abs(state.currentTime - state.previousTime) > 1 /*sec*/) {
+			if (
+				Math.abs(state.aboutVideo.currentTime - state.aboutVideo.previousTime) >
+				1 /*sec*/
+			) {
 				progressIndex = 0;
 				while (
 					progressIndex < cardList.length &&
-					cardList[progressIndex].fromInSeconds() < state.currentTime
+					cardList[progressIndex].fromInSeconds() < state.aboutVideo.currentTime
 				) {
-					if (cardList[progressIndex].toInSeconds() > state.currentTime) {
+					if (
+						cardList[progressIndex].toInSeconds() > state.aboutVideo.currentTime
+					) {
 						displayedCards.push(cardList[progressIndex]);
 					}
 					progressIndex++;
 				}
 			} else if (progressIndex <= cardList.length) {
 				displayedCards = [...state.cardModule.displayedCards];
-				removeExpiredCards(displayedCards, state.currentTime);
+				removeExpiredCards(displayedCards, state.aboutVideo.currentTime);
 				while (progressIndex < cardList.length) {
 					const nextCard = cardList[progressIndex];
-					if (nextCard.fromInSeconds() > state.currentTime) {
+					if (nextCard.fromInSeconds() > state.aboutVideo.currentTime) {
 						break;
 					}
 					let indexToInsert = 0;

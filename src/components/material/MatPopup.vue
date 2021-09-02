@@ -93,5 +93,4 @@ export default class MatPopup extends Vue {
 	--mdc-theme-primary: rgb(229, 231, 235);
 	--mdc-theme-text-primary-on-background: white;
 }
-/*TODO*/
 </style>
