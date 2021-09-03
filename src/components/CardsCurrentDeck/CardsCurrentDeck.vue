@@ -115,6 +115,7 @@ import DeleteDeckConfirmation from '@/components/CardsCurrentDeck/DeleteDeckConf
 import MatTooltip from '@/components/material/MatTooltip.vue';
 import MatPopup from '@/components/material/MatPopup.vue';
 import { ActionDeck, GetterDeck, MutationDeck } from '@/store/DeckStore';
+import { readableTime } from '@/Utils/CardUtils';
 @Options({
 	components: {
 		CardDetail,
@@ -141,16 +142,16 @@ export default class CardsCurrentDeck extends Vue {
 	closeButton() {
 		this.$emit('close-card-list');
 	}
-	addNewCard() {
+	async addNewCard() {
 		this.$store.commit(MutationDeck.CURRENT_DECK_MODIFIED);
-		this.$store.commit(
-			MutationCard.ADD_CARD,
+		await this.$store.dispatch(
+			ActionMain.TOGGLE_CARD_EDITED,
 			new CardData({
-				fromStamp: '0:00:00',
-				toStamp: '0:00:30',
+				fromStamp: readableTime(this.$store.state.aboutVideo.currentTime),
+				toStamp: readableTime(this.$store.state.aboutVideo.currentTime + 10),
 				x: 50,
-				y: 50,
-				text: 'New Card',
+				y: 75,
+				text: 'Add Information',
 			})
 		);
 	}
