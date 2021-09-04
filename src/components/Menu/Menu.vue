@@ -2,138 +2,79 @@
 	<div
 		class="group touchable PlayerControls--control-element nfp-popup-control relative block"
 	>
-		<div class="h-auto m-auto relative bottom-5">
-			<button
-				class="material-icons bg-gray-700 rounded-full outline-none w-16 h-16 m-auto"
-				:class="{
-					['ring ring-yellow-700']: isMenuOppened && isMoviePage,
-					['ring ring-gray-500']: isMenuOppened && !isMoviePage,
-					['bg-yellow-800']: isMoviePage,
-				}"
-				@click="menuButtonClicked()"
-			>
-				question_answer
-			</button>
-
-			<div
-				class="w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-3 absolute bottom-20 transform -translate-x-1/2 bg-gray-700 text-transparent rounded-md"
-				:class="{
-					['block']: isMenuOppened,
-					['hidden group-hover:block']: !isMenuOppened,
-				}"
-			>
-				<DeckSelector
-					class="px-5 pt-5"
-					:isDeckSelectionShown="isDeckSelectionShown"
-					@deck-selector-close="isDeckSelectionShown = false"
-					:decksSource="originDeck"
-				></DeckSelector>
-				<MovieList
-					:isShown="isMovieListOpenned"
-					@movie-list-close="isMovieListOpenned = false"
-				></MovieList>
-				<CardsCurrentDeck
-					v-if="currentDeck && isCardListShown"
-					:isCardListShown="isCardListShown"
-					@close-card-list="isCardListShown = false"
-				></CardsCurrentDeck>
-				<div class="p-5 mh-screen80 scrollbar overflow-y-auto">
-					<template v-if="!isMoviePage">
-						<MenuCard>
-							<div class="flex justify-center flex-col">
-								<div
-									class="material-icons text-9xl text-gray-500 flex justify-center"
-								>
-									lightbulb
+		<div class="h-auto m-auto relative mm-netflix-button-padding">
+			<div class="relative">
+				<div
+					class="transform -translate-x-1/2 absolute bottom-2 w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-2 bg-gray-700 text-transparent rounded-md"
+					:class="{
+						['block']: isMenuOppened,
+						['hidden group-hover:block']: !isMenuOppened,
+					}"
+				>
+					<DeckSelector
+						class="px-5 pt-5"
+						:isDeckSelectionShown="isDeckSelectionShown"
+						@deck-selector-close="isDeckSelectionShown = false"
+						:decksSource="originDeck"
+					></DeckSelector>
+					<MovieList
+						:isShown="isMovieListOpenned"
+						@movie-list-close="isMovieListOpenned = false"
+					></MovieList>
+					<CardsCurrentDeck
+						v-if="currentDeck && isCardListShown"
+						:isCardListShown="isCardListShown"
+						@close-card-list="isCardListShown = false"
+					></CardsCurrentDeck>
+					<div class="p-5 mh-screen80 scrollbar overflow-y-auto">
+						<template v-if="!isMoviePage">
+							<MenuCard>
+								<div class="flex justify-center flex-col">
+									<div
+										class="material-icons text-9xl text-gray-500 flex justify-center"
+									>
+										lightbulb
+									</div>
+									<div class="text-center">
+										Start a movie or an episode to see if it has decks
+									</div>
 								</div>
-								<div class="text-center">
-									Start a movie or an episode to see if it has decks
+							</MenuCard>
+							<MenuCard class="mt-5"
+								><div class="flex justify-center flex-col">
+									<div
+										class="material-icons text-9xl text-gray-500 flex justify-center"
+									>
+										view_list
+									</div>
+									<mcw-button class="" @click="toggleMovieList()">
+										Movies with decks
+									</mcw-button>
 								</div>
-							</div>
-						</MenuCard>
-						<MenuCard class="mt-5"
-							><div class="flex justify-center flex-col">
-								<div
-									class="material-icons text-9xl text-gray-500 flex justify-center"
-								>
-									view_list
-								</div>
-								<mcw-button class="" @click="toggleMovieList()">
-									Movies with decks
-								</mcw-button>
-							</div>
-						</MenuCard>
-					</template>
-					<template v-else-if="currentDeck">
-						<MenuCard class="">
-							<div class="font-bold">{{ currentDeck.name }}</div>
-							<div class="text-gray-400 text-base text-center">
-								{{ currentDeck.numberOfCards }} cards
-							</div>
-							<div class="flex justify-center">
-								<mcw-button
-									class="mt-5"
-									@click="isCardListShown = !isCardListShown"
-									outlined
-								>
-									Card list
-								</mcw-button>
-							</div>
-							<MatSwitch
-								class="my-auto mt-5"
-								v-model="areCardsHidden_VueModel"
-								label="Hide Cards"
-							></MatSwitch>
-						</MenuCard>
-						<MenuCard class="mt-5">
-							<div
-								class="material-icons text-7xl text-gray-500 flex justify-center"
-							>
-								work
-							</div>
-							<div class="text-center">
-								{{ decksCurrMovie.length }} available decks for this
-								movie/episode
-							</div>
-							<div class="mt-5 flex justify-center">
-								<mcw-button raised @click="toggleDeckSelectorMovie()">
-									Select another Deck
-								</mcw-button>
-							</div>
-						</MenuCard>
-						<MenuCard class="mt-5">
-							<mcw-button class="block mx-auto" @click="toggleMovieList()">
-								Movies with decks
-							</mcw-button>
-						</MenuCard>
-					</template>
-					<template v-else>
-						<!-- movie page but no current deck selected -->
-						<template v-if="decksCurrMovie.length == 0">
+							</MenuCard>
+						</template>
+						<template v-else-if="currentDeck">
 							<MenuCard class="">
-								<div
-									class="material-icons text-7xl text-gray-500 flex justify-center"
-								>
-									work_off
-								</div>
-								<div class="text-center">
-									This movie/episode doesn't have a deck yet.
+								<div class="font-bold">{{ currentDeck.name }}</div>
+								<div class="text-gray-400 text-base text-center">
+									{{ currentDeck.numberOfCards }} cards
 								</div>
 								<div class="flex justify-center">
 									<mcw-button
 										class="mt-5"
-										:disabled="!isLogged"
-										@click="createADeck()"
-										raised
+										@click="isCardListShown = !isCardListShown"
+										outlined
 									>
-										Create a deck
+										Card list
 									</mcw-button>
-									<NewDeck ref="create-deck-popup" class=""></NewDeck>
 								</div>
+								<MatSwitch
+									class="my-auto mt-5"
+									v-model="areCardsHidden_VueModel"
+									label="Hide Cards"
+								></MatSwitch>
 							</MenuCard>
-						</template>
-						<template v-else>
-							<MenuCard class="">
+							<MenuCard class="mt-5">
 								<div
 									class="material-icons text-7xl text-gray-500 flex justify-center"
 								>
@@ -145,28 +86,89 @@
 								</div>
 								<div class="mt-5 flex justify-center">
 									<mcw-button raised @click="toggleDeckSelectorMovie()">
-										Select A Deck
+										Select another Deck
 									</mcw-button>
 								</div>
 							</MenuCard>
+							<MenuCard class="mt-5">
+								<mcw-button class="block mx-auto" @click="toggleMovieList()">
+									Movies with decks
+								</mcw-button>
+							</MenuCard>
+						</template>
+						<template v-else>
+							<!-- movie page but no current deck selected -->
+							<template v-if="decksCurrMovie.length == 0">
+								<MenuCard class="">
+									<div
+										class="material-icons text-7xl text-gray-500 flex justify-center"
+									>
+										work_off
+									</div>
+									<div class="text-center">
+										This movie/episode doesn't have a deck yet.
+									</div>
+									<div class="flex justify-center">
+										<mcw-button
+											class="mt-5"
+											:disabled="!isLogged"
+											@click="createADeck()"
+											raised
+										>
+											Create a deck
+										</mcw-button>
+										<NewDeck ref="create-deck-popup" class=""></NewDeck>
+									</div>
+								</MenuCard>
+							</template>
+							<template v-else>
+								<MenuCard class="">
+									<div
+										class="material-icons text-7xl text-gray-500 flex justify-center"
+									>
+										work
+									</div>
+									<div class="text-center">
+										{{ decksCurrMovie.length }} available decks for this
+										movie/episode
+									</div>
+									<div class="mt-5 flex justify-center">
+										<mcw-button raised @click="toggleDeckSelectorMovie()">
+											Select A Deck
+										</mcw-button>
+									</div>
+								</MenuCard>
+							</template>
+							<MenuCard class="mt-5">
+								<mcw-button class="block mx-auto" @click="toggleMovieList()">
+									Movies with decks
+								</mcw-button>
+							</MenuCard>
 						</template>
 						<MenuCard class="mt-5">
-							<mcw-button class="block mx-auto" @click="toggleMovieList()">
-								Movies with decks
-							</mcw-button>
+							<div
+								class="text-center"
+								v-if="!isLogged && decksCurrMovie.length == 0"
+							>
+								Log In to create a deck
+							</div>
+							<Login class="mt-5" @open-user-decks="openUserDecks()"></Login>
 						</MenuCard>
-					</template>
-					<MenuCard class="mt-5">
-						<div
-							class="text-center"
-							v-if="!isLogged && decksCurrMovie.length == 0"
-						>
-							Log In to create a deck
-						</div>
-						<Login class="mt-5" @open-user-decks="openUserDecks()"></Login>
-					</MenuCard>
+					</div>
 				</div>
 			</div>
+
+			<button
+				class="material-icons bg-gray-700 rounded-full outline-none w-16 h-16 m-auto"
+				:class="{
+					['ring ring-yellow-700']: isMenuOppened && isMoviePage,
+					['ring ring-gray-500']: isMenuOppened && !isMoviePage,
+					['bg-yellow-800']: isMoviePage,
+				}"
+				@click="menuButtonClicked()"
+			>
+				question_answer
+			</button>
 		</div>
 	</div>
 </template>
@@ -350,4 +352,8 @@ export default class Menu extends Vue {
 <style lang="scss">
 @use "src/assets/styles/global-styles" as globalStyle; // there was a namespace conflict fixed by the as rename
 </style>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.mm-netflix-button-padding {
+	padding-bottom: 0.6em;
+}
+</style>
