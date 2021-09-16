@@ -1,11 +1,10 @@
 <template>
-	<!-- <template @mousedown.prevent @mouseup.prevent @click.prevent> -->
 	<div
 		class="z-1000050 absolute group touchable PlayerControls--control-element nfp-popup-control block"
 		:class="{ ['hidden']: !isDisplayed }"
 		:style="position"
+		@click.stop
 	>
-		<!-- @click.stop -->
 		<div class="h-auto m-auto relative mm-netflix-button-padding">
 			<div class="relative">
 				<div
