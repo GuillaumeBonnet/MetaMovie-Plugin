@@ -1,5 +1,5 @@
 <template>
-	<teleport to=".sizing-wrapper">
+	<teleport :to="videoWrapperSelector">
 		<div class="mdc-dialog" ref="popup">
 			<div class="mdc-dialog__container">
 				<div
@@ -49,6 +49,7 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
+import { videoWrapperSelector } from '@/chrome-scripts/netflix-selectors';
 import { MDCDialog, MDCDialogCloseEvent } from '@material/dialog';
 import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
@@ -57,6 +58,7 @@ import { Prop } from 'vue-property-decorator';
 export default class MatPopup extends Vue {
 	confirmCallback?: CallableFunction;
 	id!: string;
+	videoWrapperSelector = videoWrapperSelector;
 	created() {
 		this.id = 'MatPopup-' + Date.now();
 	}

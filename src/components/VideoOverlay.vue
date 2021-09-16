@@ -37,6 +37,10 @@ import { Action, State } from 'vuex-class';
 import { ActionMain, IState, MutationMain } from '@/store/Store';
 import { ActionCard, ICardState } from '@/store/CardStore';
 import { Options, Vue } from 'vue-class-component';
+import {
+	bottomControlSelector,
+	videoWrapperSelector,
+} from '@/chrome-scripts/netflix-selectors';
 
 @Options({
 	components: {
@@ -67,11 +71,9 @@ export default class VideoOverlay extends Vue {
 	created() {
 		const setVideoDimensions = () => {
 			const videoContainer = document.querySelector(
-				'div.VideoContainer'
+				videoWrapperSelector
 			) as HTMLElement;
-			const bottomController = document.querySelector(
-				'div.PlayerControlsNeo__bottom-controls'
-			);
+			const bottomController = document.querySelector(bottomControlSelector);
 			if (!videoContainer || !bottomController) {
 				return;
 			}

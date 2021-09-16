@@ -5,7 +5,8 @@
 	"manifest_version": 2,
 	"permissions": ["activeTab", "webNavigation", "tabs", "<all_urls>"],
 	"background": {
-		"scripts": ["chrome-scripts/background.js"]
+		"scripts": ["chrome-scripts/background.js"],
+		"persistent": false
 	},
 	"browser_action": {
 		"default_title": "meta-movie-vue-plugin",
@@ -19,7 +20,11 @@
 	],
 	"content_scripts": [
 		{
-			"matches": ["<all_urls>"],
+			"matches": [
+				"<all_urls>",
+				"https://www.netflix.com/",
+				"https://www.netflix.com/*"
+			],
 			"js": ["chrome-scripts/content.js"],
 			"run_at": "document_idle",
 			"all_frames": true

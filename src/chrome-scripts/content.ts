@@ -1,4 +1,4 @@
-declare const chrome: any;
+declare const browser: any;
 
 interface IAwaitedNodes {
 	videoTitle: Element | null;
@@ -6,25 +6,39 @@ interface IAwaitedNodes {
 	videoWrapper: Element | null;
 }
 
-const maxLoadingTime = 10000,
-	initialTimestamp = Date.now(); //ms
-const intervalId = setInterval(() => {
-	const awaitedNodes = getAwaitedNode();
-	if (awaitedNodes) {
-		insertPluginNodes(awaitedNodes);
-		loadScripts();
-		clearInterval(intervalId);
-	} else if (Date.now() - initialTimestamp > maxLoadingTime) {
-		clearInterval(intervalId);
-		throw Error('Video not found or did not load in time.');
+chrome.runtime.onMessage.addListener(
+	(message: any, sender: any, sendResponse: Function) => {
+		if (message == 'HistoryStateUpdated') {
+			startingPoint();
+		}
 	}
-}, 200);
+);
+
+const startingPoint = () => {
+	if (!/watch\/(\d+)/.test(location.pathname)) {
+		return;
+	}
+	const maxLoadingTime = 20000,
+		initialTimestamp = Date.now(); //ms
+	const intervalId = setInterval(() => {
+		const awaitedNodes = getAwaitedNode();
+		if (awaitedNodes) {
+			insertPluginNodes(awaitedNodes);
+			loadScripts();
+			clearInterval(intervalId);
+		} else if (Date.now() - initialTimestamp > maxLoadingTime) {
+			clearInterval(intervalId);
+			throw Error('Video not found or did not load in time.');
+		}
+	}, 200);
+};
+startingPoint();
 
 function getAwaitedNode() {
 	const awaitedNodes: IAwaitedNodes = {
-		videoTitle: document.querySelector('.video-title'),
+		videoTitle: document.querySelector<any>('[data-uia="video-title"'),
 		video: document.querySelector('video'),
-		videoWrapper: document.querySelector('div.sizing-wrapper'),
+		videoWrapper: document.querySelector<any>('[data-uia="player"]'),
 	};
 	for (const awaitedNodeKey of Object.keys(awaitedNodes)) {
 		if (!awaitedNodes[awaitedNodeKey as keyof IAwaitedNodes]) {
@@ -45,21 +59,27 @@ function htmlToElem(html: string) {
 }
 
 function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
-	const menuDiv = document.createElement('div') as HTMLElement;
-	menuDiv.id = 'plugin-meta-movie-menu';
-	awaitedNodes.videoTitle?.after(menuDiv);
+	if (!document.querySelector<any>('#plugin-meta-movie-video-overlay')) {
+		const videoOverlayDiv = document.createElement('div') as HTMLElement;
+		videoOverlayDiv.id = 'plugin-meta-movie-video-overlay';
+		awaitedNodes.videoWrapper?.append(videoOverlayDiv);
+	}
+	if (!document.querySelector<any>('#plugin-meta-movie-menu')) {
+		const menuDiv = document.createElement('div') as HTMLElement;
+		menuDiv.id = 'plugin-meta-movie-menu';
+		awaitedNodes.videoWrapper?.append(menuDiv);
+	}
 
-	const videoOverlayDiv = document.createElement('div') as HTMLElement;
-	videoOverlayDiv.id = 'plugin-meta-movie-video-overlay';
-	awaitedNodes.videoWrapper?.prepend(videoOverlayDiv);
-
-	const fontsNode = document.createElement('link') as HTMLElement;
-	fontsNode.setAttribute('rel', 'stylesheet');
-	fontsNode.setAttribute(
-		'href',
-		'//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons'
-	);
-	document.querySelector('head')?.appendChild(fontsNode);
+	if (!document.querySelector<any>('#plugin-meta-movie-link-font')) {
+		const fontsNode = document.createElement('link') as HTMLElement;
+		fontsNode.id = 'plugin-meta-movie-link-font';
+		fontsNode.setAttribute('rel', 'stylesheet');
+		fontsNode.setAttribute(
+			'href',
+			'//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons'
+		);
+		document.querySelector('head')?.appendChild(fontsNode);
+	}
 }
 
 function loadScripts() {

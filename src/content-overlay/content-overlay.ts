@@ -6,12 +6,12 @@ import VideoOverlay from '../components/VideoOverlay.vue';
 import { store, MutationMain } from '@/store/Store';
 import CardData from '@/models/CardData';
 import { MutationCard } from '@/store/CardStore';
-console.log('gboDebug: content overlay');
 import '@/assets/styles/styles.css';
 import { MutationDeck } from '@/store/DeckStore';
 /* eslint-disable */
 // @ts-ignore
 import VueMaterialAdapter from 'vue-material-adapter';
+import { titleSelector } from '@/chrome-scripts/netflix-selectors';
 
 const appMenu = createApp(Menu);
 appMenu.use(store);
@@ -28,9 +28,7 @@ if (/watch\/(\d+)/.test(location.pathname)) {
 		/watch\/(\d+)/.exec(location.pathname)?.[1] || ''
 	);
 	store.commit(MutationMain.SET_MOVIE_ID, netflixMovieId);
-	const movieTitle = document
-		.querySelector('.video-title')
-		?.textContent?.trim();
+	const movieTitle = document.querySelector(titleSelector)?.textContent?.trim();
 	store.commit(MutationMain.SET_MOVIE_TITLE, movieTitle);
 }
 document.addEventListener('fullscreenchange', event => {

@@ -4,10 +4,12 @@
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve --mode dev-serve",
-		"build": "vue-cli-service build --mode dev-build && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
-		"build-prod": "vue-cli-service build --mode prod-build && npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
+		"build": "vue-cli-service build --mode dev-build && npm run compile-chrome-scripts  && npm run compile-copy-files",
+		"build-prod": "vue-cli-service build --mode prod-build && npm run compile-chrome-scripts && npm run compile-copy-files",
 		"test:unit": "vue-cli-service test:unit",
-		"lint": "vue-cli-service lint"
+		"lint": "vue-cli-service lint",
+		"compile-chrome-scripts": "npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
+		"compile-copy-files": "npx copyfiles -f ./src/chrome-scripts/manifest.json ./src/chrome-scripts/vue.js dist"
 	},
 	"dependencies": {
 		"@material/button": "^10.0.0",
@@ -23,6 +25,7 @@
 		"@material/typography": "^10.0.0",
 		"@mdi/font": "^3.6.95",
 		"axios": "^0.21.1",
+		"copyfiles": "^2.4.1",
 		"core-js": "^3.6.4",
 		"material-components-web": "^10.0.0",
 		"material-design-icons": "^3.0.1",
@@ -54,7 +57,6 @@
 		"@vue/test-utils": "1.0.0-beta.31",
 		"autoprefixer": "^9.8.6",
 		"chai": "^4.1.2",
-		"copy-webpack-plugin": "^5.1.2",
 		"dart-sass": "^1.25.0",
 		"deepmerge": "^4.2.2",
 		"eslint": "^6.7.2",

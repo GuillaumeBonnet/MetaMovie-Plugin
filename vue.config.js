@@ -1,5 +1,4 @@
 // vue.config.js
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 
@@ -22,12 +21,7 @@ module.exports = {
 	runtimeCompiler: true,
 	filenameHashing: false,
 	configureWebpack: {
-		plugins: [
-			new CopyWebpackPlugin([
-				{ from: './src/manifest.json', to: 'manifest.json', flatten: true },
-				{ from: './src/chrome-scripts/vue.js', to: 'vue.js', flatten: true },
-			]),
-		],
+		plugins: [],
 	},
 	pages: {
 		['pop-up']: {

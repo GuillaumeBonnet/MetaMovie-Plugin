@@ -1,19 +1,25 @@
-// declare const chrome: any;
-console.log('gboDebug:[before callbacks] background.ts');
+declare const chrome: any;
 
-chrome.runtime.onInstalled.addListener(() => {
-	chrome.webNavigation.onCompleted.addListener(
-		() => {
-			console.log('gboDebug:[on navigation completed]');
+chrome.runtime.onInstalled.addListener(() => {});
 
-			chrome.tabs.query(
-				{ active: true, currentWindow: true },
-				([{ id }]: any) => {
-					console.log('gboDebug:[before show id]');
-					chrome.default_popup.show(id);
+chrome.webNavigation.onCompleted.addListener(
+	(event: any) => {
+		if (event.frameId !== 0) {
+			return;
+		}
+		chrome.tabs.query(
+			{ active: true, currentWindow: true },
+			(tabQueryResults: Array<{ id: number }>) => {
+				if (tabQueryResults && tabQueryResults[0] && tabQueryResults[0].id) {
+					const tabId = tabQueryResults[0].id;
+					chrome.webNavigation.onHistoryStateUpdated.addListener(
+						(event: Event) => {
+							chrome.tabs.sendMessage(tabId, 'HistoryStateUpdated');
+						}
+					);
 				}
-			);
-		},
-		{ url: [{ urlMatches: 'https://duckduckgo.com/' }] }
-	);
-});
+			}
+		);
+	}
+	// { url: [{ urlMatches: '<all_urls>' }] }
+);

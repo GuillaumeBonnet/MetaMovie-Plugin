@@ -9,7 +9,8 @@
 				? 'bg-gray-600'
 				: 'text-yellow-100 hover:text-white bg-opacity-70 hover:bg-opacity-100 bg-black hover:bg-gray-600'
 		"
-		@mousedown="handleCardMouseDown($event)"
+		@mousedown.stop="handleCardMouseDown($event)"
+		@click.stop
 	>
 		<div
 			id="header"
@@ -232,6 +233,7 @@ import MatTooltip from '@/components/material/MatTooltip.vue';
 import PercentageInput from '@/components/PercentageInput.vue';
 import { Options, Vue } from 'vue-class-component';
 import { GetterDeck } from '@/store/DeckStore';
+import { bottomControlSelector } from '@/chrome-scripts/netflix-selectors';
 
 type Duration = {
 	_value: string;
@@ -398,7 +400,7 @@ export default class CardCmp extends Vue {
 			clientY: event.clientY,
 		};
 		const bottomController_borders = document
-			.querySelector('.PlayerControlsNeo__bottom-controls')
+			.querySelector(bottomControlSelector)
 			?.getBoundingClientRect();
 		//TODO mutation to update bottomController_borders in order to not do a querySelector at every drag event
 		if (!bottomController_borders) {

@@ -4,7 +4,7 @@
 			<div class="material-icons text-7xl text-gray-500 flex justify-center">
 				account_circle
 			</div>
-			<div class="flex justify-center mt-5">
+			<div class="flex justify-center m-5">
 				<mcw-button @click="logInPopup()">LOG IN</mcw-button>
 				<mcw-button @click="signInPopup()" outlined class="ml-2"
 					>SIGN IN</mcw-button
@@ -194,7 +194,6 @@ export default class Login extends Vue {
 			(this.$refs['popup-login'] as MatPopup).close();
 		} catch (err) {
 			this.errorMessage = axiosErrorMessage(err);
-			console.log('gboDebug:[this.errorMessage]', this.errorMessage);
 		}
 	}
 	async signUpHandler() {
@@ -203,7 +202,6 @@ export default class Login extends Vue {
 			(this.$refs['popup-signup'] as MatPopup).close();
 		} catch (err) {
 			this.errorMessage = axiosErrorMessage(err);
-			console.log('gboDebug:[this.errorMessage]', this.errorMessage);
 		}
 	}
 	async logoutHandler() {

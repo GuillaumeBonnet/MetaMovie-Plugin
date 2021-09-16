@@ -50,8 +50,10 @@
 							<div
 								class="sizing-wrapper"
 								style="position: absolute; top: 0px; bottom: 0px; right: 0px; left: 0px; z-index: 1; overflow: hidden; font-size: 0.808557em;"
+								data-uia="video-canvas"
 							>
 								<div id="plugin-meta-movie-video-overlay"></div>
+								<div id="plugin-meta-movie-menu"></div>
 								<div
 									style="width: 1em; height: 1em; visibility: hidden; font-size: 1em;"
 								></div>
@@ -371,7 +373,7 @@
 											</defs>
 										</svg>
 										<div
-											class="VideoContainer"
+											class="VideoContainer active"
 											aria-hidden="true"
 											role="presentation"
 											data-uia="player"
@@ -606,20 +608,15 @@
 															</div>
 															<div
 																class="PlayerControls--control-element text-control video-title"
+																data-uia="video-title"
 															></div>
 															<script>
 																const videoTitleLoaded = () => {
-																	console.log('gboDebug: onload');
-
 																	if (/watch\/(\d+)/.test(location.pathname)) {
 																		const netflixMovieId = Number.parseInt(
 																			/watch\/(\d+)/.exec(
 																				location.pathname
 																			)?.[1] || ''
-																		);
-																		console.log(
-																			'gboDebug:[netflixMovieId host apge]',
-																			netflixMovieId
 																		);
 																		document.querySelector(
 																			'.video-title'
@@ -640,8 +637,10 @@
 																	}
 																}
 															</script>
-
-															<div id="plugin-meta-movie-menu"></div>
+															<div
+																id="meta-movie-menu-button-placeholder"
+																style="width:52px; height:52px;"
+															></div>
 															<div
 																class="touchable ReportAProblemPopupContainer PlayerControls--control-element nfp-popup-control"
 																data-uia="report-a-problem-button"

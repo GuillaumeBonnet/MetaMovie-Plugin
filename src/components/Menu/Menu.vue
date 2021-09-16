@@ -1,11 +1,16 @@
 <template>
+	<!-- <template @mousedown.prevent @mouseup.prevent @click.prevent> -->
 	<div
-		class="group touchable PlayerControls--control-element nfp-popup-control relative block"
+		class="z-1000050 absolute group touchable PlayerControls--control-element nfp-popup-control block"
+		:class="{ ['hidden']: !isDisplayed }"
+		:style="position"
 	>
+		<!-- @click.stop -->
 		<div class="h-auto m-auto relative mm-netflix-button-padding">
 			<div class="relative">
 				<div
-					class="transform -translate-x-1/2 absolute bottom-2 w-screen20 z-1000010 text-3xl font-extralight text-gray-200 py-2 bg-gray-700 text-transparent rounded-md"
+					class="transform -translate-x-1/2 absolute bottom-2 z-1000010 text-3xl font-extralight text-gray-200 py-2 bg-gray-700 text-transparent rounded-md"
+					style="min-width: 20vw"
 					:class="{
 						['block']: isMenuOppened,
 						['hidden group-hover:block']: !isMenuOppened,
@@ -159,7 +164,8 @@
 			</div>
 
 			<button
-				class="material-icons bg-gray-700 rounded-full outline-none w-16 h-16 m-auto"
+				class="material-icons bg-gray-700 rounded-full outline-none focus:outline-none w-16 h-16 m-auto"
+				style="outline: none;"
 				:class="{
 					['ring ring-yellow-700']: isMenuOppened && isMoviePage,
 					['ring ring-gray-500']: isMenuOppened && !isMoviePage,
@@ -200,6 +206,10 @@ import { fetchAllDecks, fetchMovies, userInfo } from '@/Utils/WebService';
 import { ActionMain, GetterMain, MutationMain } from '@/store/Store';
 import NewDeck from '../DeckSelector/NewDeck.vue';
 import MovieList from '../MovieList.vue';
+import {
+	playerSelector,
+	titleSelector,
+} from '@/chrome-scripts/netflix-selectors';
 
 const MenuItem = defineComponent({
 	template: `
@@ -244,6 +254,15 @@ const MenuItem = defineComponent({
 })
 export default class Menu extends Vue {
 	async created() {
+		const player = document.querySelector(playerSelector);
+		if (!player || !(player instanceof HTMLElement)) {
+			throw Error('no player node or unexpected type');
+		}
+		if (player.classList.contains('active')) {
+			this.placeButtonOnPlaceHolder();
+			this.isDisplayed = true;
+		}
+		this.listenToPlayerChanges();
 		await this.$store.dispatch(ActionMain.FETCH_USER);
 		this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
 	}
@@ -339,9 +358,76 @@ export default class Menu extends Vue {
 
 	isCardListShown = false;
 	originDeck: 'CURRENT_USER' | 'CURRENT_MOVIE' = 'CURRENT_MOVIE';
+	isDisplayed = false;
 
 	createADeck() {
 		(this.$refs['create-deck-popup'] as NewDeck).newDeckPopup();
+	}
+	/* -------------------------------------------------------------------------- */
+	/*                         interaction with host page                         */
+	/* -------------------------------------------------------------------------- */
+	position = { top: '0px', left: '0px' };
+
+	placeButtonOnPlaceHolder() {
+		let menuButtonPlaceHolder = document.querySelector(
+			'#meta-movie-menu-button-placeholder'
+		);
+		if (!menuButtonPlaceHolder) {
+			menuButtonPlaceHolder = document.createElement('div');
+			if (!(menuButtonPlaceHolder instanceof HTMLElement)) {
+				throw new Error('Type error, not HTMLElement');
+			}
+			menuButtonPlaceHolder.style.height = '52px';
+			menuButtonPlaceHolder.style.width = '52px';
+			menuButtonPlaceHolder.id = 'meta-movie-menu-button-placeholder';
+			if (
+				document.querySelector(titleSelector) &&
+				document.querySelector<any>(titleSelector).parentNode &&
+				document.querySelector<any>(titleSelector).parentNode.nextSibling
+			) {
+				const rightButtonGroup = document.querySelector<any>(titleSelector)
+					.parentNode.nextSibling;
+				if (!(rightButtonGroup instanceof HTMLElement)) {
+					throw new Error('Type error, not HTMLElement');
+				}
+				rightButtonGroup?.prepend(menuButtonPlaceHolder);
+			}
+		}
+		const placeHolderPos = menuButtonPlaceHolder.getBoundingClientRect();
+		if (placeHolderPos) {
+			this.position = {
+				top: placeHolderPos.top + 'px',
+				left: placeHolderPos.left + 'px',
+			};
+		}
+	}
+	listenToPlayerChanges() {
+		const player = document.querySelector(playerSelector);
+		if (!player) {
+			throw Error('no player ' + playerSelector);
+		}
+		const playerObserver = new MutationObserver(mutationRecords => {
+			mutationRecords.forEach(mutationRecord => {
+				if (mutationRecord.attributeName == 'class') {
+					if (!(mutationRecord.target instanceof HTMLElement)) {
+						throw new Error(
+							`Expected mutationRecord.target to be an HTMLElement`
+						);
+					}
+					const isPlayerActive = mutationRecord.target.classList.contains(
+						'active'
+					);
+					this.isDisplayed = isPlayerActive;
+					if (isPlayerActive) {
+						this.placeButtonOnPlaceHolder();
+					}
+				}
+			});
+		});
+		playerObserver.observe(player, {
+			attributes: true,
+			attributeOldValue: true,
+		});
 	}
 }
 </script>

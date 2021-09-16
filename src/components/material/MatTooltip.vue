@@ -1,5 +1,5 @@
 <template>
-	<teleport to=".sizing-wrapper">
+	<teleport :to="videoWrapperSelector">
 		<div
 			:id="id"
 			ref="tooltip"
@@ -24,12 +24,14 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
+import { videoWrapperSelector } from '@/chrome-scripts/netflix-selectors';
 import { MDCTooltip } from '@material/tooltip';
 import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 
 @Options({ components: {}, emits: [] })
 export default class MatTooltip extends Vue {
+	videoWrapperSelector = videoWrapperSelector;
 	mounted() {
 		const tooltipNode = this.$refs.tooltip as Element;
 		if (tooltipNode) {
