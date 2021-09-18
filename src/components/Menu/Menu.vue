@@ -12,7 +12,7 @@
 					style="min-width: 20vw"
 					:class="{
 						['block']: isMenuOppened,
-						['hidden group-hover:block']: !isMenuOppened,
+						['scale-0 group-hover:scale-100 delay-300']: !isMenuOppened,
 					}"
 				>
 					<DeckSelector
