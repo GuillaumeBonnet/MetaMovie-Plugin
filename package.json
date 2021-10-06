@@ -9,7 +9,7 @@
 		"test:unit": "vue-cli-service test:unit",
 		"lint": "vue-cli-service lint",
 		"compile-chrome-scripts": "npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
-		"compile-copy-files": "npx copyfiles -f ./src/chrome-scripts/manifest.json ./src/chrome-scripts/vue.js dist"
+		"compile-copy-files": "npx copyfiles -f ./src/chrome-scripts/manifest.json ./src/chrome-scripts/vue.js ./src/chrome-scripts/icons/ dist && npx copyfiles -f ./src/chrome-scripts/icons/* dist/icons/"
 	},
 	"dependencies": {
 		"@material/button": "^10.0.0",

@@ -4,10 +4,7 @@ import Menu from '../components/Menu/Menu.vue';
 import VideoOverlay from '../components/VideoOverlay.vue';
 
 import { store, MutationMain } from '@/store/Store';
-import CardData from '@/models/CardData';
-import { MutationCard } from '@/store/CardStore';
 import '@/assets/styles/styles.css';
-import { MutationDeck } from '@/store/DeckStore';
 /* eslint-disable */
 // @ts-ignore
 import VueMaterialAdapter from 'vue-material-adapter';
