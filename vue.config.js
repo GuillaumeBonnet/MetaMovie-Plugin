@@ -36,7 +36,7 @@ module.exports = {
 			title: 'Pop-Up Page',
 			// chunks to include on this page, by default includes
 			// extracted common chunks and vendor chunks.
-			chunks: ['pop-up', 'chunk-vendors', 'chunk-common', 'index'],
+			// chunks: ['pop-up', 'chunk-vendors', 'chunk-common', 'index'],
 		},
 		['content-overlay']: {
 			// entry for the page
