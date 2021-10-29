@@ -1,6 +1,10 @@
+// import '@/assets/styles/styles.css';
 import { createApp } from 'vue';
 import AppPopUp from './AppPopUp.vue';
+/* eslint-disable */
+//@ts-ignore
+import VueMaterialAdapter from 'vue-material-adapter';
 
-console.log('gboDebug: init pop-up script');
 const appPopUp = createApp(AppPopUp);
+appPopUp.use(VueMaterialAdapter);
 appPopUp.mount('#app');

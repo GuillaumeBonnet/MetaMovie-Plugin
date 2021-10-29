@@ -106,7 +106,6 @@ import { MutationCard } from '@/store/CardStore';
 import { GetterDeck, MutationDeck } from '@/store/DeckStore';
 @Options({
 	components: { TimeSelector, PercentageInput, MatTooltip },
-	props: {},
 })
 export default class CardDetail extends Vue {
 	@Prop({ required: true })

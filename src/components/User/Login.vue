@@ -36,43 +36,11 @@
 			</div>
 		</template>
 
-		<MatPopup ref="popup-login" title="Log In pop-up">
-			Log In:
-			<div class="p-4">
-				<MatTextField
-					v-model="user.email"
-					label="Email"
-					required="true"
-				></MatTextField>
-			</div>
-			<div class="p-4">
-				<MatTextField
-					v-model="user.password"
-					type="password"
-					label="Password"
-					required="true"
-				></MatTextField>
-			</div>
-			<div class="text-red-600" v-if="errorMessage">
-				{{ errorMessage }}
-			</div>
-			<template v-slot:actions>
-				<mcw-button
-					@click="logoutHandler()"
-					data-mdc-dialog-action="cancel"
-					outlined
-					class="mdc-dialog__button"
-					>Cancel</mcw-button
-				>
-				<mcw-button
-					@click="logIn()"
-					outlined
-					class="mdc-dialog__button"
-					:disabled="!user.email || !user.password"
-					>Log In</mcw-button
-				>
-			</template>
-		</MatPopup>
+		<LoginPopUp
+			ref="login-popup-cmp"
+			@open-reset-password="resetPopup()"
+		></LoginPopUp>
+		<ResetPasswordPopUp ref="reset-popup-cmp"></ResetPasswordPopUp>
 		<MatPopup ref="popup-signup" title="Sign Up pop-up">
 			Sign Up:
 			<div class="p-4">
@@ -130,24 +98,20 @@
 /* -------------------------------------------------------------------------- */
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
-import { Prop } from 'vue-property-decorator';
 import { Options, Vue } from 'vue-class-component';
 import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
-import { login, logout, signUp } from '@/Utils/WebService';
+import LoginPopUp from '@/components/User/LoginPopUp.vue';
+import ResetPasswordPopUp from '@/components/User/ResetPasswordPopUp.vue';
+import { logout, signUp } from '@/Utils/WebService';
 import { GetterMain, MutationMain, UserState } from '@/store/Store';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
-	components: { MatPopup, MatTextField },
+	components: { MatPopup, MatTextField, LoginPopUp, ResetPasswordPopUp },
 	emits: ['open-user-decks'],
 })
 export default class Login extends Vue {
-	user = {
-		email: '',
-		password: '',
-	};
-
 	newUser = {
 		email: '',
 		password: '',
@@ -162,15 +126,11 @@ export default class Login extends Vue {
 	get userInfo() {
 		return this.$store.state.user.info;
 	}
-
 	logInPopup() {
-		this.user = {
-			email: '',
-			password: '',
-		};
-		this.errorMessage = '';
-
-		(this.$refs['popup-login'] as MatPopup).open();
+		(this.$refs['login-popup-cmp'] as LoginPopUp).open();
+	}
+	resetPopup() {
+		(this.$refs['reset-popup-cmp'] as ResetPasswordPopUp).open();
 	}
 	signInPopup() {
 		this.newUser = {
@@ -181,24 +141,9 @@ export default class Login extends Vue {
 		this.errorMessage = '';
 		(this.$refs['popup-signup'] as MatPopup).open();
 	}
-	async logIn() {
-		try {
-			const userInfo = await login(this.user);
-			const userState: UserState = {
-				isLogged: true,
-				info: userInfo.data,
-			};
-			this.$store.commit(MutationMain.SET_USER, userState);
-			this.$store.dispatch(ActionDeck.FETCH_DECKS_CURRENT_MOVIE);
-			this.$store.dispatch(ActionDeck.REFRESH_CURRENT_DECK);
-			(this.$refs['popup-login'] as MatPopup).close();
-		} catch (err) {
-			this.errorMessage = axiosErrorMessage(err);
-		}
-	}
 	async signUpHandler() {
 		try {
-			const userInfo = await signUp(this.newUser);
+			await signUp(this.newUser);
 			(this.$refs['popup-signup'] as MatPopup).close();
 		} catch (err) {
 			this.errorMessage = axiosErrorMessage(err);

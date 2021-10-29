@@ -47,6 +47,11 @@ const signUp = (credentials: {
 		...credentials,
 	});
 };
+const resetPassword = (email: string) => {
+	return axios.post<null>(`${rootUrl}/users/reset-password-demand`, {
+		email,
+	});
+};
 const userInfo = () => {
 	return axios.get<UserInfo>(`${rootUrl}/users/info`);
 };
@@ -61,6 +66,7 @@ export {
 	updateDeck,
 	deleteDeck,
 	login,
+	resetPassword,
 	userInfo,
 	logout,
 	signUp,
