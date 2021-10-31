@@ -73,6 +73,8 @@ import { axiosErrorMessage } from '@/Utils/MainUtils';
 })
 export default class ResetPasswordPopUp extends Vue {
 	open() {
+		this.email = '';
+		this.isPostScreenShown = false;
 		this.errorMessage = '';
 		(this.$refs['popup-reset'] as MatPopup).open();
 	}
