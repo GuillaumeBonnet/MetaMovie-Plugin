@@ -41,50 +41,7 @@
 			@open-reset-password="resetPopup()"
 		></LoginPopUp>
 		<ResetPasswordPopUp ref="reset-popup-cmp"></ResetPasswordPopUp>
-		<MatPopup ref="popup-signup" title="Sign Up pop-up">
-			Sign Up:
-			<div class="p-4">
-				<MatTextField
-					v-model="newUser.email"
-					label="Email"
-					required="true"
-				></MatTextField>
-			</div>
-			<div class="p-4">
-				<MatTextField
-					v-model="newUser.username"
-					label="Username"
-					required="true"
-				></MatTextField>
-			</div>
-			<div class="p-4">
-				<MatTextField
-					v-model="newUser.password"
-					type="password"
-					label="Password"
-					required="true"
-				></MatTextField>
-			</div>
-			<div class="text-red-600" v-if="errorMessage">
-				{{ errorMessage }}
-			</div>
-			<template v-slot:actions>
-				<mcw-button
-					outlined
-					data-mdc-dialog-action="cancel"
-					class="mdc-dialog__button"
-					>Cancel</mcw-button
-				>
-				<mcw-button
-					outlined
-					@click="signUpHandler()"
-					data-mdc-dialog-action="cancel"
-					class="mdc-dialog__button"
-					:disabled="!newUser.email || !newUser.username || !newUser.password"
-					>Sign Up</mcw-button
-				>
-			</template>
-		</MatPopup>
+		<SignUpPopUp ref="signup-popup-cmp"></SignUpPopUp>
 	</div>
 </template>
 
@@ -103,23 +60,22 @@ import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
 import LoginPopUp from '@/components/User/LoginPopUp.vue';
+import SignUpPopUp from '@/components/User/SignUpPopUp.vue';
 import ResetPasswordPopUp from '@/components/User/ResetPasswordPopUp.vue';
 import { logout, signUp } from '@/Utils/WebService';
 import { GetterMain, MutationMain, UserState } from '@/store/Store';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
-	components: { MatPopup, MatTextField, LoginPopUp, ResetPasswordPopUp },
+	components: {
+		MatPopup,
+		MatTextField,
+		LoginPopUp,
+		ResetPasswordPopUp,
+		SignUpPopUp,
+	},
 	emits: ['open-user-decks'],
 })
 export default class Login extends Vue {
-	newUser = {
-		email: '',
-		password: '',
-		username: '',
-	};
-
-	errorMessage = '';
-
 	get isLogged() {
 		return this.$store.getters[GetterMain.IS_LOGGED];
 	}
@@ -133,21 +89,7 @@ export default class Login extends Vue {
 		(this.$refs['reset-popup-cmp'] as ResetPasswordPopUp).open();
 	}
 	signInPopup() {
-		this.newUser = {
-			email: '',
-			password: '',
-			username: '',
-		};
-		this.errorMessage = '';
-		(this.$refs['popup-signup'] as MatPopup).open();
-	}
-	async signUpHandler() {
-		try {
-			await signUp(this.newUser);
-			(this.$refs['popup-signup'] as MatPopup).close();
-		} catch (err) {
-			this.errorMessage = axiosErrorMessage(err);
-		}
+		(this.$refs['signup-popup-cmp'] as SignUpPopUp).open();
 	}
 	async logoutHandler() {
 		try {

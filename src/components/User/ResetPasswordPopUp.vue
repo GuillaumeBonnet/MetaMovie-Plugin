@@ -62,11 +62,9 @@
 /*                                     TS                                     */
 /* -------------------------------------------------------------------------- */
 import { Options, Vue } from 'vue-class-component';
-import { ActionDeck } from '@/store/DeckStore';
 import MatPopup from '@/components/material/MatPopup.vue';
 import MatTextField from '@/components/material/MatTextField.vue';
-import { login, resetPassword } from '@/Utils/WebService';
-import { MutationMain, UserState } from '@/store/Store';
+import { resetPassword } from '@/Utils/WebService';
 import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
 	components: { MatPopup, MatTextField },
