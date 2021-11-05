@@ -62,9 +62,8 @@ import MatTextField from '@/components/material/MatTextField.vue';
 import LoginPopUp from '@/components/User/LoginPopUp.vue';
 import SignUpPopUp from '@/components/User/SignUpPopUp.vue';
 import ResetPasswordPopUp from '@/components/User/ResetPasswordPopUp.vue';
-import { logout, signUp } from '@/Utils/WebService';
+import { logout } from '@/Utils/WebService';
 import { GetterMain, MutationMain, UserState } from '@/store/Store';
-import { axiosErrorMessage } from '@/Utils/MainUtils';
 @Options({
 	components: {
 		MatPopup,

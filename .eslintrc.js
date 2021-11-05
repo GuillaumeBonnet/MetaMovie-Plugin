@@ -14,8 +14,11 @@ module.exports = {
 		ecmaVersion: 2020,
 	},
 	rules: {
-		'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
-		'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 1,
+		// "off" or 0 - turn the rule off
+		// "warn" or 1 - turn the rule on as a warning (doesn't affect exit code)
+		// "error" or 2 - turn the rule on as an error (exit code is 1 when triggered)
+		'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+		'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 		'@typescript-eslint/camelcase': 0,
 		'@typescript-eslint/interface-name-prefix': 0,
 	},
