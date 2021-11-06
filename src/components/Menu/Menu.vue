@@ -169,6 +169,7 @@
 					['ring ring-yellow-700']: isMenuOppened && isMoviePage,
 					['ring ring-gray-500']: isMenuOppened && !isMoviePage,
 					['bg-yellow-800']: isMoviePage,
+					['text-yellow-500']: isDevServe,
 				}"
 				@click="menuButtonClicked()"
 			>
@@ -349,6 +350,10 @@ export default class Menu extends Vue {
 		} else {
 			this.isMenuForcedOpen = true;
 		}
+	}
+
+	get isDevServe() {
+		return process.env['VUE_APP_MODE'] == 'DEV_SERVE';
 	}
 
 	/* -------------------------------------------------------------------------- */
