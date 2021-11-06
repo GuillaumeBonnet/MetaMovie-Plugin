@@ -1,6 +1,6 @@
 <template>
-	<teleport :to="playerSelector">
-		<div class="mdc-dialog" ref="popup">
+	<teleport to="#plugin-meta-movie-popups">
+		<div class="mdc-dialog absolute z-1000060" ref="popup">
 			<div class="mdc-dialog__container">
 				<div
 					class="mdc-dialog__surface overflow-visible"

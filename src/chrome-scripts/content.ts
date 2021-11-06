@@ -69,6 +69,11 @@ function insertPluginNodes(awaitedNodes: IAwaitedNodes) {
 		menuDiv.id = 'plugin-meta-movie-menu';
 		awaitedNodes.videoWrapper?.append(menuDiv);
 	}
+	if (!document.querySelector<any>('#plugin-meta-movie-popups')) {
+		const popUpsDiv = document.createElement('div') as HTMLElement;
+		popUpsDiv.id = 'plugin-meta-movie-popups';
+		awaitedNodes.videoWrapper?.append(popUpsDiv);
+	}
 
 	if (!document.querySelector<any>('#plugin-meta-movie-link-font')) {
 		const fontsNode = document.createElement('link') as HTMLElement;

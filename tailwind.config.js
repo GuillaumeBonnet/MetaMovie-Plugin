@@ -53,7 +53,7 @@ module.exports = {
 					},
 				});
 			}
-			for (let i = 1000000; i <= 1000000 + 50; i += 10) {
+			for (let i = 1000000; i <= 1000000 + 60; i += 10) {
 				addUtilities({
 					[`.z-${i}`]: {
 						['z-index']: `${i} !important`,
