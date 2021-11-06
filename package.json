@@ -4,10 +4,11 @@
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve --mode dev-serve",
-		"build": "vue-cli-service build --mode dev-build && npm run compile-chrome-scripts  && npm run compile-copy-files",
-		"build-prod": "vue-cli-service build --mode prod-build && npm run compile-chrome-scripts && npm run compile-copy-files",
+		"build": "vue-cli-service build --mode dev-build && npm run post:build",
+		"build-prod": "vue-cli-service build --mode prod-build && npm run post:build",
 		"test:unit": "vue-cli-service test:unit",
 		"lint": "vue-cli-service lint",
+		"post:build": "npm run compile-chrome-scripts && npm run compile-copy-files",
 		"compile-chrome-scripts": "npx tsc .\\src\\chrome-scripts\\background.ts .\\src\\chrome-scripts\\content.ts --outDir .\\dist\\chrome-scripts\\",
 		"compile-copy-files": "npx copyfiles -f ./src/chrome-scripts/manifest.json ./src/chrome-scripts/vue.js ./src/chrome-scripts/icons/ dist && npx copyfiles -f ./src/chrome-scripts/icons/* dist/icons/"
 	},
